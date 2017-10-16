@@ -3,16 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>bg2e-js Composer</title>
+        <script src="node_modules/angular/angular.min.js"></script>
         <script src="node_modules/traceur/bin/traceur-runtime.js"></script>
         <script src="node_modules/bg2e-js/js/bg2e.js"></script>
 
-        <!-- bg2 engine extensions for Electron.js -->
-        <script src="src/bg2-extensions/file-loader.js"></script>
-        <!-- renderer -->
-        <script src="src/renderer.js"></script>
+        <script src="window-main.js"></script>
+
         <link rel="stylesheet" href="templates/default/styles/canvas.css">
+
     </head>
-    <body onload="load(document.getElementsByTagName('canvas')[0])">
-        <canvas class="bg2e-scene-canvas" width="480" height="360">Your browser does not support WebGL</canvas>
+    <body onload="">
+        <scene-canvas></scene-canvas>
     </body>
 </html> 

@@ -1,0 +1,3 @@
+app.addSource(() => {
+    app.fileCommands = {}
+})
