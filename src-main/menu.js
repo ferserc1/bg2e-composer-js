@@ -18,8 +18,20 @@ module.exports = {
           {
             label: 'Edit',
             submenu: [
-              {role: 'undo'},
-              {role: 'redo'},
+              {
+                label: 'Undo',
+                accelerator: 'CmdOrCtrl+Z',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'undo' });
+                }
+              },
+              {
+                label: 'Redo',
+                accelerator: 'CmdOrCtrl+Shift+Z',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'redo' });
+                }
+              },
               {type: 'separator'},
               {role: 'cut'},
               {role: 'copy'},

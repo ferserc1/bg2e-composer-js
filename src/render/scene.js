@@ -1,14 +1,20 @@
 app.addDefinitions(() => {
     let g_scene = null;
 
+    function registerPlugins() {
+        bg.base.Loader.RegisterPlugin(new bg.base.TextureLoaderPlugin());
+        bg.base.Loader.RegisterPlugin(new bg.base.Bg2LoaderPlugin());
+        bg.base.Loader.RegisterPlugin(new bg.base.OBJLoaderPlugin());
+    }
+
     class Scene {
         static Get() {
             return g_scene;
         }
 
         constructor(gl) {
-            this.gl = gl;
             g_scene = this;
+            this.gl = gl;
             this._root = null;
             this._camera = null;
         }
@@ -56,8 +62,9 @@ app.addDefinitions(() => {
         }
 
         init() {
+            registerPlugins.apply(this);
+
             this.createDefaultScene();
-            
         }
     }
 

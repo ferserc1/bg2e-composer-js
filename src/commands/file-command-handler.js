@@ -16,17 +16,15 @@ app.addSource(() => {
         }
 
         openFile() {
+            let context = app.ComposerWindowController.Get().gl;
             const {dialog} = require('electron').remote;
             
             let filePath = dialog.showOpenDialog({ properties: ['openFile']});
             if (filePath && filePath.length>0) {
-                bg.base.Loader.Load(this.gl,filePath[0])
-                    .then((node) => {
-                        this._sceneRoot.addChild(node);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                let cmd = new app.fileCommands.OpenFile(context,app.Scene.Get().root,filePath[0]);
+                app.CommandManager.Get().doCommand(cmd)
+                    .then(() => {})
+                    .catch(() => {});
             }
         }
     }
