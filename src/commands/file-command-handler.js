@@ -21,7 +21,7 @@ app.addSource(() => {
             
             let filePath = dialog.showOpenDialog({ properties: ['openFile']});
             if (filePath && filePath.length>0) {
-                let cmd = new app.fileCommands.OpenFile(context,app.Scene.Get().root,filePath[0]);
+                let cmd = new app.fileCommands.OpenFile(context,app.render.Scene.Get().root,filePath[0]);
                 app.CommandManager.Get().doCommand(cmd)
                     .then(() => {})
                     .catch(() => {});

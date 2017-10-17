@@ -17,7 +17,7 @@ app.addDefinitions(() => {
         init() {
             bg.Engine.Set(new bg.webgl1.Engine(this.gl));
 
-            this._scene = new app.Scene(this.gl);
+            this._scene = new app.render.Scene(this.gl);
             this.scene.init();
 
             this._renderer = bg.render.Renderer.Create(
@@ -35,6 +35,7 @@ app.addDefinitions(() => {
     
         display() {
             this._renderer.display(this.scene.root, this.scene.camera);
+            this.scene.selectionController.drawGizmos();
         }
     
         reshape(width,height) {
@@ -44,11 +45,27 @@ app.addDefinitions(() => {
     
         keyDown(evt) { this._inputVisitor.keyDown(this.scene.root, evt); }  
         keyUp(evt) { this._inputVisitor.keyDown(this.scene.root, evt); }
-        mouseUp(evt) { this._inputVisitor.mouseUp(this.scene.root, evt); }
-        mouseDown(evt) { this._inputVisitor.mouseDown(this.scene.root, evt); }
+
+        mouseUp(evt) {
+            this.scene.selectionController.mouseUp(evt);
+            this._inputVisitor.mouseUp(this.scene.root, evt);
+        }
+
+        mouseDown(evt) {
+            if (!this.scene.selectionController.mouseDown(evt)) {
+                this._inputVisitor.mouseDown(this.scene.root, evt);
+            }
+        }
+
+        mouseDrag(evt) {
+            if (!this.scene.selectionController.mouseDrag(evt)) {
+                this._inputVisitor.mouseDrag(this.scene.root, evt);
+            }
+        }
+
         mouseMove(evt) { this._inputVisitor.mouseMove(this.scene.root, evt); }
+
         mouseOut(evt) { this._inputVisitor.mouseOut(this.scene.root, evt); }
-        mouseDrag(evt) { this._inputVisitor.mouseDrag(this.scene.root, evt); }
         mouseWheel(evt) { this._inputVisitor.mouseWheel(this.scene.root, evt); }
         touchStart(evt) { this._inputVisitor.touchStart(this.scene.root, evt); }
         touchMove(evt) { this._inputVisitor.touchMove(this.scene.root, evt); }
