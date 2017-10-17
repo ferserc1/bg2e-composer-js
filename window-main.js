@@ -7,7 +7,6 @@ var GLOBAL_APP_NAME = "";
 
     let g_appDefines = [];
     let g_appSource = [];
-    let g_menuHandler = {};
 
     app.angular = {
         deps: [
@@ -45,10 +44,6 @@ var GLOBAL_APP_NAME = "";
     app.addSource = function(callback) {
         g_appSource.push(callback);
     };
-
-    app.addMenuHandler = function(message,menuHandler) {
-        g_menuHandler[message] = menuHandler;
-    };
     
     function loadApp() {
         angular.module(GLOBAL_APP_NAME, app.angular.deps);
@@ -65,9 +60,7 @@ var GLOBAL_APP_NAME = "";
 
     const {ipcRenderer} = require('electron');
     ipcRenderer.on('triggerMenu', (event,arg) => {
-        if (g_menuHandler[arg.msg]) {
-            g_menuHandler[arg.msg](event,arg);
-        }
+        app.CommandHandler.Trigger(arg.msg,arg);
     });
     
 })();

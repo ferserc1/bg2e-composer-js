@@ -33,7 +33,6 @@ module.exports = {
             label: 'View',
             submenu: [
               {role: 'reload'},
-              {role: 'forcereload'},
               {role: 'toggledevtools'},
               {type: 'separator'},
               {role: 'resetzoom'},
@@ -78,7 +77,7 @@ module.exports = {
           })
         
           // Edit menu
-          template[1].submenu.push(
+          template[2].submenu.push(
             {type: 'separator'},
             {
               label: 'Speech',
@@ -90,7 +89,7 @@ module.exports = {
           )
         
           // Window menu
-          template[3].submenu = [
+          template[4].submenu = [
             {role: 'close'},
             {role: 'minimize'},
             {role: 'zoom'},
