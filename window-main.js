@@ -12,6 +12,10 @@ var GLOBAL_APP_NAME = "";
         deps: [
         ]
     };
+    // Replace \ by / in Windows paths C:\ >>>> C:/
+    app.standarizePath = function(path) {
+        return path.replace(/\\/g,'/');
+    };
 
     app.config = require(__dirname + "/config.json");
     GLOBAL_APP_NAME = app.config.appName;

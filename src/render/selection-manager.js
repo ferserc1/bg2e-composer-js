@@ -52,10 +52,14 @@ app.addDefinitions(() => {
         }
         
         selectItem(node,plist,material) {
+            material.selectMode = true;
             this._selectionItems.push(new SelectionItem(node,plist,material));
         }
 
         clear() {
+            this._selectionItems.forEach((item) => {
+                item.material.selectMode = false;
+            });
             this._selectionItems = [];
         }
     }

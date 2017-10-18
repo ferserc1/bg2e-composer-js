@@ -9,13 +9,18 @@ app.addDefinitions(() => {
             let context = app.ComposerWindowController.Get().gl;
             this._mousePicker = new bg.manipulation.MousePicker(context);
             this._gizmoManager = new bg.manipulation.GizmoManager(context);
+            this._selectionHighlight = new bg.manipulation.SelectionHighlight(context);
+            this._selectionHighlight.highlightColor = bg.Color.Green();
+            this._selectionHighlight.borderColor = 2;
             this._gizmoManager.gizmoOpacity = 0.7;
             this._gizmoNode = null;
             this._gizmoTransform = null;
+
         }
 
         drawGizmos() {
             this._gizmoManager.drawGizmos(this._scene.root, this._scene.camera);
+            this._selectionHighlight.drawSelection(this._scene.root, this._scene.camera);
         }
 
         mouseDown(event) {
@@ -46,6 +51,7 @@ app.addDefinitions(() => {
                 if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
                     this._gizmoNode.removeComponent("bg.manipulation.Gizmo");
                     this._gizmoNode = null;
+                    this._selectionManager.clear();
                 }
                 let result = this._mousePicker.pick(this._scene.root, this._scene.camera, upPosition);
                 this._gizmoNode = result && result.node;
@@ -56,6 +62,7 @@ app.addDefinitions(() => {
                         gizmo.init();
                         gizmo.visible = true;
                     }
+                    this._selectionManager.selectItem(result.node,result.plist,result.material);
                 }
             }
             if (this._gizmoManager.working && this._gizmoNode && this._gizmoNode.transform) {
