@@ -30,6 +30,9 @@ app.addDefinitions(() => {
                 if (result.node.transform) {
                     this._gizmoTransform = new bg.Matrix4(result.node.transform.matrix);
                 }
+                if (result.node.component("bg.manipulation.Gizmo")) {
+                    this._gizmoP = new bg.Matrix4(result.node.component("bg.manipulation.Gizmo")._gizmoP);
+                }
                 this._gizmoManager.startAction(result, this._downPosition);
                 return true;
             }
@@ -49,8 +52,7 @@ app.addDefinitions(() => {
 
             if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
                 if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
-                    this._gizmoNode.removeComponent("bg.manipulation.Gizmo");
-                    this._gizmoNode = null;
+                    this._gizmoNode.component("bg.manipulation.Gizmo").visible = false;
                     this._selectionManager.clear();
                 }
                 let result = this._mousePicker.pick(this._scene.root, this._scene.camera, upPosition);
@@ -62,6 +64,9 @@ app.addDefinitions(() => {
                         gizmo.init();
                         gizmo.visible = true;
                     }
+                    else if (this._gizmoNode.component("bg.manipulation.Gizmo")) {
+                        this._gizmoNode.component("bg.manipulation.Gizmo").visible = true;
+                    }
                     this._selectionManager.selectItem(result.node,result.plist,result.material);
                 }
             }
@@ -70,7 +75,7 @@ app.addDefinitions(() => {
                 this._gizmoNode.transform.matrix = this._gizmoTransform;
                 this._gizmoTransform = null;
                 app.CommandManager.Get().doCommand(
-                    new app.transformCommands.Transform(this._gizmoNode,trx)
+                    new app.transformCommands.Transform(this._gizmoNode,trx,this._gizmoP)
                 );
             }
             this._gizmoManager.endAction();

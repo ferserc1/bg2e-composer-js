@@ -12,8 +12,7 @@ app.addDefinitions(() => {
     }
 
     function getGizmo() {
-        let gizmo = new bg.manipulation.PlaneGizmo("data/floor_gizmo.vwglb");
-        gizmo.autoPlaneMode = true;
+        let gizmo = new bg.manipulation.UnifiedGizmo("data/unified_gizmo.bg2");
         return gizmo;
     }
 
