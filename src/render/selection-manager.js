@@ -12,7 +12,7 @@ app.addDefinitions(() => {
     }
 
     function getGizmo() {
-        let gizmo = new bg.manipulation.UnifiedGizmo("data/unified_gizmo.bg2");
+        let gizmo = new app.render.Gizmo();
         return gizmo;
     }
 

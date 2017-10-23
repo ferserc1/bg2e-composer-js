@@ -44,6 +44,48 @@ module.exports = {
           {
             label: 'View',
             submenu: [
+              {
+                label: 'Gizmo',
+                submenu: [
+                  {
+                    label: 'Select',
+                    accelerator: 'Q',
+                    click: function(item, focusedWindow) {
+                      focusedWindow.webContents.send('triggerMenu', { msg:'gizmoSelect' })
+                    }
+                  },
+                  {
+                    label: 'Translate',
+                    accelerator: 'W',
+                    click: function(item, focusedWindow) {
+                      focusedWindow.webContents.send('triggerMenu', { msg:'gizmoTranslate' })
+                    }
+                  },
+                  {
+                    label: 'Rotate',
+                    accelerator: 'E',
+                    click: function(item, focusedWindow) {
+                      focusedWindow.webContents.send('triggerMenu', { msg:'gizmoRotate' })
+                    }
+                  },
+                  {
+                    label: 'Scale',
+                    accelerator: 'R',
+                    click: function(item, focusedWindow) {
+                      focusedWindow.webContents.send('triggerMenu', { msg:'gizmoScale' })
+                    }
+                  },
+                  {
+                    label: 'Transform',
+                    accelerator: 'T',
+                    click: function(item, focusedWindow) {
+                      focusedWindow.webContents.send('triggerMenu', { msg:'gizmoTransform' })
+                    }
+                  }
+                ]
+              },
+              {type: 'separator'},
+
               {role: 'reload'},
               {role: 'toggledevtools'},
               {type: 'separator'},
