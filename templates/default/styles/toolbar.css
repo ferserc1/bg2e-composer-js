@@ -1,0 +1,50 @@
+toolbar {
+    pointer-events: all;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+}
+
+toolbar ul {
+    list-style-type: none;
+}
+
+toolbar li {
+    display: inline;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+toolbar li p {
+    display: inline-block;
+}
+
+.bg2-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background-size: 100% 100%;
+}
+
+.bg2-gizmo-select {
+    background-image: url(../icons/gizmo-select.png);
+}
+
+.bg2-gizmo-translate {
+    background-image: url(../icons/gizmo-translate.png);
+}
+
+.bg2-gizmo-rotate {
+    background-image: url(../icons/gizmo-rotate.png);
+}
+
+.bg2-gizmo-scale {
+    background-image: url(../icons/gizmo-scale.png);
+}
+
+.bg2-gizmo-transform {
+    background-image: url(../icons/gizmo-translate.png);
+}

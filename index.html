@@ -4,15 +4,14 @@
         <meta charset="UTF-8">
         <title>bg2e-js Composer</title>
         <script src="node_modules/angular/angular.min.js"></script>
+        <script src="node_modules/angular-route/angular-route.min.js"></script>
         <script src="node_modules/traceur/bin/traceur-runtime.js"></script>
         <script src="node_modules/bg2e-js/js/bg2e.js"></script>
 
         <script src="window-main.js"></script>
-
-        <link rel="stylesheet" href="templates/default/styles/canvas.css">
-
     </head>
     <body onload="">
+        <ng-view></ng-view>
         <scene-canvas></scene-canvas>
     </body>
 </html> 

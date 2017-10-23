@@ -1,4 +1,31 @@
 {
     "appName": "bg2e-composer",
-    "templateName": "default"
+    "templateName": "default",
+    "toolbar": [
+        {
+            "icon":"gizmo-select",
+            "name":"Select",
+            "command":"gizmoSelect"
+        },
+        {
+            "icon":"gizmo-translate",
+            "name":"Translate",
+            "command":"gizmoTranslate"
+        },
+        {
+            "icon":"gizmo-rotate",
+            "name":"Rotate",
+            "command":"gizmoRotate"
+        },
+        {
+            "icon":"gizmo-scale",
+            "name":"Scale",
+            "command":"gizmoScale"
+        },
+        {
+            "icon":"gizmo-transform",
+            "name":"Transform",
+            "command":"gizmoTransform"
+        }
+    ]
 }

@@ -24,6 +24,7 @@
   "homepage": "https://bitbucket.org/ferserc1/bg2e-composer-js#readme",
   "dependencies": {
     "angular": "^1.6.6",
+    "angular-route": "^1.6.6",
     "bg2e-js": "git+https://github.com/ferserc1/bg2e-js-dist.git",
     "traceur": "0.0.111"
   }
