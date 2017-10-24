@@ -5,6 +5,26 @@ app.addDefinitions(() => {
         bg.base.Loader.RegisterPlugin(new bg.base.TextureLoaderPlugin());
         bg.base.Loader.RegisterPlugin(new bg.base.Bg2LoaderPlugin());
         bg.base.Loader.RegisterPlugin(new bg.base.OBJLoaderPlugin());
+        bg.base.Loader.RegisterPlugin(new bg.base.SceneLoaderPlugin());
+    }
+
+    function sceneWillOpen(oldSceneRoot,newSceneRoot) {
+        for (let observerId in this._sceneObservers.willOpen) {
+            let observer = this._sceneObservers.willOpen[observerId];
+            observer(oldSceneRoot,newSceneRoot);
+        }
+    }
+
+    function sceneWillClose(oldSceneRoot) {
+        let status = true;
+
+        for (let observerId in this._sceneObservers.willClose) {
+            let observer = this._sceneObservers.willClose[observerId];
+            status = observer(oldSceneRoot);
+            if (!status) break;
+        }
+        
+        return status;
     }
 
     class Scene {
@@ -19,6 +39,11 @@ app.addDefinitions(() => {
             this._camera = null;
             this._selectionManager = new app.render.SelectionManager(this);
             this._selectionController = new app.render.SelectionController(this,this._selectionManager);
+
+            this._sceneObservers = {
+                willOpen:{},
+                willClose:{}
+            };
         }
 
         get root() {
@@ -39,6 +64,16 @@ app.addDefinitions(() => {
 
         get selectionController() {
             return this._selectionController;
+        }
+
+        // callback(oldSceneRoot,newSceneRoot)
+        sceneWillOpen(observerId,callback) {
+            this._sceneObservers.willOpen[observerId] = callback;
+        }
+
+        // Callback(oldSceneRoot)
+        sceneWillClose(observerId,callback) {
+            this._sceneObservers.willClose[observerId] = callback;
         }
 
         createDefaultScene() {
@@ -81,6 +116,40 @@ app.addDefinitions(() => {
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-1,0)));
 
             this.selectionManager.initScene(this.root);
+        }
+
+        openScene(scenePath) {
+            return new Promise((resolve,reject) => {
+                if (!sceneWillClose.apply(this,[this.root])) {
+                    reject(null);
+                    return;
+                }
+                
+                bg.base.Loader.Load(this.gl,scenePath)
+                    .then((result) => {
+                        sceneWillOpen.apply(this,[this.root,result.sceneRoot]);
+    
+                        this._root = result.sceneRoot;
+                        let cameraNode = result.cameraNode;
+                        this._camera = cameraNode.camera;
+    
+                        // Add a camera handler component
+                        let ctrl = new bg.manipulation.OrbitCameraController();
+                        cameraNode.addComponent(ctrl);
+                        cameraNode.addComponent(new bg.scene.Transform());
+                        ctrl.minPitch = -45;
+   
+                        this.selectionManager.initScene(this.root);
+                        
+                        // Post reshape (to update the camera viewport) and redisplay
+                        app.ComposerWindowController.Get().postReshape();
+                        app.ComposerWindowController.Get().postRedisplay();
+
+                        resolve();
+                    })
+
+                    .catch((err) => reject(err));
+            });
         }
 
         init() {

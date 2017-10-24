@@ -41,4 +41,24 @@ app.addSource(() => {
     };
 
     app.fileCommands.OpenFile = OpenFile;
+
+    class OpenScene extends app.ContextCommand {
+        constructor(context,path) {
+            super(context);
+            this._path = path;
+
+            this._undoable = false;
+            this._clearCommandHistory = true;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                app.render.Scene.Get().openScene(this._path)
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
+            });
+        }
+    };
+
+    app.fileCommands.OpenScene = OpenScene;
 })

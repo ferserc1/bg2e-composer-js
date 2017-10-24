@@ -7,10 +7,18 @@ module.exports = {
             label: 'File',
             submenu: [
               {
-                label: 'Open',
+                label: 'Open Scene',
                 accelerator: 'CmdOrCtrl+O',
                 click: function(item, focusedWindow) {
-                  focusedWindow.webContents.send('triggerMenu', { msg:'openFile' });
+                  focusedWindow.webContents.send('triggerMenu', { msg:'openScene' });
+                }
+              },
+              {type: 'separator'},
+              {
+                label: 'Import object',
+                accelerator: 'CmdOrCtrl+Shift+O',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'openFile' })
                 }
               }
             ]

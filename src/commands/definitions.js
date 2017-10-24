@@ -1,5 +1,10 @@
 app.addDefinitions(() => {
     class Command {
+        constructor() {
+            this._undoable = true;
+            this._clearCommandHistory = false;
+        }
+
         execute() {
             return Promise.resolve();
         }
@@ -7,6 +12,9 @@ app.addDefinitions(() => {
         undo() {
             return Promise.resolve();
         }
+
+        get undoable() { return this._undoable; }
+        get clearCommandHistory() { return this._clearCommandHistory; }
     }
 
     class ContextCommand extends Command {
@@ -37,7 +45,13 @@ app.addDefinitions(() => {
                 }
                 cmd.execute()
                     .then(() => {
-                        this._undoStack.push(cmd);
+                        if (cmd.undoable) {
+                            this._undoStack.push(cmd);
+                        }
+                        if (cmd.clearCommandHistory) {
+                            this._undoStack = [];
+                            this._redoStack = [];
+                        }
                         resolve();
                     })
                     .catch((err) => {

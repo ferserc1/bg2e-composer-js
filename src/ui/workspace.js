@@ -3,6 +3,15 @@ app.addSource(() => {
     
     angularApp.controller("SceneEditorController", ['$scope', function($scope) {
         console.log("Scene editor controller");
+
+        app.render.Scene.Get().sceneWillClose("sceneEditorController", (oldScene) => {
+            console.log("The scene will be closed");
+            return true;
+        });
+
+        app.render.Scene.Get().sceneWillOpen("sceneEditorController", (oldScene,newScene) => {
+            console.log("Open new scene");
+        });
     }]);
 });
 

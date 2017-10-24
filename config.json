@@ -6,7 +6,7 @@
             "type":"button",
             "icon":"open-file",
             "name":"Open",
-            "command":"openFile"
+            "command":"openScene"
         },
         {
             "type":"separator"
