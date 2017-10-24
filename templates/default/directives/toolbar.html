@@ -1,7 +1,8 @@
 <ul>
     <li ng-repeat="item in toolbarItems">
-       <a ng-click="action(item)" title="{{ item.name }}">
+        <a ng-click="action(item)" title="{{ item.name }}" ng-show="item.type=='button'">
            <i class="bg2-icon bg2-{{ item.icon }}"></i>
         </a>
+        <i ng-show="item.type=='separator'" class="bg2-icon bg2-toobar-separator"></i>
     </li>
 </ul>

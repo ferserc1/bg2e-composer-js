@@ -7,6 +7,9 @@ toolbar {
 
 toolbar ul {
     list-style-type: none;
+    padding-left: 0px;
+    margin-top: 3px;
+    margin-bottom: 0px;
 }
 
 toolbar li {
@@ -16,10 +19,7 @@ toolbar li {
     margin-right: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-}
-
-toolbar li p {
-    display: inline-block;
+    padding: 4px;
 }
 
 .bg2-icon {
@@ -27,6 +27,10 @@ toolbar li p {
     height: 30px;
     display: inline-block;
     background-size: 100% 100%;
+}
+
+.bg2-open-file {
+    background-image: url(../icons/folder-open.png);
 }
 
 .bg2-gizmo-select {
@@ -46,5 +50,10 @@ toolbar li p {
 }
 
 .bg2-gizmo-transform {
-    background-image: url(../icons/gizmo-translate.png);
+    background-image: url(../icons/gizmo-transform.png);
+}
+
+.bg2-toobar-separator {
+    width: 8px;
+    background-image: url(../icons/toolbar-separator.png);
 }

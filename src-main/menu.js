@@ -49,35 +49,35 @@ module.exports = {
                 submenu: [
                   {
                     label: 'Select',
-                    accelerator: 'Q',
+                //    accelerator: 'Q',
                     click: function(item, focusedWindow) {
                       focusedWindow.webContents.send('triggerMenu', { msg:'gizmoSelect' })
                     }
                   },
                   {
                     label: 'Translate',
-                    accelerator: 'W',
+                //    accelerator: 'W',
                     click: function(item, focusedWindow) {
                       focusedWindow.webContents.send('triggerMenu', { msg:'gizmoTranslate' })
                     }
                   },
                   {
                     label: 'Rotate',
-                    accelerator: 'E',
+                //    accelerator: 'E',
                     click: function(item, focusedWindow) {
                       focusedWindow.webContents.send('triggerMenu', { msg:'gizmoRotate' })
                     }
                   },
                   {
                     label: 'Scale',
-                    accelerator: 'R',
+                //    accelerator: 'R',
                     click: function(item, focusedWindow) {
                       focusedWindow.webContents.send('triggerMenu', { msg:'gizmoScale' })
                     }
                   },
                   {
                     label: 'Transform',
-                    accelerator: 'T',
+                //    accelerator: 'T',
                     click: function(item, focusedWindow) {
                       focusedWindow.webContents.send('triggerMenu', { msg:'gizmoTransform' })
                     }

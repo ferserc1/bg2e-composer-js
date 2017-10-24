@@ -1,9 +1,20 @@
 
 html {
+}
 
+.noselect {
+    user-select: none;
 }
 
 .bg2-widget {
     background-color: rgba(30,30,30,0.98);
     color: white;
+}
+
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
 }

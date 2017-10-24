@@ -3,29 +3,46 @@
     "templateName": "default",
     "toolbar": [
         {
+            "type":"button",
+            "icon":"open-file",
+            "name":"Open",
+            "command":"openFile"
+        },
+        {
+            "type":"separator"
+        },
+        {
+            "type":"button",
             "icon":"gizmo-select",
             "name":"Select",
             "command":"gizmoSelect"
         },
         {
+            "type":"button",
             "icon":"gizmo-translate",
             "name":"Translate",
             "command":"gizmoTranslate"
         },
         {
+            "type":"button",
             "icon":"gizmo-rotate",
             "name":"Rotate",
             "command":"gizmoRotate"
         },
         {
+            "type":"button",
             "icon":"gizmo-scale",
             "name":"Scale",
             "command":"gizmoScale"
         },
         {
+            "type":"button",
             "icon":"gizmo-transform",
             "name":"Transform",
             "command":"gizmoTransform"
+        },
+        {
+            "type":"separator"
         }
     ]
 }
