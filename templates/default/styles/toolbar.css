@@ -22,39 +22,3 @@ toolbar li {
     margin-bottom: 0px;
     padding: 4px;
 }
-
-.bg2-icon {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-    background-size: 100% 100%;
-}
-
-.bg2-open-file {
-    background-image: url(../icons/folder-open.png);
-}
-
-.bg2-gizmo-select {
-    background-image: url(../icons/gizmo-select.png);
-}
-
-.bg2-gizmo-translate {
-    background-image: url(../icons/gizmo-translate.png);
-}
-
-.bg2-gizmo-rotate {
-    background-image: url(../icons/gizmo-rotate.png);
-}
-
-.bg2-gizmo-scale {
-    background-image: url(../icons/gizmo-scale.png);
-}
-
-.bg2-gizmo-transform {
-    background-image: url(../icons/gizmo-transform.png);
-}
-
-.bg2-toobar-separator {
-    width: 8px;
-    background-image: url(../icons/toolbar-separator.png);
-}

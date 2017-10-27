@@ -6,3 +6,25 @@ scene-inspector {
     bottom: 29px;
     pointer-events: all;
 }
+
+scene-inspector ul {
+    padding-left: 13px;
+}
+
+scene-inspector li {
+    list-style: none;
+    margin-top: 4px;
+}
+
+scene-inspector h1 {
+    font-size: 12px;
+    display: block;
+    margin-left: 20px;
+}
+
+.bg2-treeview-expanded, .bg2-treeview-collapsed {
+    width: 13px;
+    height: 13px;
+    margin-right: 4px;
+    margin-bottom: -2px;
+}

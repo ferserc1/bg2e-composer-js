@@ -1,0 +1,12 @@
+<h1>
+    <i class="bg2-icon"
+        ng-class="{ 'bg2-treeview-collapsed' : !family.expanded, 'bg2-treeview-expanded' : family.expanded }"
+        ng-click="toggleExpand()">
+    </i>
+    {{ family.name }}
+</h1>
+<ul ng-show="family.expanded">
+    <li ng-repeat="child in family.children">
+        <tree family="child"></tree>
+    </li>
+</ul>
