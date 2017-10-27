@@ -103,7 +103,7 @@ app.addDefinitions(() => {
     
             lightNode.addComponent(new bg.scene.Light(new bg.base.Light(this.gl)));
             lightNode.addComponent(new bg.scene.Transform(
-                new bg.Matrix4.Identity()
+                bg.Matrix4.Identity()
                     .translate(0,0,5)
                     .rotate(bg.Math.degreesToRadians(15),0,1,0)
                     .rotate(bg.Math.degreesToRadians(55),-1,0,0)
