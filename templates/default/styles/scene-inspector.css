@@ -1,0 +1,8 @@
+scene-inspector {
+    position: fixed;
+    left: -1px;
+    top: 37px;
+    width: 250px;
+    bottom: 29px;
+    pointer-events: all;
+}

@@ -3,20 +3,6 @@ app.addDefinitions(() => {
 
     let g_toolbar = null;
 
-    class ToolbarItem {
-        constuctor(icon,name,command) {
-            this._icon = icon;
-            this._name = name;
-            this._command = command;
-        }
-
-        get icon() { return this._icon; }
-        get name() { return this._name; }
-        get command() { return this._command; }
-    }
-
-    app.ui.ToolbarItem = ToolbarItem;
-
     class Toolbar {
         static Get() {
             if (!g_toolbar) {

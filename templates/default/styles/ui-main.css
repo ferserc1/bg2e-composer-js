@@ -9,6 +9,8 @@ html {
 .bg2-widget {
     background-color: rgba(30,30,30,0.98);
     color: white;
+    border: 1px solid #828282;
+    box-sizing: border-box;
 }
 
 :not(input):not(textarea),

@@ -1,0 +1,8 @@
+status-bar {
+    position: fixed;
+    left: -1px;
+    bottom: -1px;
+    right: -1px;
+    height: 31px;
+    pointer-events: all;
+}

@@ -1,8 +1,9 @@
 toolbar {
     pointer-events: all;
     position: fixed;
-    left: 0px;
-    right: 0px;
+    left: -1px;
+    right: -1px;
+    top: -1px;
 }
 
 toolbar ul {
