@@ -4,7 +4,8 @@ app.addSource(() => {
         getMessages() {
             return [
                 "openFile",
-                "openScene"
+                "openScene",
+                "exportSelected"
             ]
         }
 
@@ -16,6 +17,9 @@ app.addSource(() => {
             case 'openScene':
                 this.openScene(params);
                 break;
+            case 'exportSelected':
+                this.exportSelected(params);
+                break;
             }
         }
 
@@ -26,8 +30,9 @@ app.addSource(() => {
             let filePath = dialog.showOpenDialog({
                 properties: ['openFile'],
                 filters: [
-                    { name:"Wavefront OBJ", extensions:['obj']},
-                    { name:"bg2 object", extensions:['bg2','vwglb']}
+                    { name:"Compatible files", extensions:['bg2','vwglb','obj']},
+                    { name:"bg2 object", extensions:['bg2','vwglb']},
+                    { name:"Wavefront OBJ", extensions:['obj']}
                 ]
             });
             if (filePath && filePath.length>0) {
@@ -62,6 +67,37 @@ app.addSource(() => {
                             // command cancelled by user
                         }
                     });
+            }
+        }
+
+        exportSelected() {
+            let context = app.ComposerWindowController.Get().gl;
+            const {dialog} = require('electron').remote;
+            let selection = app.render.Scene.Get().selectionManager.selection;
+
+            if (selection.length==1 && selection[0].node && selection[0].node.drawable) {
+                let filePath = dialog.showSaveDialog({
+                    filters: [
+                        { name:"bg2 object file", extensions:["bg2"]}
+                    ]
+                });
+                if (filePath) {
+                    filePath = app.standarizePath(filePath);
+                    let cmd = new app.fileCommands.ExportObject(context,filePath,selection[0].node);
+                    app.CommandManager.Get().doCommand(cmd)
+                        .then(() => {})
+                        .catch((err) => {
+                            if (err) {
+                                console.log(err.message);
+                            }
+                            else {
+                                // command cancelled by user
+                            }
+                        });
+                }
+            }
+            else if (selection.length>1) {
+                // TODO: Export multiple items
             }
         }
     }

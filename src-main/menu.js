@@ -20,6 +20,12 @@ module.exports = {
                 click: function(item, focusedWindow) {
                   focusedWindow.webContents.send('triggerMenu', { msg:'openFile' })
                 }
+              },
+              {
+                label: 'Export selected',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'exportSelected' })
+                }
               }
             ]
           },

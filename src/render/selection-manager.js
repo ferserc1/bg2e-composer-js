@@ -35,6 +35,9 @@ app.addDefinitions(() => {
             this._selectionItems = [];
         }
 
+        get selection() { return this._selectionItems; }
+        get selectedItem() { return this._selectionItems.length ? this._selectionItems[0] : null; }
+
         getGizmo() {
             return getGizmo();
         }
