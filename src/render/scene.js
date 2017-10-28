@@ -44,7 +44,8 @@ app.addDefinitions(() => {
 
             this._sceneObservers = {
                 willOpen:{},
-                willClose:{}
+                willClose:{},
+                changed:{}
             };
         }
 
@@ -76,6 +77,17 @@ app.addDefinitions(() => {
         // Callback(oldSceneRoot)
         sceneWillClose(observerId,callback) {
             this._sceneObservers.willClose[observerId] = callback;
+        }
+
+        sceneChanged(observerId,callback) {
+            this._sceneObservers.changed[observerId] = callback;
+        }
+
+        notifySceneChanged() {
+            for (let observerId in this._sceneObservers.changed) {
+                let observer = this._sceneObservers.changed[observerId];
+                observer(this.root);
+            }
         }
 
         createDefaultScene() {
@@ -118,6 +130,7 @@ app.addDefinitions(() => {
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-1,0)));
 
             this.selectionManager.initScene(this.root);
+            this.notifySceneChanged();
         }
 
         openScene(scenePath) {
@@ -142,6 +155,7 @@ app.addDefinitions(() => {
                         ctrl.minPitch = -45;
    
                         this.selectionManager.initScene(this.root);
+                        this.notifySceneChanged();
                         
                         // Post reshape (to update the camera viewport) and redisplay
                         app.ComposerWindowController.Get().postReshape();

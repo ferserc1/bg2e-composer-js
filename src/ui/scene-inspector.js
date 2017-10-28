@@ -47,6 +47,9 @@ app.addSource(() => {
                 $scope.toggleExpand = function() {
                     $scope.family.expanded = !$scope.family.expanded;
                 }
+                $scope.getName = function() {
+                    return $scope.family.name || "<<untitled node>>";
+                }
             }]
         };
     });
@@ -121,6 +124,15 @@ app.addSource(() => {
 
             ]
         }
+        function updateScene(sceneRoot) {
+            $scope.node = sceneRoot;
+            setTimeout(() => $scope.$apply(),10);
+        }
+
+        app.render.Scene.Get().sceneChanged("sceneInspector",(sceneRoot) => {
+            updateScene(sceneRoot);
+        });
+        updateScene(app.render.Scene.Get().root);
     }]);
 
     angularApp.directive('sceneInspector', () => {

@@ -22,6 +22,7 @@ app.addSource(() => {
                             app.render.Scene.Get().selectionManager.prepareNode(node);
                             node.addComponent(new bg.scene.Transform());
                             this._parentNode.addChild(node);
+                            app.render.Scene.Get().notifySceneChanged();
                             resolve();
                         })
     
@@ -35,6 +36,7 @@ app.addSource(() => {
         undo() {
             return new Promise((resolve,reject) => {
                 this._parentNode.removeChild(this._loadedNode);
+                app.render.Scene.Get().notifySceneChanged();
                 resolve();
             });
         }
