@@ -49,12 +49,15 @@ app.addDefinitions(() => {
 
         mouseUp(event) {
             let upPosition = new bg.Vector2(event.x,event.y);
-
-            if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
-                let add = event.button==bg.app.MouseButton.RIGHT;
+            let clearGizmo = () => {
                 if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
                     this._gizmoNode.component("bg.manipulation.Gizmo").visible = false;
                 }
+            }
+
+            if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
+                let add = event.button==bg.app.MouseButton.RIGHT;
+                clearGizmo();
                 if (!add) {
                     this._selectionManager.clear();
                 }
@@ -76,6 +79,11 @@ app.addDefinitions(() => {
                     else if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
                         this._gizmoNode.component("bg.manipulation.Gizmo").visible = true;
                     }
+                }
+
+                // Check if there is no selection and disable the gizmo
+                if (this._selectionManager.selection.length==0 && this._gizmoNode) {
+                    clearGizmo();
                 }
             }
             if (this._gizmoManager.working && this._gizmoNode && this._gizmoNode.transform) {

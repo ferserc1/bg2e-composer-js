@@ -29,6 +29,10 @@ app.addDefinitions(() => {
         }
     };
 
+    function checkSelected(node) {
+
+    }
+
     class SelectionManager {
         constructor(scene) {
             this._scene = scene;
@@ -57,22 +61,28 @@ app.addDefinitions(() => {
             if (!material.selectMode) {
                 material.selectMode = true;
                 this._selectionItems.push(new SelectionItem(node,plist,material));
+                checkSelected.apply(node);
                 return true;
             }
             else {
-                material.selectMode = false;
-                let deselectItemIndex = -1;
-                this._selectionItems.some((item,i) => {
-                    if (item.node==node && item.plist==plist && item.material==material) {
-                        deselectItemIndex = i;
-                    }
-                    return deselectItemIndex!=-1;
-                });
-                if (deselectItemIndex!=-1) {
-                    this._selectionItems.splice(deselectItemIndex,1);
-                }
+                this.deselectItem(node,plist,material);
                 return false;
             }
+        }
+
+        deselectItem(node,plist,material) {
+            material.selectMode = false;
+            let deselectItemIndex = -1;
+            this._selectionItems.some((item,i) => {
+                if (item.node==node && item.plist==plist && item.material==material) {
+                    deselectItemIndex = i;
+                }
+                return deselectItemIndex!=-1;
+            });
+            if (deselectItemIndex!=-1) {
+                this._selectionItems.splice(deselectItemIndex,1);
+            }
+            checkSelected.apply(node);
         }
 
         clear() {
