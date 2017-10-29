@@ -1,4 +1,10 @@
 app.addDefinitions(() => {
+    function clearGizmo() {
+        if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
+            this._gizmoNode.component("bg.manipulation.Gizmo").visible = false;
+        }
+    }
+
     class SelectionController {
         constructor(scene,selectionManager) {
             this._scene = scene;
@@ -16,6 +22,11 @@ app.addDefinitions(() => {
             this._gizmoNode = null;
             this._gizmoTransform = null;
 
+            this._selectionManager.selectionChanged("selectionController",() => {
+                if (this._gizmoNode && !this._gizmoNode.selected) {
+                    clearGizmo.apply(this);
+                }
+            });
         }
 
         drawGizmos() {
@@ -24,6 +35,7 @@ app.addDefinitions(() => {
         }
 
         mouseDown(event) {
+            if (event.button!=bg.app.MouseButton.LEFT) return;
             this._downPosition = new bg.Vector2(event.x,event.y);
             let result = this._mousePicker.pick(this._scene.root, this._scene.camera, this._downPosition);
             if (result && result.type==bg.manipulation.SelectableType.GIZMO) {
@@ -48,16 +60,12 @@ app.addDefinitions(() => {
         }
 
         mouseUp(event) {
+            if (event.button!=bg.app.MouseButton.LEFT) return;
             let upPosition = new bg.Vector2(event.x,event.y);
-            let clearGizmo = () => {
-                if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
-                    this._gizmoNode.component("bg.manipulation.Gizmo").visible = false;
-                }
-            }
-
+        
             if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
-                let add = event.button==bg.app.MouseButton.RIGHT;
-                clearGizmo();
+                let add = event.event.shiftKey;
+                clearGizmo.apply(this);
                 if (!add) {
                     this._selectionManager.clear();
                 }
@@ -83,7 +91,7 @@ app.addDefinitions(() => {
 
                 // Check if there is no selection and disable the gizmo
                 if (this._selectionManager.selection.length==0 && this._gizmoNode) {
-                    clearGizmo();
+                    clearGizmo.apply(this);
                 }
             }
             if (this._gizmoManager.working && this._gizmoNode && this._gizmoNode.transform) {

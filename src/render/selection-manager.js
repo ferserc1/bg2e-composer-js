@@ -97,7 +97,10 @@ app.addDefinitions(() => {
         }
 
         selectNode(node) {
-            if (node.drawable) {
+            if (node.selected) {
+                return this.deselectNode(node);
+            }
+            else if (node.drawable) {
                 node.drawable.forEach((plist,mat) => {
                     if (!mat.selectMode) {
                         this.selectItem(node,plist,mat,false);
@@ -121,7 +124,7 @@ app.addDefinitions(() => {
                 this.deselectItem(node,null,null,false);
             }
             checkSelected.apply(this,[node]);
-            nofitySelectionChanged.apply(this);
+            notifySelectionChanged.apply(this);
         }
 
         deselectItem(node,plist,material,notify=true) {
