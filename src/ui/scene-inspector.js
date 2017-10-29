@@ -46,10 +46,18 @@ app.addSource(() => {
             controller: ['$scope',function($scope) {
                 $scope.toggleExpand = function() {
                     $scope.family.expanded = !$scope.family.expanded;
-                }
+                };
+
                 $scope.getName = function() {
                     return $scope.family.name || "<<untitled node>>";
-                }
+                };
+                
+                $scope.toggleItem = function(event) {
+                    if (!event.shiftKey) {
+                        app.render.Scene.Get().selectionManager.clear();
+                    }
+                    app.render.Scene.Get().selectionManager.selectNode($scope.family);
+                };
             }]
         };
     });
@@ -58,81 +66,21 @@ app.addSource(() => {
         $scope.node = {
             name: "Scene root",
             expanded: true,
-            children: [
-                {
-                    name: "Cosa 1",
-                    expanded: true,
-                    children: [
-
-                    ]
-                },
-                {
-                    name: "Cosa 2",
-                    expanded: true,
-                    children: [
-                        
-                    ]
-                },
-                {
-                    name: "Cosa 3",
-                    expanded: true,
-                    children: [
-                        
-                    ]
-                },
-                {
-                    name: "Cosa 4",
-                    expanded: true,
-                    children: [
-                        
-                    ]
-                },
-                {
-                    name: "Cosa 5",
-                    expanded: true,
-                    children: [
-                        {
-                            name: "Cosa 5 1",
-                            expanded: true,
-                            children: [
-                                
-                            ]
-                        },
-                        {
-                            name: "Cosa 5 2",
-                            expanded: true,
-                            children: [
-                                
-                            ]
-                        },
-                        {
-                            name: "Cosa 5 3",
-                            expanded: true,
-                            children: [
-                                
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "Cosa 6",
-                    expanded: true,
-                    children: [
-                        
-                    ]
-                }
-
-            ]
-        }
-        function updateScene(sceneRoot) {
-            $scope.node = sceneRoot;
+            children: []
+        };
+        function updateScene() {
+            $scope.node = app.render.Scene.Get().root;
+            $scope.node.expanded = true;
             setTimeout(() => $scope.$apply(),10);
         }
 
         app.render.Scene.Get().sceneChanged("sceneInspector",(sceneRoot) => {
-            updateScene(sceneRoot);
+            updateScene();
         });
-        updateScene(app.render.Scene.Get().root);
+        app.render.Scene.Get().selectionManager.selectionChanged("sceneInspector",(selectionManager) => {
+            updateScene();
+        })
+        updateScene();
     }]);
 
     angularApp.directive('sceneInspector', () => {

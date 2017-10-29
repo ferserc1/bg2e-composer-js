@@ -30,13 +30,28 @@ app.addDefinitions(() => {
     };
 
     function checkSelected(node) {
+        node.selected = this._selectionItems.some((item) => {
+            if (node==item.node) {
+                return true;
+            }
+        });
+    }
 
+    function notifySelectionChanged() {
+        for (let key in this._observers) {
+            this._observers[key](this);
+        }
     }
 
     class SelectionManager {
         constructor(scene) {
             this._scene = scene;
             this._selectionItems = [];
+            this._observers = {};
+        }
+
+        selectionChanged(observerId,callback) {
+            this._observers[observerId] = callback;
         }
 
         get selection() { return this._selectionItems; }
@@ -57,21 +72,60 @@ app.addDefinitions(() => {
             }
         }
         
-        selectItem(node,plist,material) {
-            if (!material.selectMode) {
+        selectItem(node,plist,material,notify=true) {
+            if (material && !material.selectMode) {
                 material.selectMode = true;
                 this._selectionItems.push(new SelectionItem(node,plist,material));
-                checkSelected.apply(node);
+                checkSelected.apply(this,[node]);
+                if (notify) notifySelectionChanged.apply(this);
                 return true;
             }
-            else {
-                this.deselectItem(node,plist,material);
+            else if (material) {
+                this.deselectItem(node,plist,material,notify);
                 return false;
+            }
+            else if (!material && !node.selected) {
+                this._selectionItems.push(new SelectionItem(node,null,null));
+                checkSelected.apply(this,[node]);
+                if (notify) notifySelectionChanged.apply(this);
+                return true;
+            }
+            else if (!material && node.selected) {
+                this.deselectItem(node,null,null,notify);
+                return true;
             }
         }
 
-        deselectItem(node,plist,material) {
-            material.selectMode = false;
+        selectNode(node) {
+            if (node.drawable) {
+                node.drawable.forEach((plist,mat) => {
+                    if (!mat.selectMode) {
+                        this.selectItem(node,plist,mat,false);
+                    }
+                });
+            }
+            else {
+                this.selectItem(node,null,null,false);
+            }
+            checkSelected.apply(this,[node]);
+            notifySelectionChanged.apply(this);
+        }
+
+        deselectNode(node) {
+            if (node.drawable) {
+                node.drawable.forEach((plist,mat) => {
+                    this.deselectItem(node,plist,mat,false);
+                });
+            }
+            else {
+                this.deselectItem(node,null,null,false);
+            }
+            checkSelected.apply(this,[node]);
+            nofitySelectionChanged.apply(this);
+        }
+
+        deselectItem(node,plist,material,notify=true) {
+            if (material) material.selectMode = false;
             let deselectItemIndex = -1;
             this._selectionItems.some((item,i) => {
                 if (item.node==node && item.plist==plist && item.material==material) {
@@ -82,14 +136,17 @@ app.addDefinitions(() => {
             if (deselectItemIndex!=-1) {
                 this._selectionItems.splice(deselectItemIndex,1);
             }
-            checkSelected.apply(node);
+            checkSelected.apply(this,[node]);
+            if (notify) notifySelectionChanged.apply(this);
         }
 
-        clear() {
+        clear(notify = true) {
             this._selectionItems.forEach((item) => {
-                item.material.selectMode = false;
+                if (item.material) item.material.selectMode = false;
+                item.node.selected = false;
             });
             this._selectionItems = [];
+            if (notify) notifySelectionChanged.apply(this);
         }
     }
 

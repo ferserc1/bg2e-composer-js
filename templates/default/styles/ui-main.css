@@ -5,6 +5,7 @@
 
 html {
     font-family: Muli;
+    font-size: 13px;
 }
 
 .noselect {
@@ -16,6 +17,11 @@ html {
     color: white;
     border: 1px solid #828282;
     box-sizing: border-box;
+}
+
+.bg2-selected {
+    color: black;
+    background-color: orange;
 }
 
 :not(input):not(textarea),

@@ -5,21 +5,26 @@ scene-inspector {
     width: 250px;
     bottom: 29px;
     pointer-events: all;
+    overflow: auto;
 }
 
 scene-inspector ul {
     padding-left: 13px;
+    -webkit-margin-before: 0px;
 }
 
 scene-inspector li {
     list-style: none;
-    margin-top: 4px;
 }
 
 scene-inspector h1 {
     font-size: 12px;
     display: block;
     margin-left: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .bg2-treeview-expanded, .bg2-treeview-collapsed {

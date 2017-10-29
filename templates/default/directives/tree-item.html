@@ -1,7 +1,7 @@
-<h1>
+<h1 ng-class="{ 'bg2-selected' : family.selected }" ng-click="toggleItem($event)">
     <i class="bg2-icon"
         ng-class="{ 'bg2-treeview-collapsed' : !family.expanded, 'bg2-treeview-expanded' : family.expanded }"
-        ng-click="toggleExpand()">
+        ng-click="toggleExpand(); $event.stopPropagation()">
     </i>
     {{ getName() }}
 </h1>
