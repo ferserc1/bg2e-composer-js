@@ -51,23 +51,31 @@ app.addDefinitions(() => {
             let upPosition = new bg.Vector2(event.x,event.y);
 
             if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
+                let add = event.button==bg.app.MouseButton.RIGHT;
                 if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
                     this._gizmoNode.component("bg.manipulation.Gizmo").visible = false;
+                }
+                if (!add) {
                     this._selectionManager.clear();
                 }
                 let result = this._mousePicker.pick(this._scene.root, this._scene.camera, upPosition);
                 this._gizmoNode = result && result.node;
                 if (result && result.type==bg.manipulation.SelectableType.PLIST)  {
-                    if (!this._gizmoNode.component("bg.manipulation.Gizmo") && this._gizmoNode.transform) {
+                    let selected = this._selectionManager.selectItem(result.node,result.plist,result.material);
+                    let selectedItem = this._selectionManager.selectedItem;
+                    if (!selected && selectedItem) {
+                        this._gizmoNode = selectedItem.node;
+                    }
+
+                    if (this._gizmoNode && !this._gizmoNode.component("bg.manipulation.Gizmo") && this._gizmoNode.transform) {
                         let gizmo = this._selectionManager.getGizmo();
                         this._gizmoNode.addComponent(gizmo);
                         gizmo.init();
                         gizmo.visible = true;
                     }
-                    else if (this._gizmoNode.component("bg.manipulation.Gizmo")) {
+                    else if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
                         this._gizmoNode.component("bg.manipulation.Gizmo").visible = true;
                     }
-                    this._selectionManager.selectItem(result.node,result.plist,result.material);
                 }
             }
             if (this._gizmoManager.working && this._gizmoNode && this._gizmoNode.transform) {

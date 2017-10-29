@@ -54,8 +54,25 @@ app.addDefinitions(() => {
         }
         
         selectItem(node,plist,material) {
-            material.selectMode = true;
-            this._selectionItems.push(new SelectionItem(node,plist,material));
+            if (!material.selectMode) {
+                material.selectMode = true;
+                this._selectionItems.push(new SelectionItem(node,plist,material));
+                return true;
+            }
+            else {
+                material.selectMode = false;
+                let deselectItemIndex = -1;
+                this._selectionItems.some((item,i) => {
+                    if (item.node==node && item.plist==plist && item.material==material) {
+                        deselectItemIndex = i;
+                    }
+                    return deselectItemIndex!=-1;
+                });
+                if (deselectItemIndex!=-1) {
+                    this._selectionItems.splice(deselectItemIndex,1);
+                }
+                return false;
+            }
         }
 
         clear() {
