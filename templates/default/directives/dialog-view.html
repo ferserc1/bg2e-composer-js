@@ -1,0 +1,10 @@
+<div class="bg2-dialog-container" ng-show="visible" ng-class="'bg2-dialog-' + type">
+    <div class="bg2-dialog-view bg2-widget">
+        <h1 class="bg2-dialog-title"></h1>
+        <div class="bg2-dialog-content bg2-widget-panel"></div>
+        <div class="bg2-dialog-footer">
+            <button ng-click="accept()" ng-show="showAccept">Accept</button>
+            <button ng-click="close()" ng-show="showClose">Close</button>
+        </div>
+    </div>
+</div>

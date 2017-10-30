@@ -1,0 +1,66 @@
+
+dialog-view .bg2-dialog-container {
+    z-index: 100;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    position: fixed;
+    pointer-events: none;
+}
+
+.bg2-dialog-container.bg2-dialog-modal {
+    pointer-events: all;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.bg2-dialog-container.bg2-dialog-modal-right {
+    pointer-events: none;
+}
+
+.bg2-dialog-view {
+    display: block;
+    position: fixed;
+    width: 50%;
+    top: 100px;
+    left: 25%;
+    bottom: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.bg2-dialog-container.bg2-dialog-modal-right .bg2-dialog-view {
+    pointer-events: all;
+    width: 25%;
+    top: 100px;
+    right: 40px;
+    left: auto;
+    bottom: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.bg2-dialog-view .bg2-dialog-title {
+    font-size: 14px;
+    line-height: 14px;
+    margin-top: 8px;
+}
+
+.bg2-dialog-view .bg2-dialog-content {
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: 30px;
+    bottom: 40px;
+    overflow: auto;
+    padding: 20px;
+}
+
+.bg2-dialog-view .bg2-dialog-footer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    text-align: right;
+    padding: 10px;
+}

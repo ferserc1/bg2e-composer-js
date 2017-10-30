@@ -4,10 +4,12 @@ var GLOBAL_APP_NAME = "";
 (function() {
     let fs = require("fs");
     let path = require("path");
+    const settings = require('electron-settings');
 
     let g_appDefines = [];
     let g_appSource = [];
     let g_workspaces = [];
+    let g_evtObservers = {};
 
     app.angular = {
         deps: [
@@ -68,6 +70,33 @@ var GLOBAL_APP_NAME = "";
 
     app.addWorkspace = function(callback) {
         g_workspaces.push(callback);
+    };
+
+    app.trigger = function(evt, params) {
+        setTimeout(() => {
+            for (var key in g_evtObservers[evt]) {
+                g_evtObservers[evt][key](params);
+            }
+        },10);
+    };
+
+    app.on = function(event,observerId,callback) {
+        g_evtObservers[event] = g_evtObservers[event] || {};
+        g_evtObservers[event][observerId] = callback;
+    };
+
+    app.settings = {
+        get: function(property) {
+            return settings.get(property);
+        },
+
+        set: function(property,value) {
+            settings.set(property,value);
+        },
+
+        has: function(property) {
+            return settings.has(property);
+        }
     };
     
     function loadApp() {

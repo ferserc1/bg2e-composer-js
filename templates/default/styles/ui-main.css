@@ -19,9 +19,62 @@ html {
     box-sizing: border-box;
 }
 
+.bg2-widget-panel {
+    border: 1px solid #828282;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.bg2-form-field {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 .bg2-selected {
     color: black;
     background-color: orange;
+}
+
+.bg2-input-xs {
+    width: 10%;
+    display: inline-block;
+}
+
+.bg2-input-sm {
+    width: 20%;
+    display: inline-block;
+}
+
+.bg2-input-md {
+    width: 40%;
+    display: inline-block;
+}
+
+.bg2-input-lg {
+    width: 60%;
+    display: inline-block;
+}
+
+.bg2-input-xl {
+    width: 100%;
+    display: inline-block;
+}
+
+label.bg2-input-xs, label.bg2-input-sm, label.bg2-input-md, label.bg2-input-lg, label.bg2-input-xl {
+    text-align: right;
+    padding-left: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    border: 1px solid #737373;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 4px;
+    background-color: #444444;
+    color: white;
 }
 
 :not(input):not(textarea),

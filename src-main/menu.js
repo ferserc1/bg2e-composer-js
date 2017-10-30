@@ -100,6 +100,15 @@ module.exports = {
               },
               {type: 'separator'},
 
+              {
+                label: 'Graphic Settings',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'graphicSettings' })
+                }
+              },
+
+              {type: 'separator'},
+
               {role: 'reload'},
               {role: 'toggledevtools'},
               {type: 'separator'},
