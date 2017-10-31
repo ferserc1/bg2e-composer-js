@@ -89,6 +89,14 @@ app.addSource(() => {
         });
         $scope.ssaoRadius = app.ComposerWindowController.Get().renderSettings.ssaoRadius;
         $scope.ssaoMaxDistance = app.ComposerWindowController.Get().renderSettings.ssaoMaxDistance;
+
+        $scope.error = "";
+        $scope.warning = "";
+
+        if (!app.ComposerWindowController.Get().supportHighQualityRender) {
+            $scope.error = "Error: Extension WEBGL_draw_buffers does not supported.";
+            $scope.warning = "Warning: your computer does not support deferred render. Check that you have installed the last version of the graphics drivers. ";
+        }
         
         $scope.$watch("renderPath",function() {
             app.ComposerWindowController.Get().renderPath = $scope.renderPath.id;

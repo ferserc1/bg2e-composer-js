@@ -4,6 +4,8 @@
 </div>
 <div class="bg2-widget-panel" ng-show="showDeferredSettings()">
     <h4>Deferred renderer settings</h4>
+    <p class="bg2-message-error" ng-show="error">{{ error }}</p>
+    <p class="bg2-message-warning" ng-show="warning">{{ warning }}</p>
     <div class="bg2-form-field">
         <input type="checkbox" id="antialiasing" ng-model="antialiasing">
         <label for="antialiasing">Antialiasing</label>
@@ -18,18 +20,18 @@
     </div>
     <div class="bg2-form-field">
         <label class="bg2-input-lg" for="ssaoQuality">SSAO Quality</label>
-        <select ng-options="item as item.label for item in ssaoQualities track by item.id" ng-model="ssaoQuality"></select>
+        <select ng-options="item as item.label for item in ssaoQualities track by item.id" ng-model="ssaoQuality" ng-disabled="!ssao"></select>
     </div>
     <div class="bg2-form-field">
         <label class="bg2-input-lg" for="ssaoBlur">SSAO Blur</label>
-        <select ng-options="item as item.label for item in ssaoBlurs track by item.id" ng-model="ssaoBlur"></select>
+        <select ng-options="item as item.label for item in ssaoBlurs track by item.id" ng-model="ssaoBlur" ng-disabled="!ssao"></select>
     </div>
     <div class="bg2-form-field">
         <label class="bg2-input-lg" for="ssaoRadius">SSAO Radius</label>
-        <input type="number" class="bg2-input-sm" ng-model="ssaoRadius">
+        <input type="number" class="bg2-input-sm" ng-model="ssaoRadius" ng-disabled="!ssao">
     </div>
     <div class="bg2-form-field">
         <label class="bg2-input-lg" for="ssaoRadius">SSAO Max Distance</label>
-        <input type="number" class="bg2-input-sm" ng-model="ssaoMaxDistance">
+        <input type="number" class="bg2-input-sm" ng-model="ssaoMaxDistance" ng-disabled="!ssao">
     </div>
 </div>
