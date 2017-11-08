@@ -7,7 +7,7 @@ app.addDefinitions(() => {
         bg.base.Loader.RegisterPlugin(new bg.base.OBJLoaderPlugin());
         bg.base.Loader.RegisterPlugin(new bg.base.SceneLoaderPlugin());
         
-        bg.WriteFile.RegisterPlugin(new bg.Bg2WritePlugin());
+        bg.base.Writer.RegisterPlugin(new bg.base.Bg2WriterPlugin());
     }
 
     function sceneWillOpen(oldSceneRoot,newSceneRoot) {

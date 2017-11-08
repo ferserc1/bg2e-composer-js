@@ -76,7 +76,7 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve,reject) => {
-                bg.WriteFile.Save(this._path,this._node)
+                bg.base.Writer.Write(this._path,this._node)
                     .then(() => resolve())
                     .catch((err) => reject(err));
             });
