@@ -7,10 +7,24 @@ module.exports = {
             label: 'File',
             submenu: [
               {
-                label: 'Open Scene',
+                label: 'Open Scene...',
                 accelerator: 'CmdOrCtrl+O',
                 click: function(item, focusedWindow) {
                   focusedWindow.webContents.send('triggerMenu', { msg:'openScene' });
+                }
+              },
+              {
+                label: 'Save Scene',
+                accelerator: 'CmdOrCtrl+S',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'saveScene' });
+                }
+              },
+              {
+                label: 'Save Scene As...',
+                accelerator: 'CmdOrCtrl+Shift+S',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'saveSceneAs' });
                 }
               },
               {type: 'separator'},

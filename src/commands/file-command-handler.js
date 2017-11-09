@@ -1,11 +1,18 @@
 app.addSource(() => {
 
     class FileCommandHandler extends app.CommandHandler {
+        constructor() {
+            super();
+            this._currentScenePath = null;
+        }
+
         getMessages() {
             return [
                 "openFile",
                 "openScene",
-                "exportSelected"
+                "exportSelected",
+                "saveScene",
+                "saveSceneAs"
             ]
         }
 
@@ -19,6 +26,12 @@ app.addSource(() => {
                 break;
             case 'exportSelected':
                 this.exportSelected(params);
+                break;
+            case 'saveScene':
+                this.saveScene(params);
+                break;
+            case 'saveSceneAs':
+                this.saveSceneAs(params);
                 break;
             }
         }
@@ -58,7 +71,9 @@ app.addSource(() => {
                 filePath = app.standarizePath(filePath[0]);
                 let cmd = new app.fileCommands.OpenScene(context,filePath);
                 app.CommandManager.Get().doCommand(cmd)
-                    .then(() => {})
+                    .then(() => {
+                        this._currentScenePath = filePath;
+                    })
                     .catch((err) => {
                         if (err) {
                             console.log(err.message);
@@ -99,6 +114,54 @@ app.addSource(() => {
             else if (selection.length>1) {
                 // TODO: Export multiple items
             }
+        }
+
+        saveScene() {
+            if (!this._currentScenePath) {
+                this.saveSceneAs();
+            }
+            else {
+                let context = app.ComposerWindowController.Get().gl;
+                let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                app.CommandManager.Get().doCommand(cmd)
+                    .then(() => {})
+                    .catch((err) => {
+                        if (err) {
+                            console.log(err.message);
+                        }
+                        else {
+                            // command cancelled by user
+                        }
+                    });
+            }
+        }
+
+        saveSceneAs() {
+            let context = app.ComposerWindowController.Get().gl;
+            const {dialog} = require('electron').remote;
+            
+            let filePath = dialog.showSaveDialog({
+                filters: [
+                    { name:"bg2 engine scene", extensions:["vitscnj"]}
+                ]
+            });
+            if (filePath) {
+                filePath = app.standarizePath(filePath);
+                let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                app.CommandManager.Get().doCommand(cmd)
+                    .then(() => {
+                        this._currentScenePath = filePath;
+                    })
+                    .catch((err) => {
+                        if (err) {
+                            console.log(err.message);
+                        }
+                        else {
+                            // command cancelled by user
+                        }
+                    });
+            }
+        
         }
     }
 

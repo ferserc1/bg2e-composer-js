@@ -71,7 +71,6 @@ app.addSource(() => {
             this._node = node;
 
             this._undoable = false;
-            this._clearCommandHistory = true;
         }
 
         execute() {
@@ -82,6 +81,26 @@ app.addSource(() => {
             });
         }
     }
+
+    class SaveScene extends app.ContextCommand {
+        constructor(context,path,node) {
+            super(context);
+            this._path = path;
+            this._node = node;
+            
+            this._undoable = false;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                bg.base.Writer.Write(this._path,this._node)
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
+            });
+        }
+    }
+
+    app.fileCommands.SaveScene = SaveScene;
 
     app.fileCommands.ExportObject = ExportObject;
 })
