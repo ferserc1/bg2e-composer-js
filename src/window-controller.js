@@ -63,6 +63,9 @@ app.addDefinitions(() => {
             assertProperty(this._renderSettings,'ssaoEnabled',true);
             assertProperty(this._renderSettings,'ssaoRadius',0.4);
             assertProperty(this._renderSettings,'ssaoMaxDistance',100);
+
+            // This will draw the view 5 times. 
+            this._updateFrames = 5;
         }
 
         get scene() { return this._scene; }
@@ -80,6 +83,11 @@ app.addDefinitions(() => {
         saveRenderSettings() {
             app.settings.set("graphics.renderSettings",this._renderSettings);
             applyRenderSettings.apply(this);
+        }
+
+        updateView(updateFrames = 10) {
+            this._updateFrames = updateFrames;
+            this.postRedisplay();
         }
 
         get renderer() {
@@ -112,6 +120,12 @@ app.addDefinitions(() => {
 
             this._scene = new app.render.Scene(this.gl);
             this.scene.init();
+            let flushScene = () => {
+                this.postReshape();
+                this.updateView();
+            };
+            this.scene.sceneChanged("windowController",() => flushScene());
+            this.scene.selectionManager.selectionChanged("windowController",() => flushScene());
 
             this._renderers[app.RenderPath.FORWARD] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.FORWARD);
             this._renderers[app.RenderPath.DEFERRED] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.DEFERRED);
@@ -123,6 +137,10 @@ app.addDefinitions(() => {
     
         frame(delta) {
             this.renderer.frame(this.scene.root, delta);
+            --this._updateFrames;
+            if (this._updateFrames>=0) {
+                this.postRedisplay();
+            }
         }
     
         display() {
@@ -135,33 +153,65 @@ app.addDefinitions(() => {
             this.scene.camera.projection.perspective(60,this.scene.camera.viewport.aspectRatio,0.1,100);
         }
     
-        keyDown(evt) { this._inputVisitor.keyDown(this.scene.root, evt); }  
-        keyUp(evt) { this._inputVisitor.keyDown(this.scene.root, evt); }
+        keyDown(evt) {
+            this._inputVisitor.keyDown(this.scene.root, evt);
+            this.updateView();
+        }
+
+        keyUp(evt) {
+            this._inputVisitor.keyDown(this.scene.root, evt);
+            this.updateView();
+        }
 
         mouseUp(evt) {
             this.scene.selectionController.mouseUp(evt);
             this._inputVisitor.mouseUp(this.scene.root, evt);
+            this.updateView();
         }
 
         mouseDown(evt) {
             if (!this.scene.selectionController.mouseDown(evt)) {
                 this._inputVisitor.mouseDown(this.scene.root, evt);
             }
+            this.updateView();
         }
 
         mouseDrag(evt) {
             if (!this.scene.selectionController.mouseDrag(evt)) {
                 this._inputVisitor.mouseDrag(this.scene.root, evt);
             }
+            this.updateView();
         }
 
-        mouseMove(evt) { this._inputVisitor.mouseMove(this.scene.root, evt); }
+        mouseMove(evt) {
+            this._inputVisitor.mouseMove(this.scene.root, evt);
+        }
 
-        mouseOut(evt) { this._inputVisitor.mouseOut(this.scene.root, evt); }
-        mouseWheel(evt) { this._inputVisitor.mouseWheel(this.scene.root, evt); }
-        touchStart(evt) { this._inputVisitor.touchStart(this.scene.root, evt); }
-        touchMove(evt) { this._inputVisitor.touchMove(this.scene.root, evt); }
-        touchEnd(evt) { this._inputVisitor.touchEnd(this.scene.root, evt); }
+        mouseOut(evt) {
+            this._inputVisitor.mouseOut(this.scene.root, evt);
+            this.updateView();
+        }
+
+        
+        mouseWheel(evt) {
+            this._inputVisitor.mouseWheel(this.scene.root, evt);
+            this.updateView();
+        }
+        
+        touchStart(evt) {
+            this._inputVisitor.touchStart(this.scene.root, evt);
+            this.updateView();
+        }
+        
+        touchMove(evt) {
+            this._inputVisitor.touchMove(this.scene.root, evt);
+            this.updateView();
+        }
+        
+        touchEnd(evt) {
+            this._inputVisitor.touchEnd(this.scene.root, evt);
+            this.updateView();
+        }
     }
 
     app.ComposerWindowController = ComposerWindowController;

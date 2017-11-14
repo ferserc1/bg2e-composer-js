@@ -13,7 +13,7 @@ app.addSource(() => {
                 let ctrl = new app.ComposerWindowController();
                 let mainLoop = bg.app.MainLoop.singleton;
             
-                mainLoop.updateMode = bg.app.FrameUpdate.AUTO;
+                mainLoop.updateMode = bg.app.FrameUpdate.MANUAL;
                 mainLoop.canvas = canvas;
                 mainLoop.run(ctrl);
             },
