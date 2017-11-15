@@ -17,6 +17,7 @@ html {
     color: white;
     border: 1px solid #828282;
     box-sizing: border-box;
+    pointer-events: all;
 }
 
 .bg2-widget-panel {
@@ -87,6 +88,23 @@ button {
     border-radius: 4px;
     background-color: #444444;
     color: white;
+}
+
+h1 {
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 15px;
+}
+
+h3 {
+    font-size: 14px;
+}
+
+h4 {
+    font-size: 14px;
+    font-weight: 100;
 }
 
 :not(input):not(textarea),

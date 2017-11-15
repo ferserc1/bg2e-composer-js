@@ -38,6 +38,7 @@ app.addSource(() => {
         return {
             restrict: "E",
             templateUrl: `templates/${ app.config.templateName }/directives/toolbar.html`,
+            compile: app.workspaceElementCompile(),
             controller: 'ToolbarController'
         }
     })

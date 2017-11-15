@@ -68,6 +68,7 @@ app.addSource(() => {
             restrict: "E",
             templateUrl: `templates/${ app.config.templateName }/directives/dialog-view.html`,
             link: function(scope,element) {
+                app.configureWorkspaceElement(element);
                 scope.setContent = function(params) {
                     $templateRequest(params.templateUrl + '?cache=' + Math.random())
                         .then((html) => {

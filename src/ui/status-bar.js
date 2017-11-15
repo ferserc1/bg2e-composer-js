@@ -14,6 +14,7 @@ app.addSource(() => {
         return {
             restrict: 'E',
             templateUrl: `templates/${ app.config.templateName }/directives/status-bar.html`,
+            compile: app.workspaceElementCompile(),
             controller: 'StatusBarController'
         };
     });

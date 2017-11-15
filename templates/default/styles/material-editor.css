@@ -1,0 +1,12 @@
+material-editor {
+    position: fixed;
+    right: 0px;
+    top: 36px;
+    bottom: 29px;
+    width: 350px;
+    overflow: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 40px;
+}

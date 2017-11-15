@@ -87,6 +87,7 @@ app.addSource(() => {
         return {
             restrict: "E",
             templateUrl: `templates/${ app.config.templateName }/directives/scene-inspector.html`,
+            compile: app.workspaceElementCompile(),
             controller: 'SceneInspectorController'
         };
     });

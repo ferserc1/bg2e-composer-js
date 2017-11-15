@@ -13,7 +13,8 @@ var GLOBAL_APP_NAME = "";
 
     app.angular = {
         deps: [
-            "ngRoute"
+            "ngRoute",
+            "rzModule"
         ]
     };
     // Replace \ by / in Windows paths C:\ >>>> C:/
@@ -70,6 +71,16 @@ var GLOBAL_APP_NAME = "";
 
     app.addWorkspace = function(callback) {
         g_workspaces.push(callback);
+    };
+
+    app.configureWorkspaceElement = function(element) {
+        element.attr('class','bg2-widget');
+    };
+
+    app.workspaceElementCompile = function() {
+        return function(element) {
+            app.configureWorkspaceElement(element);
+        };
     };
 
     app.trigger = function(evt, params) {
