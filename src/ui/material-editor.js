@@ -3,8 +3,17 @@ app.addSource(() => {
 
     angularApp.controller("MaterialEditorController",['$scope',function($scope) {
         $scope.slidertest = {
-            value: 10
+            value: 0,
+            options: {
+                floor: 0,
+                ceil: 1,
+                step: 0.0001,
+                precision: 3
+            }
         }
+
+        $scope.diffuseColor = [0,0,0.88,1];
+        $scope.specularColor = [0,0,0,1];
     }]);
 
     angularApp.directive("materialEditor", function() {

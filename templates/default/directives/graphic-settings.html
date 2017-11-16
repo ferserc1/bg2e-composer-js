@@ -11,7 +11,7 @@
         <label for="antialiasing">Antialiasing</label>
     </div>
     <div class="bg2-form-field">
-        <label class="bg2-input-lg" for="raytracerQuality">Raytracer quality:</label>
+        <label class="bg2-width-60" for="raytracerQuality">Raytracer quality:</label>
         <select ng-options="item as item.label for item in raytracerQualities track by item.id" ng-model="raytracerQuality"></select>
     </div>
     <div class="bg2-form-field">
@@ -19,19 +19,19 @@
         <label for="ssao">Screen Space Ambient Occlusion</label>
     </div>
     <div class="bg2-form-field">
-        <label class="bg2-input-lg" for="ssaoQuality">SSAO Quality</label>
+        <label class="bg2-width-60" for="ssaoQuality">SSAO Quality</label>
         <select ng-options="item as item.label for item in ssaoQualities track by item.id" ng-model="ssaoQuality" ng-disabled="!ssao"></select>
     </div>
     <div class="bg2-form-field">
-        <label class="bg2-input-lg" for="ssaoBlur">SSAO Blur</label>
+        <label class="bg2-width-60" for="ssaoBlur">SSAO Blur</label>
         <select ng-options="item as item.label for item in ssaoBlurs track by item.id" ng-model="ssaoBlur" ng-disabled="!ssao"></select>
     </div>
     <div class="bg2-form-field">
-        <label class="bg2-input-lg" for="ssaoRadius">SSAO Radius</label>
-        <input type="number" class="bg2-input-sm" ng-model="ssaoRadius" ng-disabled="!ssao">
+        <label class="bg2-width-60" for="ssaoRadius">SSAO Radius</label>
+        <input type="number" class="bg2-width-20" ng-model="ssaoRadius" ng-disabled="!ssao">
     </div>
     <div class="bg2-form-field">
-        <label class="bg2-input-lg" for="ssaoRadius">SSAO Max Distance</label>
-        <input type="number" class="bg2-input-sm" ng-model="ssaoMaxDistance" ng-disabled="!ssao">
+        <label class="bg2-width-60" for="ssaoRadius">SSAO Max Distance</label>
+        <input type="number" class="bg2-width-20" ng-model="ssaoMaxDistance" ng-disabled="!ssao">
     </div>
 </div>

@@ -1,24 +1,28 @@
 <h1>Material editor</h1>
+<h4>Color</h4>
 <div class="bg2-widget-panel">
-    <h2>Color</h2>
-    <input type="color">
+    <color-picker label="Diffuse" value="diffuseColor"></color-picker>
+    <color-picker label="Specular" value="specularColor"></color-picker>
 </div>
+<h4>Shininess</h4>
 <div class="bg2-widget-panel">
-    <h2>Shininess</h2>
-    <rzslider rz-slider-model="slidertest.value"></rzslider>
+    <div class="bg2-form-field">
+        <label class="bg2-width-30">Amount</label>
+        <rzslider class="bg2-width-60" rz-slider-model="slidertest.value" rz-slider-options="slidertest.options"></rzslider>
+    </div>
 </div>
+<h4>Light emission</h4>
 <div class="bg2-widget-panel">
-    <h2>Light emission</h2>
 </div>
+<h4>Texture properties</h4>
 <div class="bg2-widget-panel">
-    <h2>Texture properties</h2>
 </div>
+<h4>Reflection</h4>
 <div class="bg2-widget-panel">
-    <h2>Reflection</h2>
 </div>
+<h4>Shadows</h4>
 <div class="bg2-widget-panel">
-    <h2>Shadows</h2>
 </div>
+<h4>Other</h4>
 <div class="bg2-widget-panel">
-    <h2>Other</h2>
 </div>

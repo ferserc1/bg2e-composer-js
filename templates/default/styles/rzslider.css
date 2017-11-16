@@ -1,0 +1,57 @@
+.rzslider {
+    margin: 9px 0 3px 0;
+}
+
+.rzslider .rz-bar {
+    background: #ffe4d1;
+    height: 2px;
+}
+
+.rzslider .rz-bubble.rz-limit {
+    color: rgb(228, 228, 228);
+}
+
+.rzslider .rz-selection {
+    background: rgb(43, 43, 43);
+}
+
+.rzslider .rz-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto;
+    bottom: 0;
+    background-color: #3e3e3e;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border: 1px solid rgb(146, 146, 146);
+    
+}
+
+.rzslider .rz-pointer:after {
+    display: none;
+}
+
+.rzslider .rz-bubble {
+    bottom: 3px;
+    z-index: 4;
+    pointer-events: none;
+    color: white;
+}
+
+.rzslider .rz-limit {
+    font-weight: bold;
+    color: rgb(43, 43, 43);
+}
+
+.rzslider .rz-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+}
+
+.rzslider .rz-tick.rz-selected {
+    background: rgb(43, 43, 43);
+}
