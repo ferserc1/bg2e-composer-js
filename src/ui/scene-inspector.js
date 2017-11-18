@@ -71,7 +71,9 @@ app.addSource(() => {
         function updateScene() {
             $scope.node = app.render.Scene.Get().root;
             $scope.node.expanded = true;
-            setTimeout(() => $scope.$apply(),10);
+            setTimeout(() => {
+                $scope.$apply(() => {});
+            },10);
         }
 
         app.render.Scene.Get().sceneChanged("sceneInspector",(sceneRoot) => {

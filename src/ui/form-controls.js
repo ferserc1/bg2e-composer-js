@@ -103,6 +103,7 @@ app.addSource(() => {
         };
     });
 
+    let g_boolPickerId = 0;
     angularApp.directive("boolPicker", function() {
         return {
             restrict: 'E',
@@ -112,7 +113,7 @@ app.addSource(() => {
                 value:"=",
             },
             controller: ['$scope', function($scope) {
-                $scope.id = "boolPicker_" + bg.utils.md5(Math.random());
+                $scope.id = "boolPicker_" + (g_boolPickerId++);
             }]
         };
     });

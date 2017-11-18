@@ -1,31 +1,49 @@
 <h1>Material editor</h1>
 <h4>Color</h4>
 <div class="bg2-widget-panel">
-    <color-picker label="Diffuse" value="diffuseColor"></color-picker>
-    <color-picker label="Specular" value="specularColor"></color-picker>
+    <color-picker label="Diffuse" value="diffuse"></color-picker>
+    <color-picker label="Specular" value="specular"></color-picker>
+    <slider-picker label="Alpha cutoff" value="alphaCutoff" increment="0.1" min="0" max="1"></slider-picker>
 </div>
-<h4>Shininess</h4>
-<div class="bg2-widget-panel">
-    <slider-picker value="slidertest.value" label="Amount" min="0" max="1"></slider-picker>
-    <texture-picker label="Mask" value=""></texture-picker>
-    <select-picker label="Channel" value="channel" options="items"></select-picker>
-    <bool-picker label="Invert values" value="invert"></bool-picker>
-</div>
-<h4>Light emission</h4>
-<div class="bg2-widget-panel">
-</div>
+
 <h4>Texture properties</h4>
 <div class="bg2-widget-panel">
-    <vector-picker label="vector 2" value="vec2" increment="0.1"></vector-picker>
-    <vector-picker label="vector 3" value="vec3"></vector-picker>
-    <vector-picker label="vector 4" value="vec4" component-labels="['r','g','b','a']"></vector-picker>
+    <texture-picker value="texture" label="Texture"></texture-picker>
+    <vector-picker label="Offset" value="textureOffset" increment="0.1"></vector-picker>
+    <vector-picker label="Scale" value="textureScale" increment="0.1"></vector-picker>
+    <texture-picker value="lightMap" label="Light map"></texture-picker>
+    <texture-picker value="normalMap" label="Normal map"></texture-picker>
+    <vector-picker label="Offset" value="normalMapOffset" increment="0.1"></vector-picker>
+    <vector-picker label="Scale" value="normalMapScale" increment="0.1"></vector-picker>
 </div>
+
+<h4>Shininess</h4>
+<div class="bg2-widget-panel">
+    <slider-picker value="shininess" label="Amount" min="0" max="255"></slider-picker>
+    <texture-picker label="Mask" value="shininessMask"></texture-picker>
+    <select-picker label="Channel" value="shininessMaskChannel" options="maskChannels"></select-picker>
+    <bool-picker label="Invert values" value="shininessMaskInvert"></bool-picker>
+</div>
+
+<h4>Light emission</h4>
+<div class="bg2-widget-panel">
+    <slider-picker value="lightEmission" label="Amount" min="0" max="1"></slider-picker>
+    <texture-picker label="Mask" value="lightEmissionMask"></texture-picker>
+    <select-picker label="Channel" value="lightEmissionMaskChannel" options="maskChannels"></select-picker>
+    <bool-picker label="Invert values" value="lightEmissionMaskInvert"></bool-picker>
+</div>
+
 <h4>Reflection</h4>
 <div class="bg2-widget-panel">
+    <slider-picker value="reflection" label="Amount" min="0" max="255"></slider-picker>
+    <texture-picker label="Mask" value="reflectionMask"></texture-picker>
+    <select-picker label="Channel" value="reflectionMaskChannel" options="maskChannels"></select-picker>
+    <bool-picker label="Invert values" value="reflectionMaskInvert"></bool-picker>
 </div>
-<h4>Shadows</h4>
-<div class="bg2-widget-panel">
-</div>
+
 <h4>Other</h4>
 <div class="bg2-widget-panel">
+    <bool-picker label="Cast shadows" value="castShadows"></bool-picker>
+    <bool-picker label="Receive shadows" value="receiveShadows"></bool-picker>
+    <bool-picker label="Cull face" value="cullFace"></bool-picker>
 </div>

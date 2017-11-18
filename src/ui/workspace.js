@@ -4,6 +4,19 @@ app.addSource(() => {
     angularApp.controller("SceneEditorController", ['$scope', function($scope) {
         console.log("Scene editor controller");
 
+        $scope.currentMaterial = null;
+
+        app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {
+            let mat = null;
+            s.selection.some((item) => {
+                mat = item.material;
+                return mat!=null; 
+            });
+            if (mat!=$scope.currentMaterial) {
+                $scope.currentMaterial = mat;
+            }
+        });
+
         app.render.Scene.Get().sceneWillClose("sceneEditorController", (oldScene) => {
             console.log("The scene will be closed");
             return true;
