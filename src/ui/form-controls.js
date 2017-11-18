@@ -54,7 +54,15 @@ app.addSource(() => {
                         filePath = app.standarizePath(filePath[0]);
                         $scope.value = filePath;
                     }
-                }
+                };
+
+                $scope.clearTexture = function() {
+                    $scope.value = "";
+                };
+
+                $scope.getTextureImage = function() {
+                    return $scope.value || `templates/${ app.config.templateName }/images/no_image.png`
+                };
             }]
         }
     });

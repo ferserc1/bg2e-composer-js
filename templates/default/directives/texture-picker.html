@@ -1,5 +1,6 @@
 <div class="bg2-form-field">
     <label class="bg2-width-30">{{ label }}</label>
-    <input type="text" ng-model="value" class="bg2-width-40">
+    <img ng-src="{{ getTextureImage() }}" alt="" class="bg2-width-20" ng-click="pickTexture()">
     <button ng-click="pickTexture()" class="bg2-width-20">Select</button>
+    <button ng-click="clearTexture()" class="bg2-width-20">Clear</button>
 </div>

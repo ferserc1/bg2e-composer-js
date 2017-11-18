@@ -111,6 +111,11 @@ color-picker .bg2-form-field {
     position: relative;
 }
 
+texture-picker img {
+    vertical-align: top;
+    border: 1px solid white;
+}
+
 .bg2-color-picker-sample {
     height: 20px;
     border: 1px solid white;
