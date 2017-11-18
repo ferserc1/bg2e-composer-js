@@ -14,6 +14,20 @@ app.addSource(() => {
 
         $scope.diffuseColor = [0,0,0.88,1];
         $scope.specularColor = [0,0,0,1];
+
+        $scope.items = [
+            { id:0, label:"R" },
+            { id:1, label:"G" },
+            { id:2, label:"B" },
+            { id:3, label:"A" }
+        ];
+        $scope.channel = $scope.items[0];
+
+        $scope.invert = true;
+
+        $scope.vec2 = [0,0];
+        $scope.vec3 = [0,0,4];
+        $scope.vec4 = [0,0,1,2];
     }]);
 
     angularApp.directive("materialEditor", function() {

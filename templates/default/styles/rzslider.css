@@ -55,3 +55,7 @@
 .rzslider .rz-tick.rz-selected {
     background: rgb(43, 43, 43);
 }
+
+.rzslider .rz-bar-wrapper {
+    height: 21px;
+}

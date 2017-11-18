@@ -6,16 +6,19 @@
 </div>
 <h4>Shininess</h4>
 <div class="bg2-widget-panel">
-    <div class="bg2-form-field">
-        <label class="bg2-width-30">Amount</label>
-        <rzslider class="bg2-width-60" rz-slider-model="slidertest.value" rz-slider-options="slidertest.options"></rzslider>
-    </div>
+    <slider-picker value="slidertest.value" label="Amount" min="0" max="1"></slider-picker>
+    <texture-picker label="Mask" value=""></texture-picker>
+    <select-picker label="Channel" value="channel" options="items"></select-picker>
+    <bool-picker label="Invert values" value="invert"></bool-picker>
 </div>
 <h4>Light emission</h4>
 <div class="bg2-widget-panel">
 </div>
 <h4>Texture properties</h4>
 <div class="bg2-widget-panel">
+    <vector-picker label="vector 2" value="vec2" increment="0.1"></vector-picker>
+    <vector-picker label="vector 3" value="vec3"></vector-picker>
+    <vector-picker label="vector 4" value="vec4" component-labels="['r','g','b','a']"></vector-picker>
 </div>
 <h4>Reflection</h4>
 <div class="bg2-widget-panel">
