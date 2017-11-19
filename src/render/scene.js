@@ -112,6 +112,7 @@ app.addDefinitions(() => {
             cameraController.minPitch = -90;
             cameraController.maxDistance = Number.MAX_VALUE;
             this._cameraNode.addComponent(cameraController);
+           // this._camera.projectionStrategy = new bg.scene.OpticalProjectionStrategy();
 
             let lightNode = new bg.scene.Node(this.gl);
             this._root.addChild(lightNode);
@@ -143,6 +144,8 @@ app.addDefinitions(() => {
                 
                 bg.base.Loader.Load(this.gl,scenePath)
                     .then((result) => {
+                        bg.scene.Node.CleanupNode(this._root);
+
                         sceneWillOpen.apply(this,[this.root,result.sceneRoot]);
     
                         this._root = result.sceneRoot;

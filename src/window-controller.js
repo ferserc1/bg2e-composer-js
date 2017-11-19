@@ -78,6 +78,7 @@ app.addDefinitions(() => {
             this._renderSettings = rs;
             app.settings.set("graphics.renderSettings",rs);
             applyRenderSettings.apply(this);
+            this.updateView();
         }
 
         saveRenderSettings() {
@@ -101,6 +102,7 @@ app.addDefinitions(() => {
         set renderPath(rp) {
             this._renderPath = rp;
             app.settings.set("graphics.renderPath",rp);
+            this.updateView();
         }
 
         get highQualityRenderer() {
@@ -150,7 +152,9 @@ app.addDefinitions(() => {
     
         reshape(width,height) {
             this.scene.camera.viewport = new bg.Viewport(0,0,width,height);
-            this.scene.camera.projection.perspective(60,this.scene.camera.viewport.aspectRatio,0.1,100);
+            if (!this.scene.camera.projectionStrategy) {
+                this.scene.camera.projection.perspective(60,this.scene.camera.viewport.aspectRatio,0.1,100);
+            }
         }
     
         keyDown(evt) {

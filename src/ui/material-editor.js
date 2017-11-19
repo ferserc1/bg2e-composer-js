@@ -79,6 +79,8 @@ app.addSource(() => {
                     m.diffuse = new bg.Vector4($scope.diffuse);
                     m.specular = new bg.Vector4($scope.specular);
                     m.alphaCutoff = $scope.alphaCutoff;
+
+                    app.ComposerWindowController.Get().updateView();
                 }
                 
             },500);
