@@ -142,7 +142,7 @@ app.addSource(() => {
                 $scope.receiveShadows = true;
                 $scope.cullFace = true;
             }
-        }, true);
+        });
 
         $scope.$watch("diffuse",() => {
             updateMaterial();
