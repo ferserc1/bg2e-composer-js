@@ -42,11 +42,11 @@ app.addSource(() => {
         $scope.alphaCutoff = 0.5;
         $scope.shininess = 0;
         $scope.shininessMask = "";
-        $scope.shininessMaskChannel = 0;
+        $scope.shininessMaskChannel = $scope.maskChannels[0];
         $scope.shininessMaskInvert = false;
         $scope.lightEmission = 0;
         $scope.lightEmissionMask = "";
-        $scope.lightEmissionMaskChannel = 0;
+        $scope.lightEmissionMaskChannel = $scope.maskChannels[0];
         $scope.lightEmissionMaskInvert = false;
         $scope.texture = "";
         $scope.textureOffset = [0,0];
@@ -57,7 +57,7 @@ app.addSource(() => {
         $scope.normalMapScale = [1,1];
         $scope.reflection = 0;
         $scope.reflectionMask = "";
-        $scope.reflectionMaskChannel = 0;
+        $scope.reflectionMaskChannel = $scope.maskChannels[0];
         $scope.reflectionMaskInvert = false;
         $scope.castShadows = true;
         $scope.receiveShadows = true;
@@ -80,10 +80,35 @@ app.addSource(() => {
                     m.specular = new bg.Vector4($scope.specular);
                     m.alphaCutoff = $scope.alphaCutoff;
 
+                    m.shininess = $scope.shininess;
+                    updateTexture(m,'shininessMask',$scope.shininessMask);
+                    m.shininessMaskChannel = $scope.shininessMaskChannel.id;
+                    m.shininessMaskInvert = $scope.shininessMaskInvert;
+
+                    m.lightEmission = $scope.lightEmission;
+                    updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask);
+                    m.lightEmissionMaskChannel = $scope.lightEmissionMaskChannel.id;
+                    m.lightEmissionMaskInvert = $scope.lightEmissionMaskInvert;
+
+                    updateTexture(m,'texture',$scope.texture);
+                    m.textureOffset = new bg.Vector2($scope.textureOffset);
+                    m.textureScale = new bg.Vector2($scope.textureScale);
+                    updateTexture(m,'lightMap',$scope.lightMap);
+                    updateTexture(m,'normalMap',$scope.normalMap);
+                    m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
+                    m.normalMapScale = new bg.Vector2($scope.normalMapScale);
+                    m.reflectionAmount = $scope.reflection;
+                    updateTexture(m,'reflectionMask',$scope.reflectionMask);
+                    m.reflectionMaskChannel = $scope.reflectionMaskChannel.id;
+                    m.reflectionMaskInvert = $scope.reflectionMaskInvert;
+                    m.castShadows = $scope.castShadows;
+                    m.receiveShadows = $scope.receiveShadows;
+                    m.cullFace = $scope.cullFace;
+
                     app.ComposerWindowController.Get().updateView();
                 }
                 
-            },500);
+            },100);
         }
 
         $scope.$watch('material',() => {
@@ -94,11 +119,11 @@ app.addSource(() => {
                 $scope.alphaCutoff = m.alphaCutoff;
                 $scope.shininess = m.shininess;
                 $scope.shininessMask = m.shininessMask && m.shininessMask.fileName || "";
-                $scope.shininessMaskChannel = $scope.maskChannels[m.shininessMaskChannel];
+                $scope.shininessMaskChannel = $scope.maskChannels[m.shininessMaskChannel] || $scope.maskChannels[0];
                 $scope.shininessMaskInvert = m.shininessMaskInvert;
                 $scope.lightEmission = m.lightEmission;
-                $scope.lightEmissionMask = m.lightemissionMask && m.lightEmissionMask.fileName || "";
-                $scope.lightEmissionMaskChannel = $scope.maskChannels[m.lightemissionMaskChannel];
+                $scope.lightEmissionMask = m.lightEmissionMask && m.lightEmissionMask.fileName || "";
+                $scope.lightEmissionMaskChannel = $scope.maskChannels[m.lightEmissionMaskChannel] || $scope.maskChannels[0];
                 $scope.lightEmissionMaskInvert = m.lightEmissionMaskInvert;
                 $scope.texture = m.texture && m.texture.fileName || "";
                 $scope.textureOffset = m.textureOffset.toArray();
@@ -107,9 +132,9 @@ app.addSource(() => {
                 $scope.normalMap = m.normalMap && m.normalMap.fileName || "";
                 $scope.normalMapOffset = m.normalMapOffset.toArray();
                 $scope.normalMapScale = m.normalMapScale.toArray();
-                $scope.reflection = m.reflection;
+                $scope.reflection = m.reflectionAmount;
                 $scope.reflectionMask = m.reflectionMask && m.reflectionMask.fileName || "";
-                $scope.reflectionMaskChannel = $scope.maskChannels[m.reflectionMaskChannel];
+                $scope.reflectionMaskChannel = $scope.maskChannels[m.reflectionMaskChannel] || $scope.maskChannels[0];
                 $scope.reflectionMaskInvert = m.reflectionMaskInvert;
                 $scope.castShadows = m.castShadows;
                 $scope.receiveShadows = m.receiveShadows;
@@ -121,11 +146,11 @@ app.addSource(() => {
                 $scope.alphaCutoff = 0;
                 $scope.shininess = 0;
                 $scope.shininessMask = "";
-                $scope.shininessMaskChannel = 0;
+                $scope.shininessMaskChannel = $scope.maskChannels[0];
                 $scope.shininessMaskInvert = false;
                 $scope.lightEmission = 0;
                 $scope.lightEmissionMask = "";
-                $scope.lightEmissionMaskChannel = 0;
+                $scope.lightEmissionMaskChannel = $scope.maskChannels[0];
                 $scope.lightEmissionMaskInvert = false;
                 $scope.texture = "";
                 $scope.textureOffset = [0,0];
@@ -136,7 +161,7 @@ app.addSource(() => {
                 $scope.normalMapScale = [1,1];
                 $scope.reflection = 0;
                 $scope.reflectionMask = "";
-                $scope.reflectionMaskChannel = 0;
+                $scope.reflectionMaskChannel = $scope.maskChannels[0];
                 $scope.reflectionMaskInvert = false;
                 $scope.castShadows = true;
                 $scope.receiveShadows = true;

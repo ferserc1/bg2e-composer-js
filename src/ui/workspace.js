@@ -2,8 +2,6 @@ app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
     
     angularApp.controller("SceneEditorController", ['$scope', function($scope) {
-        console.log("Scene editor controller");
-
         $scope.currentMaterial = null;
 
         app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {
