@@ -155,6 +155,12 @@ input:disabled {
     background-color: gray;
 }
 
+button.disabled {
+    background-color: gray;
+    color: lightgray;
+    outline: none;
+}
+
 button {
     border: 1px solid #737373;
     padding-left: 10px;

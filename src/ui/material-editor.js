@@ -29,7 +29,7 @@ app.addSource(() => {
 
 
 
-    angularApp.controller("MaterialEditorController",['$scope',function($scope) {
+    angularApp.controller("MaterialEditorController",['$scope','$timeout',function($scope,$timeout) {
         $scope.maskChannels = [
             { id:0, label:"R" },
             { id:1, label:"G" },
@@ -63,6 +63,14 @@ app.addSource(() => {
         $scope.receiveShadows = true;
         $scope.cullFace = true;
 
+        $scope.isDisabled = true;
+
+        $scope.applyToAll = function() {
+            if ($scope.applyToAllPressed) {
+                $scope.applyToAllPressed();
+            }
+        };
+
         let updateTimer = null;
         function updateMaterial() {
             // setTimeout is used to update the material only once when the fields
@@ -72,7 +80,6 @@ app.addSource(() => {
                 updateTimer = null;
             }
             updateTimer = setTimeout(() => {
-                console.log("Update material");
                 if ($scope.material) {
                     let m = $scope.material;
 
@@ -105,7 +112,9 @@ app.addSource(() => {
                     m.receiveShadows = $scope.receiveShadows;
                     m.cullFace = $scope.cullFace;
 
-                    app.ComposerWindowController.Get().updateView();
+                    if ($scope.materialChanged) {
+                        $scope.materialChanged($scope.material);
+                    }
                 }
                 
             },100);
@@ -139,6 +148,7 @@ app.addSource(() => {
                 $scope.castShadows = m.castShadows;
                 $scope.receiveShadows = m.receiveShadows;
                 $scope.cullFace = m.cullFace;
+                $scope.isDisabled = false;
             }
             else {
                 $scope.diffuse = [0,0,0,0];
@@ -166,7 +176,10 @@ app.addSource(() => {
                 $scope.castShadows = true;
                 $scope.receiveShadows = true;
                 $scope.cullFace = true;
+                $scope.isDisabled = true;
             }
+            $timeout(() => $scope.$broadcast('rzSliderForceRender'), 50);
+            
         });
 
         $scope.$watch("diffuse",() => {
@@ -272,7 +285,9 @@ app.addSource(() => {
             templateUrl: `templates/${ app.config.templateName }/directives/material-editor.html`,
             compile: app.workspaceElementCompile(),
             scope: {
-                material:"=?"
+                material:"=?",
+                materialChanged:"=?",
+                applyToAllPressed:"=?"
             },
             controller: 'MaterialEditorController'
         };

@@ -25,6 +25,12 @@ app.addDefinitions(() => {
     }
 
     let g_commandManager = null;
+    function callObservers(observers) {
+        for (let key in observers) {
+            observers[key]();
+        }
+    }
+
     class CommandManager {
         static Get() {
             if (!g_commandManager) {
@@ -36,6 +42,22 @@ app.addDefinitions(() => {
         constructor() {
             this._undoStack = [];
             this._redoStack = [];
+
+            this._doObservers = {};
+            this._undoObservers = {};
+            this._redoObservers = {};
+        }
+
+        onDoCommand(observerName,callback) {
+            this._doObservers[observerName] = callback;
+        }
+
+        onUndo(observerName,callback) {
+            this._undoObservers[observerName] = callback;
+        }
+
+        onRedo(observerName,callback) {
+            this._redoObservers[observerName] = callback;
         }
 
         doCommand(cmd) {
@@ -52,6 +74,7 @@ app.addDefinitions(() => {
                             this._undoStack = [];
                             this._redoStack = [];
                         }
+                        callObservers(this._doObservers);
                         resolve();
                     })
                     .catch((err) => {
@@ -67,6 +90,7 @@ app.addDefinitions(() => {
                     cmd.undo()
                         .then(() => {
                             this._redoStack.push(cmd);
+                            callObservers(this._undoObservers);
                             resolve();
                         })
 
@@ -89,6 +113,7 @@ app.addDefinitions(() => {
                     cmd.execute()
                         .then(() => {
                             this._undoStack.push(cmd);
+                            callObservers(this._redoObservers);
                             resolve();
                         })
                         
