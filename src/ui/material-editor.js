@@ -117,7 +117,7 @@ app.addSource(() => {
                     }
                 }
                 
-            },100);
+            },500);
         }
 
         $scope.$watch('material',() => {
@@ -151,6 +151,7 @@ app.addSource(() => {
                 $scope.isDisabled = false;
             }
             else {
+                /*
                 $scope.diffuse = [0,0,0,0];
                 $scope.specular = [0,0,0,0];
                 $scope.alphaCutoff = 0;
@@ -176,8 +177,10 @@ app.addSource(() => {
                 $scope.castShadows = true;
                 $scope.receiveShadows = true;
                 $scope.cullFace = true;
+                */
                 $scope.isDisabled = true;
             }
+
             $timeout(() => $scope.$broadcast('rzSliderForceRender'), 50);
             
         });
