@@ -36,14 +36,16 @@ app.addSource(() => {
         function getValue() {
             let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
             let value = $scope.valuePercent * range / 100;
-            return value + $scope.sliderOptions.floor;
+            value = value + $scope.sliderOptions.floor
+            value = value<$scope.sliderOptions.floor ? $scope.sliderOptions.floor : value;
+            return value>$scope.sliderOptions.ceil ? $scope.sliderOptions.ceil : value;
         }
 
         function updatePosition(evt) {
             let w = evt.target.getBoundingClientRect().width;
             let x = evt.offsetX - $scope.handlerWidth() / 2;
             $scope.leftValue = x * 100 / w;
-            $scope.valuePercent = Math.round(evt.offsetX * 100 / w);
+            $scope.valuePercent = Math.round(evt.offsetX * 100 / w) + 1;
             let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
             let value = $scope.valuePercent * range / 100;
             $scope.value = getValue();
@@ -55,6 +57,9 @@ app.addSource(() => {
         };
 
         $scope.onMouseUp = function(evt) {
+            if ($scope.sliderOptions.onUserChanged) {
+                $scope.sliderOptions.onUserChanged();
+            }
         };
 
         $scope.onMouseMove = function(evt) {
@@ -73,6 +78,11 @@ app.addSource(() => {
             scope: {
                 sliderModel:"=",
                 sliderOptions:"=?"
+                // sliderOptions:
+                //  flor
+                //  ceil
+                //  precision
+                //  onUserChanged
             },
             link: function(scope,elem) {
                 for (var i = 0; i<elem.children().children().length; ++i) {
