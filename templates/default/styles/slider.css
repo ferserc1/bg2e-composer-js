@@ -1,0 +1,61 @@
+slider .bg2-slider {
+    height: 30px;
+    position: relative;
+    font-size: 0.7em;
+}
+
+slider .bg2-slide-area {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+slider .bg2-bar {
+    height: 2px;
+    background-color: white;
+    bottom: 10px;
+    position: absolute;
+    width: 100%;
+    border: 1px solid gray;
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+slider .bg2-handler {
+    position: absolute;
+    height: 21px;
+    width: 10px;
+    background-color: #5f5f5f;
+    border: 1px solid white;
+    border-radius: 0px 0px 6px 6px;
+}
+
+slider .bg2-min {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+slider .bg2-min {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+slider .bg2-max {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+slider .bg2-value {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    text-align: center;
+}

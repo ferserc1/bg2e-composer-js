@@ -1,0 +1,14 @@
+<div class="bg2-slider">
+    <div class="bg2-min">0</div>
+    <div class="bg2-value">{{ value | number : sliderOptions.precision }}</div>
+    <div class="bg2-max">1</div>
+    <div class="bg2-bar"></div>
+    <div class="bg2-handler" ng-style="{ left: leftValue + '%' }"></div>
+    <div
+        class="bg2-slide-area"
+        ng-mousedown="onMouseDown($event)"
+        ng-mouseup="onMouseUp($event)"
+        ng-mousemove="onMouseMove($event)"
+        >
+    </div>
+</div>
