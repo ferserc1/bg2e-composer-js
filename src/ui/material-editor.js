@@ -193,6 +193,10 @@ app.addSource(() => {
             updateMaterial();
         },true);
 
+        $scope.$watch("alphaCutoff",() => {
+            updateMaterial();
+        });
+
         $scope.$watch("shininess",() => {
             updateMaterial();
         });

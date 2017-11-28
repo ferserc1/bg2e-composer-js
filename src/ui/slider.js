@@ -10,7 +10,7 @@ app.addSource(() => {
         
         $scope.sliderOptions = $scope.sliderOptions || {};
         $scope.sliderOptions.floor = $scope.sliderOptions.floor || 0;
-        $scope.sliderOptions.ceil = $scope.sliderOptions.ceil || 255;
+        $scope.sliderOptions.ceil = $scope.sliderOptions.ceil || 1;
         $scope.sliderOptions.precision = $scope.sliderOptions.precision || 2;
 
         $scope.value = getValue();
@@ -21,6 +21,17 @@ app.addSource(() => {
             }
             return handlerWidth;
         };
+
+        $scope.$watch("sliderModel", function() {
+            updatePercent();
+        });
+
+        function updatePercent() {
+            let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
+            $scope.valuePercent = $scope.sliderModel * 100 / range - $scope.sliderOptions.floor;
+            $scope.leftValue = $scope.valuePercent;
+            $scope.value = getValue();
+        }
 
         function getValue() {
             let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
@@ -36,6 +47,7 @@ app.addSource(() => {
             let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
             let value = $scope.valuePercent * range / 100;
             $scope.value = getValue();
+            $scope.sliderModel = $scope.value;
         }
 
         $scope.onMouseDown = function(evt) {
@@ -48,11 +60,10 @@ app.addSource(() => {
         $scope.onMouseMove = function(evt) {
             if (evt.buttons) {
                 updatePosition(evt);
-               // console.log($scope.valuePercent);
-//                console.log(evt.target);
-//                console.log(evt.pageX - evt.target.getBoundingClientRect().left);
             }
         };
+
+        updatePercent();
     }]);
 
     angularApp.directive("slider", function() {
@@ -64,7 +75,6 @@ app.addSource(() => {
                 sliderOptions:"=?"
             },
             link: function(scope,elem) {
-                console.log(elem);
                 for (var i = 0; i<elem.children().children().length; ++i) {
                     let child = elem.children().children()[i];
                     if (child.className=='bg2-handler') {
