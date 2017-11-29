@@ -1,5 +1,5 @@
 <div>
     <div class="bg2-width-30"></div>
-    <input type="checkbox" id="{{ id }}" ng-model="value">
-    <label class="" for="{{ id }}">{{ label }}</label>
+    <input type="checkbox" id="{{ id }}" ng-model="value" ng-click="userChanged()">
+    <label class="" for="{{ id }}" ng-click="userChanged()">{{ label }}</label>
 </div>

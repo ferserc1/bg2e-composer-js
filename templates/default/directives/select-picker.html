@@ -1,4 +1,4 @@
 <div class="bg2-form-field">
     <label class="bg2-width-30">{{ label }}</label>
-    <select ng-model="value" ng-options="item as item.label for item in options track by item.id"></select>
+    <select ng-model="value" ng-options="item as item.label for item in options track by item.id" ng-change="userChanged()"></select>
 </div>

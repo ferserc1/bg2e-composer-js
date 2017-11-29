@@ -7,14 +7,20 @@ app.addSource(() => {
             templateUrl: `templates/${ app.config.templateName }/directives/color-picker.html`,
             scope: {
                 label:"@",
-                value:"="
+                value:"=",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.options = {
                     floor: 0,
                     ceil: 1,
                     step: 0.0001,
-                    precision: 2
+                    precision: 2,
+                    onUserChanged:function() {
+                        if ($scope.onUserChanged) {
+                            $scope.onUserChanged();
+                        }
+                    }
                 }
 
                 $scope.preview = { 'background-color': 'rgba(0,0,0,0)' };
@@ -35,7 +41,8 @@ app.addSource(() => {
             templateUrl: `templates/${ app.config.templateName }/directives/texture-picker.html`,
             scope: {
                 label:"@",
-                value:"="
+                value:"=",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.pickTexture = function() {
@@ -53,11 +60,17 @@ app.addSource(() => {
                     if (filePath) {
                         filePath = app.standarizePath(filePath[0]);
                         $scope.value = filePath;
+                        if ($scope.onUserChanged) {
+                            $scope.onUserChanged();
+                        }
                     }
                 };
 
                 $scope.clearTexture = function() {
                     $scope.value = "";
+                    if ($scope.onUserChanged) {
+                        $scope.onUserChanged();
+                    }
                 };
 
                 $scope.getTextureImage = function() {
@@ -75,15 +88,22 @@ app.addSource(() => {
                 label:"@",
                 value:"=",
                 min:"=",
-                max:"="
+                max:"=",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.options = {
                     floor: $scope.min,
                     ceil: $scope.max,
                     step: 0.0001,
-                    precision: 3
+                    precision: 3,
+                    onUserChanged:function() {
+                        if ($scope.onUserChanged) {
+                            $scope.onUserChanged();
+                        }
+                    }
                 };
+
             }]
         };
     });
@@ -95,10 +115,16 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
-                options:"="
+                options:"=",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.value = $scope.value || $scope.options[0];
+                $scope.userChanged = function() {
+                    if ($scope.onUserChanged) {
+                        $scope.onUserChanged();
+                    }
+                };
             }]
         };
     });
@@ -111,9 +137,15 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.id = "boolPicker_" + (g_boolPickerId++);
+                $scope.userChanged = function() {
+                    if ($scope.onUserChanged) {
+                        $scope.onUserChanged();
+                    }
+                }
             }]
         };
     });
@@ -125,7 +157,8 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
-                increment:"=?"
+                increment:"=?",
+                onUserChanged:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.increment = $scope.increment || 1;
@@ -143,6 +176,11 @@ app.addSource(() => {
                     if (event.key=="ArrowUp") {
                         $scope.value[index] += inc - 0.0001;
                     }
+                    $scope.$watch("value",function() {
+                        if ($scope.onUserChanged) {
+                            $scope.onUserChanged();
+                        }
+                    });
                 };
             }]
         };

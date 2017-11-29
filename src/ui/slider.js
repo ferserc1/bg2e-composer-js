@@ -43,9 +43,9 @@ app.addSource(() => {
 
         function updatePosition(evt) {
             let w = evt.target.getBoundingClientRect().width;
-            let x = evt.offsetX - $scope.handlerWidth() / 2;
+            let x = evt.offsetX;
             $scope.leftValue = x * 100 / w;
-            $scope.valuePercent = Math.round(evt.offsetX * 100 / w) + 1;
+            $scope.valuePercent = Math.round(evt.offsetX * 100 / w);
             let range = $scope.sliderOptions.ceil - $scope.sliderOptions.floor;
             let value = $scope.valuePercent * range / 100;
             $scope.value = getValue();

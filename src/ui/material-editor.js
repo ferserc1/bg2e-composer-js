@@ -71,6 +71,10 @@ app.addSource(() => {
             }
         };
 
+        $scope.userChanged = function() {
+            console.log("User changed");
+        };
+
         let updateTimer = null;
         function updateMaterial() {
             // setTimeout is used to update the material only once when the fields
