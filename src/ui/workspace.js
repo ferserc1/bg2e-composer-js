@@ -24,7 +24,7 @@ app.addSource(() => {
             if (targets.length) {
                 let cmd = new app.materialCommands.ApplyMaterial($scope.currentMaterial,targets);
                 app.CommandManager.Get().doCommand(cmd)
-                    .then(() => app.ComposerWindowController().Get().updateView());
+                    .then(() => app.ComposerWindowController.Get().updateView());
             }
         };
 
