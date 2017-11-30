@@ -8,7 +8,7 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.options = {
@@ -16,9 +16,9 @@ app.addSource(() => {
                     ceil: 1,
                     step: 0.0001,
                     precision: 2,
-                    onUserChanged:function() {
-                        if ($scope.onUserChanged) {
-                            $scope.onUserChanged();
+                    commitChanges:function() {
+                        if ($scope.commitChanges) {
+                            $scope.commitChanges();
                         }
                     }
                 }
@@ -42,7 +42,7 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.pickTexture = function() {
@@ -60,16 +60,16 @@ app.addSource(() => {
                     if (filePath) {
                         filePath = app.standarizePath(filePath[0]);
                         $scope.value = filePath;
-                        if ($scope.onUserChanged) {
-                            $scope.onUserChanged();
+                        if ($scope.commitChanges) {
+                            $scope.commitChanges();
                         }
                     }
                 };
 
                 $scope.clearTexture = function() {
                     $scope.value = "";
-                    if ($scope.onUserChanged) {
-                        $scope.onUserChanged();
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
                     }
                 };
 
@@ -89,7 +89,7 @@ app.addSource(() => {
                 value:"=",
                 min:"=",
                 max:"=",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.options = {
@@ -97,9 +97,9 @@ app.addSource(() => {
                     ceil: $scope.max,
                     step: 0.0001,
                     precision: 3,
-                    onUserChanged:function() {
-                        if ($scope.onUserChanged) {
-                            $scope.onUserChanged();
+                    commitChanges:function() {
+                        if ($scope.commitChanges) {
+                            $scope.commitChanges();
                         }
                     }
                 };
@@ -116,13 +116,13 @@ app.addSource(() => {
                 label:"@",
                 value:"=",
                 options:"=",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.value = $scope.value || $scope.options[0];
                 $scope.userChanged = function() {
-                    if ($scope.onUserChanged) {
-                        $scope.onUserChanged();
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
                     }
                 };
             }]
@@ -137,13 +137,13 @@ app.addSource(() => {
             scope: {
                 label:"@",
                 value:"=",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.id = "boolPicker_" + (g_boolPickerId++);
                 $scope.userChanged = function() {
-                    if ($scope.onUserChanged) {
-                        $scope.onUserChanged();
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
                     }
                 }
             }]
@@ -158,7 +158,7 @@ app.addSource(() => {
                 label:"@",
                 value:"=",
                 increment:"=?",
-                onUserChanged:"=?"
+                commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
                 $scope.increment = $scope.increment || 1;
@@ -177,8 +177,8 @@ app.addSource(() => {
                         $scope.value[index] += inc - 0.0001;
                     }
                     $scope.$watch("value",function() {
-                        if ($scope.onUserChanged) {
-                            $scope.onUserChanged();
+                        if ($scope.commitChanges) {
+                            $scope.commitChanges();
                         }
                     });
                 };

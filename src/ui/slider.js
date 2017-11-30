@@ -1,7 +1,7 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
-    angularApp.controller("SliderController",['$scope',function($scope) {
+    angularApp.controller("SliderController",['$rootScope','$scope',function($rootScope,$scope) {
         
         $scope.valuePercent = 0;
         
@@ -57,8 +57,8 @@ app.addSource(() => {
         };
 
         $scope.onMouseUp = function(evt) {
-            if ($scope.sliderOptions.onUserChanged) {
-                $scope.sliderOptions.onUserChanged();
+            if ($scope.sliderOptions.commitChanges) {
+                $scope.sliderOptions.commitChanges();
             }
         };
 

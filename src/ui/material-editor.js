@@ -29,7 +29,7 @@ app.addSource(() => {
 
 
 
-    angularApp.controller("MaterialEditorController",['$scope','$timeout',function($scope,$timeout) {
+    angularApp.controller("MaterialEditorController",['$rootScope','$scope','$timeout',function($rootScope,$scope,$timeout) {
         $scope.maskChannels = [
             { id:0, label:"R" },
             { id:1, label:"G" },
@@ -71,60 +71,58 @@ app.addSource(() => {
             }
         };
 
-        $scope.userChanged = function() {
-            console.log("User changed");
+        let commitTimer = null;
+        $scope.onCommitChanges = function() {
+            if ($scope.commitChanges) {
+                if (commitTimer) {
+                    clearTimeout(commitTimer);
+                }
+                commitTimer = setTimeout(() => {
+                    $scope.commitChanges();
+                }, 50);
+            }
         };
 
-        let updateTimer = null;
         function updateMaterial() {
-            // setTimeout is used to update the material only once when the fields
-            // are updated too quick, and to prevent a circular update
-            if (updateTimer) {
-                clearTimeout(updateTimer);
-                updateTimer = null;
-            }
-            updateTimer = setTimeout(() => {
-                if ($scope.material) {
-                    let m = $scope.material;
+            if ($scope.material) {
+                let m = $scope.material;
 
-                    m.diffuse = new bg.Vector4($scope.diffuse);
-                    m.specular = new bg.Vector4($scope.specular);
-                    m.alphaCutoff = $scope.alphaCutoff;
+                m.diffuse = new bg.Vector4($scope.diffuse);
+                m.specular = new bg.Vector4($scope.specular);
+                m.alphaCutoff = $scope.alphaCutoff;
 
-                    m.shininess = $scope.shininess;
-                    updateTexture(m,'shininessMask',$scope.shininessMask);
-                    m.shininessMaskChannel = $scope.shininessMaskChannel.id;
-                    m.shininessMaskInvert = $scope.shininessMaskInvert;
+                m.shininess = $scope.shininess;
+                updateTexture(m,'shininessMask',$scope.shininessMask);
+                m.shininessMaskChannel = $scope.shininessMaskChannel.id;
+                m.shininessMaskInvert = $scope.shininessMaskInvert;
 
-                    m.lightEmission = $scope.lightEmission;
-                    updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask);
-                    m.lightEmissionMaskChannel = $scope.lightEmissionMaskChannel.id;
-                    m.lightEmissionMaskInvert = $scope.lightEmissionMaskInvert;
+                m.lightEmission = $scope.lightEmission;
+                updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask);
+                m.lightEmissionMaskChannel = $scope.lightEmissionMaskChannel.id;
+                m.lightEmissionMaskInvert = $scope.lightEmissionMaskInvert;
 
-                    updateTexture(m,'texture',$scope.texture);
-                    m.textureOffset = new bg.Vector2($scope.textureOffset);
-                    m.textureScale = new bg.Vector2($scope.textureScale);
-                    updateTexture(m,'lightMap',$scope.lightMap);
-                    updateTexture(m,'normalMap',$scope.normalMap);
-                    m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
-                    m.normalMapScale = new bg.Vector2($scope.normalMapScale);
-                    m.reflectionAmount = $scope.reflection;
-                    updateTexture(m,'reflectionMask',$scope.reflectionMask);
-                    m.reflectionMaskChannel = $scope.reflectionMaskChannel.id;
-                    m.reflectionMaskInvert = $scope.reflectionMaskInvert;
-                    m.castShadows = $scope.castShadows;
-                    m.receiveShadows = $scope.receiveShadows;
-                    m.cullFace = $scope.cullFace;
+                updateTexture(m,'texture',$scope.texture);
+                m.textureOffset = new bg.Vector2($scope.textureOffset);
+                m.textureScale = new bg.Vector2($scope.textureScale);
+                updateTexture(m,'lightMap',$scope.lightMap);
+                updateTexture(m,'normalMap',$scope.normalMap);
+                m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
+                m.normalMapScale = new bg.Vector2($scope.normalMapScale);
+                m.reflectionAmount = $scope.reflection;
+                updateTexture(m,'reflectionMask',$scope.reflectionMask);
+                m.reflectionMaskChannel = $scope.reflectionMaskChannel.id;
+                m.reflectionMaskInvert = $scope.reflectionMaskInvert;
+                m.castShadows = $scope.castShadows;
+                m.receiveShadows = $scope.receiveShadows;
+                m.cullFace = $scope.cullFace;
 
-                    if ($scope.materialChanged) {
-                        $scope.materialChanged($scope.material);
-                    }
+                if ($scope.materialChanged) {
+                    $scope.materialChanged($scope.material);
                 }
-                
-            },500);
+            }
         }
 
-        $scope.$watch('material',() => {
+        function updateUI() {
             let m = $scope.material;
             if ($scope.material) {
                 $scope.diffuse = m.diffuse.toArray();
@@ -155,38 +153,16 @@ app.addSource(() => {
                 $scope.isDisabled = false;
             }
             else {
-                /*
-                $scope.diffuse = [0,0,0,0];
-                $scope.specular = [0,0,0,0];
-                $scope.alphaCutoff = 0;
-                $scope.shininess = 0;
-                $scope.shininessMask = "";
-                $scope.shininessMaskChannel = $scope.maskChannels[0];
-                $scope.shininessMaskInvert = false;
-                $scope.lightEmission = 0;
-                $scope.lightEmissionMask = "";
-                $scope.lightEmissionMaskChannel = $scope.maskChannels[0];
-                $scope.lightEmissionMaskInvert = false;
-                $scope.texture = "";
-                $scope.textureOffset = [0,0];
-                $scope.textureScale = [1,1];
-                $scope.lightMap = "";
-                $scope.normalMap = "";
-                $scope.normalMapOffset = [0,0];
-                $scope.normalMapScale = [1,1];
-                $scope.reflection = 0;
-                $scope.reflectionMask = "";
-                $scope.reflectionMaskChannel = $scope.maskChannels[0];
-                $scope.reflectionMaskInvert = false;
-                $scope.castShadows = true;
-                $scope.receiveShadows = true;
-                $scope.cullFace = true;
-                */
                 $scope.isDisabled = true;
             }
+        }
 
-            $timeout(() => $scope.$broadcast('rzSliderForceRender'), 50);
-            
+        $rootScope.$on("bg2UpdateMaterialUI", function() {
+            updateUI();
+        });
+
+        $scope.$watch('material',() => {
+            updateUI(); 
         });
 
         $scope.$watch("diffuse",() => {
@@ -298,7 +274,8 @@ app.addSource(() => {
             scope: {
                 material:"=?",
                 materialChanged:"=?",
-                applyToAllPressed:"=?"
+                applyToAllPressed:"=?",
+                commitChanges:"=?"
             },
             controller: 'MaterialEditorController'
         };

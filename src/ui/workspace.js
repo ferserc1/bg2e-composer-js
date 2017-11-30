@@ -1,63 +1,141 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
+
+    function commitMaterials(target,multi=true) {
+        return new Promise((resolve,reject) => {
+            if (!this.currentMaterial) {
+                reject(new Error("Current material is null"));
+            }
+            else if (target.length) {
+                if (!multi) {
+                    target = [target[0]];
+                }
+                let cmd = new app.materialCommands.ApplyMaterial(this.currentMaterial,target);
+                app.CommandManager.Get().doCommand(cmd)
+                    .then(() => {
+                        // Update the material backup
+                        this._materialBackup.assign(this.currentMaterial);
+                        resolve()
+                    });
+            }
+            else {
+                resolve();
+            }
+        })
+    }
+
+    let s_materialHandlerSingleton = null;
+    class MaterialHandler {
+        static Get() {
+            if (!s_materialHandlerSingleton) {
+                s_materialHandlerSingleton = new MaterialHandler();
+            }
+            return s_materialHandlerSingleton;
+        }
+
+        constructor() {
+            this._currentMaterial = null;
+            
+            // This attribute stores the selected material, to restore it just before
+            // execute the ApplyMaterial command.
+            this._materialBackup = null;
+        }
+
+        getMaterialsFromSelection() {
+            let result = []
+            app.render.Scene.Get().selectionManager.selection.forEach((item) => {
+                if (item.material) {
+                    result.push(item.material);
+                }
+            });
+            return result;
+        }
+
+        get currentMaterial() { return this._currentMaterial; }
+        set currentMaterial(m) { this._currentMaterial = m; }
+
+        updateCurrentFromSelection() {
+            let mat = this.getMaterialsFromSelection();
+            mat = mat.length>0 && mat[0];
+            if (mat) {
+                this._materialBackup = new bg.base.Material();
+                this._materialBackup.assign(mat);
+                this._currentMaterial = new bg.base.Material();
+                this._currentMaterial.assign(mat);
+            }
+            else {
+                this._currentMaterial = null;
+            }
+            return this.currentMaterial;
+        }
+
+        restoreCurrent() {
+            let mat = this.getMaterialsFromSelection();
+            if (this._materialBackup && mat.length) {
+                mat[0].assign(this._materialBackup);
+            }
+        }
+
+        // Apply the currentMaterial to the first selected material, using a command
+        // if commit==true
+        applyToSelected(commit = false) {
+            if (commit) {
+                return commitMaterials.apply(this,[this.getMaterialsFromSelection(),false]);
+            }
+            else {
+                let mat = this.getMaterialsFromSelection();
+                if (mat.length && this.currentMaterial) {
+                    mat[0].assign(this.currentMaterial);
+                }
+                return Promise.resolve();
+            }
+        }
+
+        // Apply the currentMaterial to all the selection, using a command
+        applyToAll() {
+            if (!this.currentMaterial) {
+                throw new Error("Unexpected applyToAll received: currentMaterial is null");
+            }
+            return commitMaterials.apply(this,[this.getMaterialsFromSelection(),true]);
+        }
+    }
     
-    angularApp.controller("SceneEditorController", ['$scope', function($scope) {
+    angularApp.controller("SceneEditorController", ['$rootScope','$scope', function($rootScope,$scope) {
         $scope.currentMaterial = null;
 
         $scope.onMaterialChanged = function(material) {
-            let firstSelected = app.render.Scene.Get().selectionManager.selection.length &&
-                                app.render.Scene.Get().selectionManager.selection[0];
-            if (firstSelected && firstSelected.material) {
-                let cmd = new app.materialCommands.ApplyMaterial($scope.currentMaterial,firstSelected.material);
-                app.CommandManager.Get().doCommand(cmd)
-                    .then(() => app.ComposerWindowController.Get().updateView());
-            }
+            MaterialHandler.Get().applyToSelected(false);
+            app.ComposerWindowController.Get().updateView();
         };
 
         $scope.onApplyToAll = function() {
-            let targets = [];
-            app.render.Scene.Get().selectionManager.selection.forEach((item) => {
-                if (item.material) {
-                    targets.push(item.material);
-                }
-            });
-            if (targets.length) {
-                let cmd = new app.materialCommands.ApplyMaterial($scope.currentMaterial,targets);
-                app.CommandManager.Get().doCommand(cmd)
-                    .then(() => app.ComposerWindowController.Get().updateView());
-            }
+            MaterialHandler.Get().applyToAll();
+            app.ComposerWindowController.Get().updateView();
         };
 
-        function getMaterialFromSelection(force=false) {
-            let mat = null;
-            app.render.Scene.Get().selectionManager.selection.some((item) => {
-                mat = item.material;
-                return mat!=null; 
-            });
-            if (mat!=$scope.currentMaterial || force) {
-                if (mat) {
-                    $scope.currentMaterial = new bg.base.Material();
-                    $scope.currentMaterial.assign(mat);
-                }
-                else {
-                    $scope.currentMaterial = null;
-                }
-            }
-        }
+        $scope.commitChanges = function() {
+            MaterialHandler.Get().restoreCurrent();
+            MaterialHandler.Get().applyToSelected(true);
+            // Update the UI, to ensure that the material match the UI
+            $scope.currentMaterial = MaterialHandler.Get().currentMaterial;
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
+        };
+
         app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {
-            getMaterialFromSelection();
+            $scope.currentMaterial = MaterialHandler.Get().updateCurrentFromSelection();
         });
 
         app.CommandManager.Get().onRedo("sceneEditorController",() => {
-            $scope.$apply(() => {
-                getMaterialFromSelection(true);
-            });
+            $scope.currentMaterial = MaterialHandler.Get().updateCurrentFromSelection();
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
         });
 
         app.CommandManager.Get().onUndo("sceneEditorController",() => {
-            $scope.$apply(() => {
-                getMaterialFromSelection(true);
-            });
+            $scope.currentMaterial = MaterialHandler.Get().updateCurrentFromSelection();
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
         });
 
         app.render.Scene.Get().sceneWillClose("sceneEditorController", (oldScene) => {

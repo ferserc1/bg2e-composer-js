@@ -5,51 +5,51 @@
 <div class="bg2-material-editor-controls" ng-hide="isDisabled">
     <h4>Color</h4>
     <div class="bg2-widget-panel">
-        <color-picker label="Diffuse" value="diffuse" on-user-changed="userChanged"></color-picker>
-        <color-picker label="Specular" value="specular" on-user-changed="userChanged"></color-picker>
-        <slider-picker label="Alpha cutoff" value="alphaCutoff" increment="0.1" min="0" max="1" on-user-changed="userChanged"></slider-picker>
+        <color-picker label="Diffuse" value="diffuse" commit-changes="onCommitChanges"></color-picker>
+        <color-picker label="Specular" value="specular" commit-changes="onCommitChanges"></color-picker>
+        <slider-picker label="Alpha cutoff" value="alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
     </div>
     
     <h4>Texture properties</h4>
     <div class="bg2-widget-panel">
-        <texture-picker value="texture" label="Texture" on-user-changed="userChanged"></texture-picker>
-        <vector-picker label="Offset" value="textureOffset" increment="0.1" on-user-changed="userChanged"></vector-picker>
-        <vector-picker label="Scale" value="textureScale" increment="0.1" on-user-changed="userChanged"></vector-picker>
-        <texture-picker value="lightMap" label="Light map" on-user-changed="userChanged"></texture-picker>
-        <texture-picker value="normalMap" label="Normal map" on-user-changed="userChanged"></texture-picker>
-        <vector-picker label="Offset" value="normalMapOffset" increment="0.1" on-user-changed="userChanged"></vector-picker>
-        <vector-picker label="Scale" value="normalMapScale" increment="0.1" on-user-changed="userChanged"></vector-picker>
+        <texture-picker value="texture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <vector-picker label="Offset" value="textureOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <vector-picker label="Scale" value="textureScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <texture-picker value="lightMap" label="Light map" commit-changes="onCommitChanges"></texture-picker>
+        <texture-picker value="normalMap" label="Normal map" commit-changes="onCommitChanges"></texture-picker>
+        <vector-picker label="Offset" value="normalMapOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <vector-picker label="Scale" value="normalMapScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
     </div>
     
     <h4>Shininess</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="shininess" label="Amount" min="0" max="255" on-user-changed="userChanged"></slider-picker>
-        <texture-picker label="Mask" value="shininessMask" on-user-changed="userChanged"></texture-picker>
-        <select-picker label="Channel" value="shininessMaskChannel" options="maskChannels" on-user-changed="userChanged"></select-picker>
-        <bool-picker label="Invert values" value="shininessMaskInvert" on-user-changed="userChanged"></bool-picker>
+        <slider-picker value="shininess" label="Amount" min="0" max="255" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="shininessMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="shininessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="shininessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Light emission</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="lightEmission" label="Amount" min="0" max="1" on-user-changed="userChanged"></slider-picker>
-        <texture-picker label="Mask" value="lightEmissionMask" on-user-changed="userChanged"></texture-picker>
-        <select-picker label="Channel" value="lightEmissionMaskChannel" options="maskChannels" on-user-changed="userChanged"></select-picker>
-        <bool-picker label="Invert values" value="lightEmissionMaskInvert" on-user-changed="userChanged"></bool-picker>
+        <slider-picker value="lightEmission" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="lightEmissionMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="lightEmissionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="lightEmissionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Reflection</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="reflection" label="Amount" min="0" max="1" on-user-changed="userChanged"></slider-picker>
-        <texture-picker label="Mask" value="reflectionMask" on-user-changed="userChanged"></texture-picker>
-        <select-picker label="Channel" value="reflectionMaskChannel" options="maskChannels" on-user-changed="userChanged"></select-picker>
-        <bool-picker label="Invert values" value="reflectionMaskInvert" on-user-changed="userChanged"></bool-picker>
+        <slider-picker value="reflection" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="reflectionMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="reflectionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="reflectionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Other</h4>
     <div class="bg2-widget-panel">
-        <bool-picker label="Cast shadows" value="castShadows" on-user-changed="userChanged"></bool-picker>
-        <bool-picker label="Receive shadows" value="receiveShadows" on-user-changed="userChanged"></bool-picker>
-        <bool-picker label="Cull face" value="cullFace" on-user-changed="userChanged"></bool-picker>
+        <bool-picker label="Cast shadows" value="castShadows" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Receive shadows" value="receiveShadows" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Cull face" value="cullFace" commit-changes="onCommitChanges"></bool-picker>
     </div>
 </div>
 <div ng-show="isDisabled">
