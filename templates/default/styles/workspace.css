@@ -9,3 +9,26 @@
     pointer-events: none;
 }
     
+.bg2-left-tabs {
+    position: fixed;
+    right: 0px;
+    top: 36px;
+    width: 350px;
+    height: 30px;
+}
+
+.bg2-left-tabs ul {
+    padding-left: 0px;
+    margin-top: 6px;
+}
+
+.bg2-left-tabs li {
+    display: inline;
+    list-style: none;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.bg2-tab-bar a {
+    padding: 6px;
+}

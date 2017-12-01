@@ -103,6 +103,9 @@ app.addSource(() => {
     angularApp.controller("SceneEditorController", ['$rootScope','$scope', function($rootScope,$scope) {
         $scope.currentMaterial = null;
 
+        $scope.tabs = ["Material","Components"];
+        $scope.currentTab = 0;
+
         $scope.onMaterialChanged = function(material) {
             MaterialHandler.Get().applyToSelected(false);
             app.ComposerWindowController.Get().updateView();
