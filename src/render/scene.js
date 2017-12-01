@@ -145,6 +145,11 @@ app.addDefinitions(() => {
                 bg.base.Loader.Load(this.gl,scenePath)
                     .then((result) => {
                         bg.scene.Node.CleanupNode(this._root);
+                        if (result.sceneRoot.children.length==1 &&
+                            Object.keys(result.sceneRoot._components).length==0
+                        ) {
+                            result.sceneRoot = result.sceneRoot.children[0];
+                        }
 
                         sceneWillOpen.apply(this,[this.root,result.sceneRoot]);
     
