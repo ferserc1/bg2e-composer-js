@@ -99,9 +99,35 @@ app.addSource(() => {
             return commitMaterials.apply(this,[this.getMaterialsFromSelection(),true]);
         }
     }
+
+    let g_nodeHandler = null;
+    class NodeHandler {
+        static Get() {
+            if (!g_nodeHandler) {
+                g_nodeHandler = new NodeHandler();
+            }
+            return g_nodeHandler;
+        }
+
+        constructor() {
+        }
+
+        get selectedNodes() {
+            let result = [];
+            app.render.Scene.Get().selectionManager.selection.forEach((item) => {
+                if (item.node) {
+                    result.push(item.node);
+                }
+            });
+            return result;
+        }
+    }
     
     angularApp.controller("SceneEditorController", ['$rootScope','$scope', function($rootScope,$scope) {
+        // Main magerial, obtained from MaterialHandler
         $scope.currentMaterial = null;
+
+        // This array stores the currently selected nodes
 
         $scope.tabs = ["Material","Components"];
         $scope.currentTab = 0;
@@ -127,6 +153,7 @@ app.addSource(() => {
 
         app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {
             $scope.currentMaterial = MaterialHandler.Get().updateCurrentFromSelection();
+            $scope.selection = NodeHandler.Get().selectedNodes;
         });
 
         app.CommandManager.Get().onRedo("sceneEditorController",() => {

@@ -122,7 +122,9 @@ app.addSource(() => {
                 $scope.value = $scope.value || $scope.options[0];
                 $scope.userChanged = function() {
                     if ($scope.commitChanges) {
-                        $scope.commitChanges();
+                        // setTimeout to ensure that the new value is updated
+                        // before sending the user event
+                        setTimeout(() => $scope.commitChanges(), 10);
                     }
                 };
             }]
@@ -175,6 +177,42 @@ app.addSource(() => {
                     }
                     if (event.key=="ArrowUp") {
                         $scope.value[index] += inc - 0.0001;
+                    }
+                    $scope.$watch("value",function() {
+                        if ($scope.commitChanges) {
+                            $scope.commitChanges();
+                        }
+                    });
+                };
+            }]
+        };
+    });
+
+    angularApp.directive("numberPicker", function() {
+        return {
+            restrict: 'E',
+            templateUrl: `templates/${ app.config.templateName }/directives/number-picker.html`,
+            scope: {
+                label:"@",
+                value:"=",
+                increment:"=?",
+                commitChanges:"=?"
+            },
+            controller: ['$scope', function($scope) {
+                $scope.increment = $scope.increment || 1;
+                $scope.keyDown = function(event) {
+                    let inc = $scope.increment;
+                    if (event.shiftKey) {
+                        inc *= 10;
+                    }
+                    if (event.ctrlKey) {
+                        inc *= 0.1;
+                    }
+                    if (event.key=="ArrowDown") {
+                        $scope.value -= inc - 0.0001;
+                    }
+                    if (event.key=="ArrowUp") {
+                        $scope.value += inc - 0.0001;
                     }
                     $scope.$watch("value",function() {
                         if ($scope.commitChanges) {
