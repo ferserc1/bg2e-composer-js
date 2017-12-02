@@ -54,6 +54,28 @@ app.addSource(() => {
                 let cmd = new app.cameraCommands.SetProjectionStrategy(this.camera,strategy);
                 return app.CommandManager.Get().doCommand(cmd);
             }
+
+            saveProjection(fov,near,far) {
+                if (this.projectionType==1) {
+                    return app.CommandManager.Get().doCommand(
+                        new app.cameraCommands.SavePerspective(this.camera,fov,near,far)
+                    );
+                }
+                else {
+                    return Promise.resolve();
+                }
+            }
+
+            saveLens(focalLength,frameSize,near,far) {
+                if (this.projectionType==2) {
+                    return app.CommandManager.Get().doCommand(
+                        new app.cameraCommands.SaveLens(this.camera,focalLength,frameSize,near,far)
+                    )
+                }
+                else {
+                    return Promise.resolve();
+                }
+            }
         }
     });
 
@@ -96,10 +118,26 @@ app.addSource(() => {
                     let type = $scope.projectionType.id;
                     $scope.component.setProjectionType(type)
                         .then(() => {
-                            app.ComposerWindowController.Get().postReshape()
+                            app.ComposerWindowController.Get().postReshape();
                             app.ComposerWindowController.Get().updateView();
                             updateValues();
                             $scope.$apply();
+                        });
+                }
+
+                $scope.saveProjection = function() {
+                    $scope.component.saveProjection($scope.fov,$scope.near,$scope.far)
+                        .then(() => {
+                            app.ComposerWindowController.Get().postReshape();
+                            app.ComposerWindowController.Get().updateView();
+                        });
+                }
+
+                $scope.saveLens = function() {
+                    $scope.component.saveLens($scope.focalLength,$scope.frameSize,$scope.near,$scope.far)
+                        .then(() => {
+                            app.ComposerWindowController.Get().postReshape();
+                            app.ComposerWindowController.Get().updateView();
                         });
                 }
 
@@ -107,12 +145,17 @@ app.addSource(() => {
                 app.CommandManager.Get().onRedo("cameraUI", () => {
                     $scope.$apply(() => {
                         updateValues();
+                        app.ComposerWindowController.Get().postReshape();
+                        app.ComposerWindowController.Get().updateView();
                     });
+
                 });
 
                 app.CommandManager.Get().onUndo("cameraUI", () => {
                     $scope.$apply(() => {
                         updateValues();
+                        app.ComposerWindowController.Get().postReshape();
+                        app.ComposerWindowController.Get().updateView();
                     });
                 });
 

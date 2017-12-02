@@ -178,12 +178,12 @@ app.addSource(() => {
                     if (event.key=="ArrowUp") {
                         $scope.value[index] += inc - 0.0001;
                     }
-                    $scope.$watch("value",function() {
-                        if ($scope.commitChanges) {
-                            $scope.commitChanges();
-                        }
-                    });
                 };
+                $scope.commit = function() {
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
+                    }
+                }
             }]
         };
     });
@@ -214,12 +214,12 @@ app.addSource(() => {
                     if (event.key=="ArrowUp") {
                         $scope.value += inc - 0.0001;
                     }
-                    $scope.$watch("value",function() {
-                        if ($scope.commitChanges) {
-                            $scope.commitChanges();
-                        }
-                    });
                 };
+                $scope.commit = function() {
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
+                    }
+                }
             }]
         };
     });

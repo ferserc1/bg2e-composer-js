@@ -1,14 +1,14 @@
 <select-picker label="Projection" value="projectionType" options="projections" commit-changes="changeProjection"></select-picker>
 <div ng-show="projectionType.id==1">
     <h3>Perspective</h3>
-    <number-picker label="Field of View" value="fov"></number-picker>
-    <number-picker label="Near plane" value="near"></number-picker>
-    <number-picker label="Far plane" value="far"></number-picker>
+    <number-picker label="Field of View" value="fov" commit-changes="saveProjection"></number-picker>
+    <number-picker label="Near plane" value="near" commit-changes="saveProjection"></number-picker>
+    <number-picker label="Far plane" value="far" commit-changes="saveProjection"></number-picker>
 </div>
 <div ng-show="projectionType.id==2">
         <h3>Lens</h3>
-        <number-picker label="Focal length" value="focalLength"></number-picker>
-        <number-picker label="Frame size" value="frameSize"></number-picker>
-        <number-picker label="Near plane" value="near"></number-picker>
-        <number-picker label="Far plane" value="far"></number-picker>
+        <number-picker label="Focal length" value="focalLength" commit-changes="saveLens"></number-picker>
+        <number-picker label="Frame size" value="frameSize" commit-changes="saveLens"></number-picker>
+        <number-picker label="Near plane" value="near" commit-changes="saveLens"></number-picker>
+        <number-picker label="Far plane" value="far" commit-changes="saveLens"></number-picker>
 </div>
