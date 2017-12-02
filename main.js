@@ -17,7 +17,8 @@ function createWindow() {
         width: mainWindowState.width,
         height: mainWindowState.height,
         x: mainWindowState.x,
-        y: mainWindowState.y
+        y: mainWindowState.y,
+        icon: path.join(__dirname, "data/bg2e-composer-512.png")
     });
     if (mainWindowState.maximized) {
         win.maximize();
