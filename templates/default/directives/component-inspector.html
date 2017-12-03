@@ -1,5 +1,9 @@
-<h1>Component inspector</h1>
+<h1>Node</h1>
 <div ng-show="selection.length">
+    <div class="bg2-widget-panel">
+        <string-picker label="Node name" value="nodeName" commit-changes="setNodeName"></string-picker>
+    </div>
+    <h2>Components</h2>
     <div class="bg2-widget-panel">
         <button ng-click="addComponent()">Add Component</button>
     </div>

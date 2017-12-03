@@ -223,4 +223,24 @@ app.addSource(() => {
             }]
         };
     });
+
+    angularApp.directive("stringPicker", function() {
+        return {
+            restrict: 'E',
+            templateUrl: `templates/${ app.config.templateName }/directives/string-picker.html`,
+            scope: {
+                label:"@",
+                value:"=",
+                commitChanges:"=?"
+            },
+            controller: ['$scope', function($scope) {
+    
+                $scope.commit = function() {
+                    if ($scope.commitChanges) {
+                        $scope.commitChanges();
+                    }
+                }
+            }]
+        };
+    });
 })

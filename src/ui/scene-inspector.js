@@ -76,12 +76,34 @@ app.addSource(() => {
             },10);
         }
 
+        function expandNode(node) {
+            node.expanded = true;
+            if (node.parent) {
+                expandNode(node.parent);
+            }
+        }
+
+        function expandSelection() {
+            let sel = app.render.Scene.Get().selectionManager.selection;
+            sel = sel.length && sel[sel.length-1];
+            if (sel.node) {
+                expandNode(sel.node);
+            }
+        }
+
         app.render.Scene.Get().sceneChanged("sceneInspector",(sceneRoot) => {
             updateScene();
         });
         app.render.Scene.Get().selectionManager.selectionChanged("sceneInspector",(selectionManager) => {
+            expandSelection();
             updateScene();
-        })
+        });
+        app.CommandManager.Get().onUndo("sceneInspector",() => {
+            updateScene();
+        });
+        app.CommandManager.Get().onRedo("sceneInspector",() => {
+            updateScene();
+        });
         updateScene();
     }]);
 

@@ -5,9 +5,11 @@ app.addSource(() => {
         $scope.selection = $scope.selection || [];
         $scope.selectedNode = null;
         $scope.components = [];
-
+        $scope.nodeName = "";
+        
         $scope.$watch("selection",function() {
             $scope.selectedNode = $scope.selection.length && $scope.selection[0];
+            $scope.nodeName = $scope.selectedNode && $scope.selectedNode.name;
             $scope.components = [];
             $scope.unknownComponents = [];
             if ($scope.selectedNode) {
@@ -29,6 +31,14 @@ app.addSource(() => {
 
         };
 
+        $scope.setNodeName = function() {
+            app.CommandManager.Get().doCommand(
+                new app.nodeCommands.SetName($scope.selectedNode,$scope.nodeName)
+            )
+            .then(() => {
+                app.render.Scene.Get().notifySceneChanged();
+            });
+        };
 
     }]);
 
