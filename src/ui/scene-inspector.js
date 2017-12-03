@@ -22,9 +22,29 @@ app.addSource(() => {
                         if (!compiledContents) {
                             compiledContents = $compile(contents);
                         }
+                        
                         compiledContents(scope,function(clone) {
                             element.append(clone);
                         });
+
+                        let children = element.children();
+                        if (children.length) {
+                            let el = children[0];  // H1 node
+                            el.draggable = true;
+                            el.data = scope.family;
+                            el.addEventListener("dragstart", function(evt) {
+                                app.ui.DragManager.Get().dragStart(this.data);
+                                return false;
+                            }, false);
+                            el.addEventListener("dragover",function(evt) {
+                                evt.preventDefault();
+                                return false;
+                            }, false);
+                            el.addEventListener("drop", function(evt) {
+                                app.ui.DragManager.Get().dragEnd(this.data);
+                                return false;
+                            }, false);
+                        }
 
                         if (link && link.post) {
                             link.post.apply(null, arguments);
