@@ -76,6 +76,18 @@ app.addSource(() => {
                     return Promise.resolve();
                 }
             }
+
+            setAsMain() {
+                if (!this.isMainCamera) {
+                    return app.CommandManager.Get().doCommand(
+                        new app.cameraCommands.SetMain(this.camera)
+                    );
+                }
+            }
+
+            get isMainCamera() {
+                return app.render.Scene.Get().camera == this.camera;
+            }
         }
     });
 
@@ -111,6 +123,8 @@ app.addSource(() => {
                     $scope.focalLength = $scope.component.focalLength;
                     $scope.frameSize = $scope.component.frameSize;
 
+                    $scope.isMainCamera = $scope.component.isMainCamera;
+
                     return true;
                 }
 
@@ -138,6 +152,16 @@ app.addSource(() => {
                         .then(() => {
                             app.ComposerWindowController.Get().postReshape();
                             app.ComposerWindowController.Get().updateView();
+                        });
+                }
+
+                $scope.setAsMain = function() {
+                    $scope.component.setAsMain()
+                        .then(() => {
+                            app.ComposerWindowController.Get().postReshape();
+                            app.ComposerWindowController.Get().updateView();
+                            updateValues();
+                            $scope.$apply();
                         });
                 }
 

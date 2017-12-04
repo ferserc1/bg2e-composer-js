@@ -135,6 +135,30 @@ module.exports = {
             ]
           },
           {
+            label: 'Create',
+            submenu: [
+              {
+                label: 'Empty Node',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'createEmptyNode' })
+                }
+              },
+              { type: 'separator' },
+              {
+                label: 'Add Component',
+                submenu: [
+                  { label: 'Camera', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createCameraComponent' }) }},
+                  { label: 'Transform', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createTransformComponent' }) }},
+                  { label: 'Light', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createLightComponent' }) }},
+                  { label: 'Drawable', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createDrawableComponent' }) }},
+                  { label: 'Cube', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createCubeComponent' }) }},
+                  { label: 'Plane', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createPlaneComponent' }) }},
+                  { label: 'Sphere', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createSphereComponent' }) }}
+                ]
+              }
+            ]
+          },
+          {
             role: 'window',
             submenu: [
               {role: 'minimize'},
