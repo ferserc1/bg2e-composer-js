@@ -78,4 +78,41 @@ app.addSource(() => {
     }
 
     app.nodeCommands.SetParent = SetParent;
+
+    class RemoveNode extends app.Command {
+        constructor(nodeList) {
+            super();
+            this._nodeList = [];
+            this._restoreParents = [];
+            nodeList.forEach((node) => {
+                if (node.parent) {
+                    this._nodeList.push(node);
+                    this._restoreParents.push(node.parent);
+                }
+            });
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._nodeList.length==0) {
+                    reject(new Error("Could not remove nodes: the selected nodes could not be removed"));
+                }
+                else {
+                    this._nodeList.forEach((node) => node.parent.removeChild(node));
+                    resolve();
+                }
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._nodeList.forEach((node,index) => {
+                    this._restoreParents[index].addChild(node);
+                });
+                resolve();
+            })
+        }
+    }
+
+    app.nodeCommands.RemoveNode = RemoveNode;
 });

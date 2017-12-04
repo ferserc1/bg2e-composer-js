@@ -61,12 +61,13 @@ module.exports = {
                 }
               },
               {type: 'separator'},
-              {role: 'cut'},
-              {role: 'copy'},
-              {role: 'paste'},
-              {role: 'pasteandmatchstyle'},
-              {role: 'delete'},
-              {role: 'selectall'}
+              {
+                label: 'Remove Node',
+                accelerator: 'Backspace',
+                click: function(item, focusedWindow) {
+                  focusedWindow.webContents.send('triggerMenu', { msg:'removeNode' })
+                }
+              }
             ]
           },
           {
