@@ -14,7 +14,31 @@ app.addSource(() => {
     
             drag(src,dst) {
                 return new Promise((resolve,reject) => {
-                    reject(new Error("NodeDragHandler Not implemented"));
+                    let newParent = dst;
+                    let nodeList = [];
+                    let selection = app.render.Scene.Get().selectionManager.selection;
+                    let isSourceSelected = false;   // Add the source to the selection, if is not selected
+                    selection.forEach((item) => {
+                        if (item.node) {
+                            nodeList.push(item.node);
+                        }
+                        if (item.node==src) {
+                            isSourceSelected = true;
+                        }
+                    });
+                    if (!isSourceSelected) {
+                        nodeList.push(src);
+                    }
+                    
+                    app.CommandManager.Get().doCommand(new app.nodeCommands.SetParent(newParent,nodeList))
+                        .then(() => {
+                            newParent.expanded = true;
+                            app.render.Scene.Get().notifySceneChanged();
+                            resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
                 });
             }
         }
@@ -47,6 +71,10 @@ app.addSource(() => {
                             el.draggable = true;
                             el.data = scope.family;
                             el.addEventListener("dragstart", function(evt) {
+                                if (!(this.data instanceof bg.scene.Node)) {
+                                    // The root node is not an instance of bg.scene.Node
+                                    this.data = app.render.Scene.Get().root;
+                                }
                                 app.ui.DragManager.Get().dragStart(this.data);
                                 return false;
                             }, false);
@@ -97,15 +125,11 @@ app.addSource(() => {
     });
 
     angularApp.controller("SceneInspectorController", ['$scope',function($scope) {
-        $scope.node = {
-            name: "Scene root",
-            expanded: true,
-            children: []
-        };
+        $scope.node = {};
         function updateScene() {
-            $scope.node = app.render.Scene.Get().root;
-            $scope.node.expanded = true;
             setTimeout(() => {
+                $scope.node = app.render.Scene.Get().root;
+                $scope.node.expanded = true;
                 $scope.$apply(() => {});
             },10);
         }
