@@ -83,6 +83,10 @@ app.addSource(() => {
                                 return false;
                             }, false);
                             el.addEventListener("drop", function(evt) {
+                                if (!(this.data instanceof bg.scene.Node)) {
+                                    // The root node is not an instance of bg.scene.Node
+                                    this.data = app.render.Scene.Get().root;
+                                }
                                 app.ui.DragManager.Get().dragEnd(this.data);
                                 return false;
                             }, false);

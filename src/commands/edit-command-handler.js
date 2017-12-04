@@ -36,6 +36,7 @@ app.addSource(() => {
                         new app.nodeCommands.RemoveNode(nodes)
                     )
                     .then(() => {
+                        app.render.Scene.Get().selectionManager.clear();
                         app.render.Scene.Get().notifySceneChanged();
                     })
                     .catch((err) => {
