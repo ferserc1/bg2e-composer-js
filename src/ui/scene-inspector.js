@@ -6,6 +6,20 @@ app.addDefinitions(() => {
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
+    app.ui.addDragHandler(() => {
+        return class NodeDragHandler extends app.ui.DragHandler {
+            canDrag(src,dst) {
+                return src instanceof bg.scene.Node && dst instanceof bg.scene.Node;
+            }
+    
+            drag(src,dst) {
+                return new Promise((resolve,reject) => {
+                    reject(new Error("NodeDragHandler Not implemented"));
+                });
+            }
+        }
+    })
+
     angularApp.factory("RecursionHelper", ['$compile', function($compile) {
         return {
             compile: function(element, link) {
@@ -135,4 +149,5 @@ app.addSource(() => {
             controller: 'SceneInspectorController'
         };
     });
-})
+});
+
