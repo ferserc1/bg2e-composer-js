@@ -115,4 +115,28 @@ app.addSource(() => {
     }
 
     app.nodeCommands.RemoveNode = RemoveNode;
+
+    class CreateNode extends app.Command {
+        constructor(node,parent) {
+            super();
+            this._node = node;
+            this._parent = parent;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._parent.addChild(this._node);
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._parent.removeChild(this._node);
+                resolve();
+            });
+        }
+    }
+
+    app.nodeCommands.CreateNode = CreateNode;
 });

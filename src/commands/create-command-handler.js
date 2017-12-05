@@ -1,4 +1,28 @@
 app.addSource(() => {
+
+    function createNode(onCreateCallback) {
+        let context = app.ComposerWindowController.Get().gl;
+        let parent = app.render.Scene.Get().root;
+        app.render.Scene.Get().selectionManager.selection.some((item) => {
+            if (item.node) {
+                parent = item.node;
+                return true;
+            }
+        });
+        let node = new bg.scene.Node(context);
+        if (onCreateCallback) {
+            onCreateCallack(node);
+        }
+        app.CommandManager.Get().doCommand(new app.nodeCommands.CreateNode(node,parent))
+            .then(() => {
+                app.render.Scene.Get().notifySceneChanged();
+                app.ComposerWindowController.Get().updateView();
+            })
+            .catch((err) => {
+
+            });
+    }
+
     class CreateCommandHandler extends app.CommandHandler {
         getMessages() {
             return [
@@ -57,7 +81,7 @@ app.addSource(() => {
         }
 
         createNode() {
-            alert("Not implemented");
+            createNode();
         }
 
         createCameraComponent() {

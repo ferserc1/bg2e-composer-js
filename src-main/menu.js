@@ -205,7 +205,7 @@ module.exports = {
           )
         
           // Window menu
-          template[4].submenu = [
+          template[5].submenu = [
             {role: 'close'},
             {role: 'minimize'},
             {role: 'zoom'},
