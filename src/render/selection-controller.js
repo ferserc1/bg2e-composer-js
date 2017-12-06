@@ -22,6 +22,14 @@ app.addDefinitions(() => {
             this._gizmoNode = null;
             this._gizmoTransform = null;
 
+            this._gizmoManager.loadGizmoIcons([
+                { type:'bg.scene.Camera', icon:'gizmo_icon_camera.png' },
+                { type:'bg.scene.Light', icon:'gizmo_icon_light_point.png' },
+                { type:'bg.scene.Transform', icon:'gizmo_icon_transform.png' },
+                { type:'bg.scene.Drawable', icon:'gizmo_icon_drawable.png' }
+            ], `templates/${ app.config.templateName }/gizmos`);
+            this._gizmoManager.gizmoIconScale = 2;
+
             this._selectionManager.selectionChanged("selectionController",() => {
                 if (this._gizmoNode && !this._gizmoNode.selected) {
                     clearGizmo.apply(this);
@@ -38,7 +46,9 @@ app.addDefinitions(() => {
             if (event.button!=bg.app.MouseButton.LEFT) return;
             this._downPosition = new bg.Vector2(event.x,event.y);
             let result = this._mousePicker.pick(this._scene.root, this._scene.camera, this._downPosition);
-            if (result && result.type==bg.manipulation.SelectableType.GIZMO) {
+            if (result &&
+                (result.type==bg.manipulation.SelectableType.GIZMO || result.type==bg.manipulation.SelectableType.GIZMO_ICON))
+            {
                 if (result.node.transform) {
                     this._gizmoTransform = new bg.Matrix4(result.node.transform.matrix);
                 }
@@ -63,15 +73,20 @@ app.addDefinitions(() => {
             if (event.button!=bg.app.MouseButton.LEFT) return;
             let upPosition = new bg.Vector2(event.x,event.y);
         
-            if (!this._gizmoManager.working && Math.abs(this._downPosition.distance(upPosition))<3) {
+            let result = this._mousePicker.pick(this._scene.root, this._scene.camera, upPosition);
+            if (Math.abs(this._downPosition.distance(upPosition))<3 &&
+                (!this._gizmoManager.working || (result && result.type==bg.manipulation.SelectableType.GIZMO_ICON)))
+            {
                 let add = event.event.shiftKey;
                 clearGizmo.apply(this);
                 if (!add) {
                     this._selectionManager.clear();
                 }
-                let result = this._mousePicker.pick(this._scene.root, this._scene.camera, upPosition);
+                
                 this._gizmoNode = result && result.node;
-                if (result && result.type==bg.manipulation.SelectableType.PLIST)  {
+                if (result &&
+                    (result.type==bg.manipulation.SelectableType.PLIST || result.type==bg.manipulation.SelectableType.GIZMO_ICON))
+                {
                     let selected = this._selectionManager.selectItem(result.node,result.plist,result.material);
                     let selectedItem = this._selectionManager.selectedItem;
                     if (!selected && selectedItem) {
