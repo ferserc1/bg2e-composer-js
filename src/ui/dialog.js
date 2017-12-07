@@ -84,6 +84,7 @@ app.addSource(() => {
             },
             controller: ['$scope','$compile',function($scope) {
                 $scope.visible = false;
+                $scope.result = null;
 
                 $scope.close = function() {
                     app.ui.DialogView.Close();
@@ -91,7 +92,7 @@ app.addSource(() => {
 
                 $scope.accept = function() {
                     if (typeof($scope.onAccept)=="function") {
-                        app.ui.DialogView.Ok($scope.onAccept());
+                        app.ui.DialogView.Ok($scope.onAccept($scope.result));
                     }
                     else {
                         app.ui.DialogView.Ok();

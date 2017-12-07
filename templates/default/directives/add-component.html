@@ -1,0 +1,5 @@
+<ul>
+    <li ng-repeat="comp in componentList" ng-class="{ 'selected' : comp.isSelected }">
+        <a ng-click="select(comp)">{{ comp.name }}</a>
+    </li>
+</ul>

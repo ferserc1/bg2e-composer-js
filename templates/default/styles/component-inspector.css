@@ -10,3 +10,35 @@ component-inspector {
     padding-top: 10px;
     padding-bottom: 40px;
 }
+
+add-component ul {
+    padding: 0px;
+}
+
+add-component ul li {
+    list-style: none;
+    border: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
+    padding-left: 13px;
+    padding-right: 13px;
+    margin-bottom: -1px;
+}
+
+add-component ul li:last-child {
+    border-radius: 0px 0px 5px 5px;
+}
+
+add-component ul li:first-child {
+    border-radius: 5px 5px 0px 0px;
+}
+
+add-component ul li.selected {
+    color: black;
+    background-color: #bfbfbf;
+}
+
+add-component ul li a {
+    padding: 10px;
+    display: block;
+    width: 100%;
+}

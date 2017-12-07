@@ -139,4 +139,53 @@ app.addSource(() => {
     }
 
     app.nodeCommands.CreateNode = CreateNode;
+
+    class RemoveComponent extends app.Command {
+        constructor(node,component) {
+            super();
+            this._node = node;
+            this._component = component;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._node.removeComponent(this._component);
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.addComponent(this._component);
+                resolve();
+            });
+        }
+    }
+
+    app.nodeCommands.RemoveComponent = RemoveComponent;
+
+    class AddComponent extends app.Command {
+        constructor(node,component) {
+            super();
+            this._node = node;
+            this._component = component;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._node.addComponent(this._component);
+                app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                resolve();
+            });
+        }
+        
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.removeComponent(this._component);
+                resolve();
+            });
+        }
+    }
+
+    app.nodeCommands.AddComponent = AddComponent;
 });

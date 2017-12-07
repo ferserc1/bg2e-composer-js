@@ -5,6 +5,10 @@ app.addSource(() => {
                 super("bg.scene.Camera","Camera","camera-ui");
             }
 
+            createInstance() {
+                return new bg.scene.Camera();
+            }
+
             get camera() { return this.componentInstance; }
 
             get near() {

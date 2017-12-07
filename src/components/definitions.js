@@ -12,6 +12,12 @@ app.addDefinitions(() => {
         return g_componentUIs[componentClass];
     }
 
+    Object.defineProperty(app.components,"componentList", {
+        get: function() {
+            return g_componentUIs;
+        }
+    });
+
     class ComponentUI {
 
         constructor(componentClass,componentName,directiveName) {
@@ -27,6 +33,9 @@ app.addDefinitions(() => {
 
         set componentInstance(c) { this._componentInstance = c; }
 
+        createInstance() {
+            return null;
+        }
     }
 
     app.components.ComponentUI = ComponentUI;

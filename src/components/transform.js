@@ -5,6 +5,10 @@ app.addSource(() => {
                 super("bg.scene.Transform","Transform","transform-ui");
             }
 
+            createInstance() {
+                return new bg.scene.Transform(bg.Matrix4.Translation(0,1,0));
+            }
+
             resetPosition() {
                 app.CommandManager.Get().doCommand(
                     new app.transformCommands.ResetPosition(this.componentInstance)

@@ -99,7 +99,7 @@ app.addDefinitions(() => {
                         gizmo.init();
                         gizmo.visible = true;
                     }
-                    else if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo")) {
+                    else if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo") && this._gizmoNode.transform) {
                         this._gizmoNode.component("bg.manipulation.Gizmo").visible = true;
                     }
                 }

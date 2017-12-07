@@ -28,7 +28,38 @@ app.addSource(() => {
         });
         
         $scope.addComponent = function() {
+            app.ui.DialogView.Show({
+                templateUrl:`templates/${ app.config.templateName }/directives/add-component-view.html`,
+                title:"Add Component",
+                showClose: false,
+                type: 'modal-right bg2-modal-mini',
+                onAccept:(result) => { return result; }
+            })
+                .then((comp) => {
+                    if (comp && $scope.selectedNode) {
+                        let instance = comp.createInstance();
+                        app.CommandManager.Get().doCommand(
+                            new app.nodeCommands.AddComponent($scope.selectedNode,instance)
+                        )
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                            app.ComposerWindowController.Get().updateView();
+                        })
+                        .catch((err) => {
 
+                        })
+                    }
+                })
+                .catch((err) => console.log(err));
+        };
+
+        $scope.removeComponent = function(componentUi) {
+            let comp = componentUi.componentInstance;
+            app.CommandManager.Get().doCommand(new app.nodeCommands.RemoveComponent(comp.node,comp))
+                .then(() => {
+                    app.render.Scene.Get().notifySceneChanged();
+                    app.ComposerWindowController.Get().updateView();
+                });
         };
 
         $scope.setNodeName = function() {

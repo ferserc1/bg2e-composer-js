@@ -40,6 +40,12 @@ dialog-view .bg2-dialog-container {
     padding-right: 20px;
 }
 
+.bg2-modal-mini .bg2-dialog-view {
+    top: 100px !important;
+    bottom: auto !important;
+    height: 400px;
+}
+
 .bg2-dialog-view .bg2-dialog-title {
     font-size: 14px;
     line-height: 14px;

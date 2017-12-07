@@ -145,6 +145,10 @@ texture-picker img {
     color: #ff9a9a;
 }
 
+.bg2-pull-right {
+    float: right;
+}
+
 label.bg2-input-xs, label.bg2-input-sm, label.bg2-input-md, label.bg2-input-lg, label.bg2-input-xl {
     text-align: right;
     padding-left: 4px;
