@@ -1,30 +1,40 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
-    angularApp.controller("ComponentInspectorController",['$scope',function($scope) {
+    angularApp.controller("ComponentInspectorController",['$scope','$timeout',function($scope,$timeout) {
         $scope.selection = $scope.selection || [];
         $scope.selectedNode = null;
         $scope.components = [];
         $scope.nodeName = "";
-        
-        $scope.$watch("selection",function() {
+
+        function updateComponents() {
             $scope.selectedNode = $scope.selection.length && $scope.selection[0];
             $scope.nodeName = $scope.selectedNode && $scope.selectedNode.name;
             $scope.components = [];
             $scope.unknownComponents = [];
-            if ($scope.selectedNode) {
-                for (let identifier in $scope.selectedNode._components)  {
-                    let instance = $scope.selectedNode.component(identifier);
-                    let ui = app.components.getUIForComponent(identifier) || {};
-                    if (ui) {
-                        ui.componentInstance = instance;
-                        $scope.components.push(ui);
-                    }
-                    else {
-                        $scope.unknownComponents.push(identifier);
+            $timeout(() => {
+                if ($scope.selectedNode) {
+                    for (let identifier in $scope.selectedNode._components)  {
+                        let instance = $scope.selectedNode.component(identifier);
+                        let ui = app.components.getUIForComponent(identifier) || {};
+                        if (ui) {
+                            ui.componentInstance = instance;
+                            $scope.components.push(ui);
+                        }
+                        else {
+                            $scope.unknownComponents.push(identifier);
+                        }
                     }
                 }
-            }
+            },10);
+        }
+        
+        $scope.$watch("selection",function() {
+            updateComponents();
+        });
+
+        app.render.Scene.Get().sceneChanged("componentInspector", () => {
+            updateComponents();
         });
         
         $scope.addComponent = function() {
