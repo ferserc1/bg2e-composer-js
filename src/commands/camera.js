@@ -115,4 +115,28 @@ app.addSource(() => {
     }
 
     app.cameraCommands.SaveLens = SaveLens;
+
+    class SetMain extends app.Command {
+        constructor(camera) {
+            super();
+            this._camera = camera;
+            this._prevMain = app.render.Scene.Get().camera;
+        }
+
+        execute() {
+            return new Promise((resolve) => {
+                app.render.Scene.Get().camera = this._camera;
+                resolve();
+            })
+        }
+
+        undo() {
+            return new Promise((resolve) => {
+                app.render.Scene.Get().camera = this._prevMain;
+                resolve();
+            })
+        }
+    }
+
+    app.cameraCommands.SetMain = SetMain;
 })

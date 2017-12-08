@@ -58,6 +58,15 @@ app.addDefinitions(() => {
             return this._camera;
         }
 
+        set camera(c) {
+            if (this.belongsToScene(c.node)) {
+                this._camera = c;
+            }
+            else {
+                throw new Error("Could not set camera as main: this camera does not belongs to the scene.");
+            }
+        }
+
         get isValid() {
             return this._root && this._camera;
         }
@@ -68,6 +77,18 @@ app.addDefinitions(() => {
 
         get selectionController() {
             return this._selectionController;
+        }
+
+        belongsToScene(node) {
+            if (node==null) {
+                return false;
+            }
+            else if (node==this.root) {
+                return true;
+            }
+            else {
+                return this.belongsToScene(node.parent);
+            }
         }
 
         // callback(oldSceneRoot,newSceneRoot)
