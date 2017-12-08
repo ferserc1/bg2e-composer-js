@@ -24,7 +24,8 @@ html {
     border: 1px solid #828282;
     box-sizing: border-box;
     padding: 7px;
-    border-radius: 5px
+    border-radius: 5px;
+    margin-bottom: 4px;
 }
 
 .bg2-form-field {
