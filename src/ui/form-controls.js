@@ -80,6 +80,46 @@ app.addSource(() => {
         }
     });
 
+    angularApp.directive("filePicker", function() {
+        return {
+            restrict: "E",
+            templateUrl: `templates/${ app.config.templateName }/directives/file-picker.html`,
+            scope: {
+                label:"@",
+                value:"=",
+                commitChanges:"=?",
+                filters:"=?"
+            },
+            controller: ['$scope', function($scope) {
+                $scope.filters = $scope.filters || [];
+                $scope.fileName = bg.utils.path.fileName($scope.value);
+                $scope.$watch("value", () => {
+                    $scope.fileName = bg.utils.path.fileName($scope.value);
+                });
+
+                $scope.pickFile = function() {
+                    const { dialog } = require('electron').remote;
+
+                    let filePath = dialog.showOpenDialog({
+                        properties: ['openFile'],
+                        filters:$scope.filters
+                    });
+                    if (filePath) {
+                        filePath = app.standarizePath(filePath[0]);
+                        $scope.value = filePath;
+                        if ($scope.commitChanges) {
+                            $scope.commintChanges();
+                        }
+                    }
+                };
+
+                $scope.clearFile = function() {
+                    $scope.value = "";
+                };
+            }]
+        }
+    });
+
     angularApp.directive("sliderPicker", function() {
         return {
             restrict: 'E',

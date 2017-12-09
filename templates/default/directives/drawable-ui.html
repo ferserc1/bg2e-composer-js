@@ -1,0 +1,22 @@
+<div class="bg2-widget-panel">
+    <h3>Creation tools</h3>
+    <select-picker label="Type" value="creationTool" options="creationTools"></select-picker>
+    <div ng-show="creationTool.id==0">
+        <file-picker label="File" value="filePath" filters="fileFilters"></file-picker>
+    </div>
+    <div ng-show="creationTool.id==1">
+        <number-picker label="Width" value="width"></number-picker>
+        <number-picker label="Height" value="height"></number-picker>
+        <number-picker label="Depth" value="depth"></number-picker>
+    </div>
+    <div ng-show="creationTool.id==2">
+        <number-picker label="Radius" value="radius"></number-picker>
+        <number-picker label="Slides" value="slices"></number-picker>
+        <number-picker label="Stacks" value="stacks"></number-picker>
+    </div>
+    <div ng-show="creationTool.id==3">
+        <number-picker label="Width" value="width"></number-picker>
+        <number-picker label="Depth" value="depth"></number-picker>
+    </div>
+    <button ng-click="createDrawable()">{{ createButtonName }}</button>
+</div>

@@ -18,9 +18,7 @@ app.addDefinitions(() => {
 
     function prepareNode(node) {
         let context = app.ComposerWindowController.Get().gl;
-        if (!node.component("bg.manipulation.Selectable")) {
-            node.addComponent(new bg.manipulation.Selectable());
-        }
+        node.addComponent(new bg.manipulation.Selectable());
     }
 
     class MakeSelectableVisitor extends bg.scene.NodeVisitor {
