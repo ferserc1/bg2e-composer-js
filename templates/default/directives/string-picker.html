@@ -1,4 +1,5 @@
 <div class="bg2-form-field">
     <label class="bg2-width-30">{{ label }}</label>
-    <input type="text" ng-model="value" ng-keyup="commit()">
+    <input type="text" class="bg2-width-40" ng-model="value" ng-keyup="keyUp($event)" ng-blur="confirm($event)">
+    <button ng-click="" class="bg2-width-10" ng-class="{ 'disabled' : !valueChanged }">V</button>
 </div>

@@ -81,6 +81,13 @@ app.addSource(() => {
             });
         };
 
+        app.CommandManager.Get().onUndo("commandManager",() => {
+            updateComponents();
+        });
+
+        app.CommandManager.Get().onRedo("commandManager",() => {
+            updateComponents();
+        });
     }]);
 
     angularApp.directive("componentInspector", function() {

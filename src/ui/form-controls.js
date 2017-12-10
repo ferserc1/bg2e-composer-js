@@ -274,8 +274,18 @@ app.addSource(() => {
                 commitChanges:"=?"
             },
             controller: ['$scope', function($scope) {
-    
-                $scope.commit = function() {
+                $scope.valueChanged = false;
+                $scope.keyUp = function(evt) {
+                    if (evt.key=="Enter") {
+                        evt.target.blur();
+                    }
+                    else {
+                        $scope.valueChanged = true;
+                    }
+                }
+                
+                $scope.confirm = function(evt) {
+                    $scope.valueChanged = false;
                     if ($scope.commitChanges) {
                         $scope.commitChanges();
                     }
