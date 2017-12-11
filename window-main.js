@@ -34,6 +34,10 @@ var GLOBAL_APP_NAME = "";
 
     function requireSources(folderPath) {
         let srcDir = fs.readdirSync(folderPath);
+        srcDir.sort((a,b) => {
+            if (a<b) return -1;
+            else return 1;
+        });
         srcDir.forEach((sourceFile) => {
             let filePath = path.join(folderPath,sourceFile);
             if (sourceFile.split(".").pop()=='js') {
