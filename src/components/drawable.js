@@ -43,6 +43,10 @@ app.addSource(() => {
             createPlane(w,d) {
                 return this.execCommand(new app.drawableCommands.CreatePlane(this.componentInstance.node,w,d));
             }
+
+            setName(name) {
+                return this.execCommand(new app.drawableCommands.SetName(this.componentInstance,name));
+            }
         }
     });
 
@@ -56,6 +60,7 @@ app.addSource(() => {
                 component:"="
             },
             controller: ['$scope',function($scope) {
+                $scope.name = $scope.component.componentInstance.name;
                 $scope.creationTools = [
                     { id:0, label:"Load from file" },
                     { id:1, label:"Cube" },
@@ -78,6 +83,10 @@ app.addSource(() => {
                 $scope.$watch('creationTool', () => {
 
                 });
+
+                $scope.setDrawableName = function() {
+                    $scope.component.setName($scope.name);
+                };
 
                 $scope.createDrawable = function() {
                     switch ($scope.creationTool.id) {

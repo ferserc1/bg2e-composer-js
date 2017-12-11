@@ -59,10 +59,16 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve) => {
-                let ctx = app.ComposerWindowController.Get().gl;
-                this._comp = bg.scene.PrimitiveFactory.Cube(ctx,this._w,this._h,this._d);
-                this._node.addComponent(this._comp);
-                app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                if (this._comp) {
+                    this._node.addComponent(this._comp);
+                }
+                else {
+                    let ctx = app.ComposerWindowController.Get().gl;
+                    this._comp = bg.scene.PrimitiveFactory.Cube(ctx,this._w,this._h,this._d);
+                    this._comp.name = bg.utils.generateUUID();
+                    this._node.addComponent(this._comp);
+                    app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                }
                 resolve();
             });
         }
@@ -95,10 +101,16 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve) => {
-                let ctx = app.ComposerWindowController.Get().gl;
-                this._comp = bg.scene.PrimitiveFactory.Sphere(ctx,this._radius,this._slices,this._stacks);
-                this._node.addComponent(this._comp);
-                app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                if (this._comp) {
+                    this._node.addComponent(this._comp);
+                }
+                else {
+                    let ctx = app.ComposerWindowController.Get().gl;
+                    this._comp = bg.scene.PrimitiveFactory.Sphere(ctx,this._radius,this._slices,this._stacks);
+                    this._comp.name = bg.utils.generateUUID();
+                    this._node.addComponent(this._comp);
+                    app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                }
                 resolve();
             });
         }
@@ -130,10 +142,16 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve) => {
-                let ctx = app.ComposerWindowController.Get().gl;
-                this._comp = bg.scene.PrimitiveFactory.Plane(ctx,this._w,this._d);
-                this._node.addComponent(this._comp);
-                app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                if (this._comp) {
+                    this._node.addComponent(this._comp);
+                }
+                else {
+                    let ctx = app.ComposerWindowController.Get().gl;
+                    this._comp = bg.scene.PrimitiveFactory.Plane(ctx,this._w,this._d);
+                    this._comp.name = bg.utils.generateUUID();
+                    this._node.addComponent(this._comp);
+                    app.render.Scene.Get().selectionManager.prepareNode(this._node);
+                }
                 resolve();
             });
         }
@@ -153,4 +171,29 @@ app.addSource(() => {
     }
 
     app.drawableCommands.CreatePlane = CreatePlane;
+
+    class SetName extends app.Command {
+        constructor(drawable,name) {
+            super();
+            this._drawable = drawable;
+            this._name = name;
+            this._prevName = drawable.name;
+        }
+
+        execute() {
+            return new Promise((resolve) => {
+                this._drawable.name = this._name;
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve) => {
+                this._drawable.name = this._prevName;
+                resolve();
+            })
+        }
+    }
+
+    app.drawableCommands.SetName = SetName;
 })

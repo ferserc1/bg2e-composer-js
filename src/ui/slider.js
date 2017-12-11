@@ -38,7 +38,7 @@ app.addSource(() => {
             let value = $scope.valuePercent * range / 100;
             value = value + $scope.sliderOptions.floor
             value = value<$scope.sliderOptions.floor ? $scope.sliderOptions.floor : value;
-            return value>$scope.sliderOptions.ceil ? $scope.sliderOptions.ceil : value;
+            return value>=$scope.sliderOptions.ceil*0.99 ? $scope.sliderOptions.ceil : value;
         }
 
         function updatePosition(evt) {
