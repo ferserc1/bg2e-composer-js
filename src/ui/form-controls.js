@@ -293,4 +293,77 @@ app.addSource(() => {
             }]
         };
     });
+
+    angularApp.directive("translatePicker", function() {
+        return {
+            restrict: 'E',
+            templateUrl: `templates/${ app.config.templateName }/directives/translate-scale-picker.html`,
+            scope: {
+                onExecute:"="
+            },
+            controller: ['$scope',function($scope) {
+                $scope.label = "Translate";
+                $scope.x = 0;
+                $scope.y = 0;
+                $scope.z = 0;
+                $scope.apply = function() {
+                    if ($scope.onExecute) {
+                        $scope.onExecute($scope.x,$scope.y,$scope.z);
+                    }
+                    $scope.x = 0;
+                    $scope.y = 0;
+                    $scope.z = 0;
+                }
+            }]
+        }
+    });
+
+    angularApp.directive("rotatePicker", function() {
+        return {
+            restrict: 'E',
+            templateUrl: `templates/${ app.config.templateName }/directives/rotate-picker.html`,
+            scope: {
+                onExecute:"="
+            },
+            controller: ['$scope',function($scope) {
+                $scope.alpha = 0;
+                $scope.axises = [
+                    { id:0, label:"X Axis", value:[1,0,0] },
+                    { id:1, label:"Y Axis", value:[0,1,0] },
+                    { id:2, label:"Z Axis", value:[0,0,1] }
+                ]
+                $scope.axis = $scope.axises[0];
+                $scope.apply = function() {
+                    if ($scope.onExecute) {
+                        $scope.onExecute($scope.alpha,...$scope.axis.value);
+                    }
+                    $scope.alpha = 0;
+                }
+            }]
+        }
+    })
+
+    angularApp.directive("scalePicker", function() {
+        return {
+            restrict: 'E',
+            templateUrl: `templates/${ app.config.templateName }/directives/translate-scale-picker.html`,
+            scope: {
+                onExecute:"="
+            },
+            controller: ['$scope',function($scope) {
+                $scope.label = "Scale";
+                $scope.x = 1;
+                $scope.y = 1;
+                $scope.z = 1;
+                $scope.apply = function() {
+                    if ($scope.onExecute) {
+                        $scope.onExecute($scope.x,$scope.y,$scope.z);
+                    }
+                    $scope.x = 1;
+                    $scope.y = 1;
+                    $scope.z = 1;
+                }
+            }]
+        }
+    })
 })

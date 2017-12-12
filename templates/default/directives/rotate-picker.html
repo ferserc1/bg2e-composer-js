@@ -1,0 +1,6 @@
+<div class="bg2-form-field">
+    <label class="bg2-width-30">Scale</label>
+    <select ng-model="axis" ng-options="item as item.label for item in axises track by item.id"></select>
+    <input class="bg2-width-15" type="number" step="0.001" ng-model="alpha">
+    <button class="bg2-width-20" ng-click="apply()"> Apply</button>
+</div>

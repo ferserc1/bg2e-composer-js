@@ -36,6 +36,13 @@ app.addSource(() => {
                 )
                 .then(() => app.ComposerWindowController.Get().updateView());
             }
+
+            mult(matrix) {
+                app.CommandManager.Get().doCommand(
+                    new app.transformCommands.MultMatrix(this.componentInstance,matrix)
+                )
+                .then(() => app.ComposerWindowController.Get().updateView());
+            }
         }
     });
 
@@ -49,6 +56,17 @@ app.addSource(() => {
                 component: "="
             },
             controller: ["$scope",function($scope) {
+                $scope.doTranslate = function(x,y,z) {
+                    $scope.component.mult(bg.Matrix4.Translation(x,y,z));
+                }
+
+                $scope.doScale = function(x,y,z) {
+                    $scope.component.mult(bg.Matrix4.Scale(x,y,z));
+                }
+
+                $scope.doRotate = function(alpha,x,y,z) {
+                    $scope.component.mult(bg.Matrix4.Rotation(bg.Math.degreesToRadians(alpha),x,y,z));
+                }
             }]
         }
     });

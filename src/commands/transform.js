@@ -37,6 +37,31 @@ app.addSource(() => {
 
     app.transformCommands.Transform = Transform;
 
+    class MultMatrix extends app.Command {
+        constructor(transform,matrix) {
+            super();
+            this._transform = transform;
+            this._matrix = matrix;
+            this._restoreMatrix = new bg.Matrix4(this._transform.matrix);
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._transform.matrix.mult(this._matrix);
+                resolve();
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._transform.matrix.assign(this._restoreMatrix);
+                resolve();
+            })
+        }
+    }
+
+    app.transformCommands.MultMatrix = MultMatrix;
+
     function placeGizmo(node) {
         let gizmo = node.component("bg.manipulation.Gizmo");
         if (gizmo) {
