@@ -1,7 +1,19 @@
+slider {
+    height: 30px;
+}
+
+slider .bg2-slider-padding {
+    width: 5%;
+    height: 30px;
+    float: left;
+}
+
 slider .bg2-slider {
     height: 30px;
     position: relative;
     font-size: 0.7em;
+    float: left;
+    width: 95%;
 }
 
 slider .bg2-slide-area {
