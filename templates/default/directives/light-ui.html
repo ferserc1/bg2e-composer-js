@@ -4,17 +4,17 @@
 <color-picker label="Diffuse" value="diffuse" commit-changes="onCommitChanges"></color-picker>
 <color-picker label="Specular" value="specular" commit-changes="onCommitChanges"></color-picker>
 
-<number-picker ng-show="type.id!=bg.base.LightType.DIRECTIONAL" label="Cutoff distance" value="cutoffDistance" commit-changes="onCommitChanges"></number-picker>
+<number-picker ng-hide="showDirectional" label="Cutoff distance" value="cutoffDistance" commit-changes="onCommitChanges"></number-picker>
 
-<h4 ng-show="type.id!=bg.base.LightType.DIRECTIONAL">Attenuation:</h4>
-<slider-picker ng-show="type.id!=bg.base.LightType.DIRECTIONAL" label="Constant" value="constantAttenuation" commit-changes="onCommitChanges"></slider-picker>
-<slider-picker ng-show="type.id!=bg.base.LightType.DIRECTIONAL" label="Linear" value="linearAttenuation" commit-changes="onCommitChanges"></slider-picker>
-<slider-picker ng-show="type.id!=bg.base.LightType.DIRECTIONAL" label="Quadratic" value="quadraticAttenuation" commit-changes="onCommitChanges"></slider-picker>
+<h4 ng-hide="showDirectional">Attenuation:</h4>
+<slider-picker ng-hide="showDirectional" label="Constant" value="constantAttenuation" min="0" max="4" commit-changes="onCommitChanges"></slider-picker>
+<slider-picker ng-hide="showDirectional" label="Linear" value="linearAttenuation" min="0" max="4" commit-changes="onCommitChanges"></slider-picker>
+<slider-picker ng-hide="showDirectional" label="Quadratic" value="quadraticAttenuation"  min="0" max="4"commit-changes="onCommitChanges"></slider-picker>
 
-<h4 ng-show="type.id!=bg.base.LightType.POINT">Shadows:</h4>
-<bool-picker ng-show="type.id!=bg.base.LightType.POINT" label="Cast shadows" value="castShadows" commit-changes="onCommitChanges"></bool-picker>
-<slider-picker ng-show="type.id!=bg.base.LightType.POINT" label="Strenght" value="shadowStrength" commit-changes="onCommitChanges"></slider-picker>
+<h4 ng-hide="showPoint">Shadows:</h4>
+<bool-picker ng-hide="showPoint" label="Cast shadows" value="castShadows" commit-changes="onCommitChanges"></bool-picker>
+<slider-picker ng-hide="showPoint" label="Strenght" value="shadowStrength" commit-changes="onCommitChanges"></slider-picker>
 
-<h4 ng-show="type.id==bg.base.LightType.SPOT">Spot:</h4>
-<slider-picker ng-show="type.id==bg.base.LightType.SPOT" label="Cutoff" value="spotCutoff" commit-changes="onCommitChanges" min="0" max="90"></slider-picker>
-<slider-picker ng-show="type.id==bg.base.LightType.SPOT" label="Exponent" value="spotExponent" commit-changes="onCommitChanges" min="0" max="90"></slider-picker>
+<h4 ng-show="showSpot">Spot:</h4>
+<slider-picker ng-show="showSpot" label="Cutoff" value="spotCutoff" commit-changes="onCommitChanges" min="0" max="90"></slider-picker>
+<slider-picker ng-show="showSpot" label="Exponent" value="spotExponent" commit-changes="onCommitChanges" min="0" max="90"></slider-picker>

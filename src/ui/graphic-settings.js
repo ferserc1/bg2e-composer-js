@@ -66,6 +66,34 @@ app.addSource(() => {
                 label: '8x'
             }
         ];
+        $scope.shadowQualities = [
+            {
+                id: 512,
+                label: "512x512"
+            },
+            {
+                id: 1024,
+                label: "1024x1024"
+            },
+            {
+                id: 2048,
+                label: "2048x2048"
+            },
+            {
+                id: 4096,
+                label: "4096x4096"
+            }
+        ];
+        $scope.shadowTypes = [
+            {
+                id: bg.render.ShadowType.HARD,
+                label: "Hard Shadows"
+            },
+            {
+                id: bg.render.ShadowType.SOFT,
+                label: "Soft Shadows"
+            }
+        ];
         $scope.renderPath = $scope.renderPaths[app.ComposerWindowController.Get().renderPath];
         $scope.antialiasing = app.ComposerWindowController.Get().renderSettings.antialiasing;
         $scope.raytracerQualities.some((q) => {
@@ -90,6 +118,18 @@ app.addSource(() => {
         $scope.ssaoRadius = app.ComposerWindowController.Get().renderSettings.ssaoRadius;
         $scope.ssaoMaxDistance = app.ComposerWindowController.Get().renderSettings.ssaoMaxDistance;
 
+        $scope.shadowTypes.some((t) => {
+            if (t.id==app.ComposerWindowController.Get().renderSettings.shadowType) {
+                $scope.shadowType = t;
+                return true;
+            }
+        });
+        $scope.shadowQualities.some((q) => {
+            if (q.id==app.ComposerWindowController.Get().renderSettings.shadowQuality) {
+                $scope.shadowQuality = q;
+                return true;
+            }
+        });
         $scope.error = "";
         $scope.warning = "";
 
@@ -134,6 +174,16 @@ app.addSource(() => {
 
         $scope.$watch("ssaoMaxDistance", function() {
             app.ComposerWindowController.Get().renderSettings.ssaoMaxDistance = $scope.ssaoMaxDistance;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("shadowType", function() {
+            app.ComposerWindowController.Get().renderSettings.shadowType = $scope.shadowType.id;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("shadowQuality", function() {
+            app.ComposerWindowController.Get().renderSettings.shadowQuality = $scope.shadowQuality.id;
             app.ComposerWindowController.Get().saveRenderSettings();
         });
 

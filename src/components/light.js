@@ -60,6 +60,7 @@ app.addSource(() => {
                     $scope.component.updateLight(params)
                         .then(() => {
                             app.ComposerWindowController.Get().updateView();
+                            $scope.$apply(() => updateUI());
                         })
                 }
 
@@ -69,17 +70,27 @@ app.addSource(() => {
                     { id:bg.base.LightType.POINT, label:'Point' }
                 ];
 
+                $scope.showSpot = false;
+                $scope.showDirectional = false;
+                $scope.showPoint = false;
+
                 function updateUI() {
                     let l = $scope.component.componentInstance.light;
+                    $scope.showSpot = false;
+                    $scope.showDirectional = false;
+                    $scope.showPoint = false;
                     switch (l.type) {
                     case bg.base.LightType.DIRECTIONAL:
                         $scope.type = $scope.lightTypes[0];
+                        $scope.showDirectional = true;
                         break;
                     case bg.base.LightType.SPOT:
                         $scope.type = $scope.lightTypes[1];
+                        $scope.showSpot = true;
                         break;
                     case bg.base.LightType.POINT:
                         $scope.type = $scope.lightTypes[2];
+                        $scope.showPoint = true;
                         break;
                     }
                     $scope.enabled = l.enabled;

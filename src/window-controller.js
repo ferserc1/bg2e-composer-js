@@ -41,6 +41,9 @@ app.addDefinitions(() => {
         renderer.settings.ambientOcclusion.enabled = this.renderSettings.ssaoEnabled;
         renderer.settings.ambientOcclusion.sampleRadius = this.renderSettings.ssaoRadius;
         renderer.settings.ambientOcclusion.maxDistance = this.renderSettings.ssaoMaxDistance;
+
+        renderer.settings.shadows.type = this.renderSettings.shadowType;
+        renderer.settings.shadows.quality = this.renderSettings.shadowQuality;
     }
 
     class ComposerWindowController extends bg.app.WindowController {
@@ -63,6 +66,8 @@ app.addDefinitions(() => {
             assertProperty(this._renderSettings,'ssaoEnabled',true);
             assertProperty(this._renderSettings,'ssaoRadius',0.4);
             assertProperty(this._renderSettings,'ssaoMaxDistance',100);
+            assertProperty(this._renderSettings,'shadowQuality',bg.render.ShadowMapQuality.mid);
+            assertProperty(this._renderSettings,'shadowType',bg.render.ShadowType.HARD);
 
             // This will draw the view 5 times. 
             this._updateFrames = 5;
@@ -84,6 +89,7 @@ app.addDefinitions(() => {
         saveRenderSettings() {
             app.settings.set("graphics.renderSettings",this._renderSettings);
             applyRenderSettings.apply(this);
+            this.updateView();
         }
 
         updateView(updateFrames = 10) {
