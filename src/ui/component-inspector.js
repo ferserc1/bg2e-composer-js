@@ -6,12 +6,14 @@ app.addSource(() => {
         $scope.selectedNode = null;
         $scope.components = [];
         $scope.nodeName = "";
+        $scope.visible = $scope.selection.length>0;
 
         function updateComponents() {
             $scope.selectedNode = $scope.selection.length && $scope.selection[0];
             $scope.nodeName = $scope.selectedNode && $scope.selectedNode.name;
             $scope.components = [];
             $scope.unknownComponents = [];
+            $scope.visible = $scope.selection.length>0;
             $timeout(() => {
                 if ($scope.selectedNode) {
                     for (let identifier in $scope.selectedNode._components)  {

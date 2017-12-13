@@ -112,16 +112,7 @@ app.addDefinitions(() => {
             }
         }
 
-        createDefaultScene() {
-            // TODO: Import scene file
-            this._root = new bg.scene.Node(this.gl,"SceneRoot");
-
-            this._cameraNode = new bg.scene.Node(this.gl, "Main Camera");
-            this._root.addChild(this._cameraNode);
-    
-            this._camera = new bg.scene.Camera();
-            this._cameraNode.addComponent(this._camera);
-            this._cameraNode.addComponent(new bg.scene.Transform());
+        createCameraController() {
             let cameraController = new bg.manipulation.OrbitCameraController();
             cameraController._minX = -Number.MAX_VALUE;
             cameraController._maxX =  Number.MAX_VALUE;
@@ -132,7 +123,20 @@ app.addDefinitions(() => {
             cameraController.maxPitch = 90;
             cameraController.minPitch = -90;
             cameraController.maxDistance = Number.MAX_VALUE;
-            this._cameraNode.addComponent(cameraController);
+            return cameraController;
+        }
+
+        createDefaultScene() {
+            // TODO: Import scene file
+            this._root = new bg.scene.Node(this.gl,"SceneRoot");
+
+            this._cameraNode = new bg.scene.Node(this.gl, "Main Camera");
+            this._root.addChild(this._cameraNode);
+    
+            this._camera = new bg.scene.Camera();
+            this._cameraNode.addComponent(this._camera);
+            this._cameraNode.addComponent(new bg.scene.Transform());
+            this._cameraNode.addComponent(this.createCameraController());
            // this._camera.projectionStrategy = new bg.scene.OpticalProjectionStrategy();
 
             let lightNode = new bg.scene.Node(this.gl);
@@ -179,10 +183,8 @@ app.addDefinitions(() => {
                         this._camera = cameraNode.camera;
     
                         // Add a camera handler component
-                        let ctrl = new bg.manipulation.OrbitCameraController();
-                        cameraNode.addComponent(ctrl);
+                        cameraNode.addComponent(this.createCameraController());
                         cameraNode.addComponent(new bg.scene.Transform());
-                        ctrl.minPitch = -45;
    
                         this.selectionManager.initScene(this.root);
                         this.notifySceneChanged();
