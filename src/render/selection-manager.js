@@ -69,6 +69,21 @@ app.addDefinitions(() => {
                 node.accept(selectableVisitor);
             }
         }
+
+        removeGizmos(node = null) {
+            if (!node) {
+                this.clear();
+                node = this._scene.root;
+            }
+
+            let gizmo = node.component("bg.manipulation.Gizmo");
+            if (gizmo) {
+                node.removeComponent(gizmo);
+            }
+            node.children.forEach((child) => {
+                this.removeGizmos(child);
+            });
+        }
         
         selectItem(node,plist,material,notify=true) {
             if (material && !material.selectMode) {

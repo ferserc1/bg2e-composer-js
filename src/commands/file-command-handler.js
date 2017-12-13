@@ -122,7 +122,7 @@ app.addSource(() => {
             }
             else {
                 let context = app.ComposerWindowController.Get().gl;
-                let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
                 app.CommandManager.Get().doCommand(cmd)
                     .then(() => {})
                     .catch((err) => {

@@ -93,6 +93,7 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve,reject) => {
+                app.render.Scene.Get().selectionManager.removeGizmos();
                 bg.base.Writer.Write(this._path,this._node)
                     .then(() => resolve())
                     .catch((err) => reject(err));
