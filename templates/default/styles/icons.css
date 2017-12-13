@@ -42,3 +42,12 @@
 .bg2-treeview-collapsed {
     background-image: url(../icons/treeview-triangle-collapsed.png);
 }
+
+.bg2-undo {
+    background-image: url(../icons/undo_2.png);
+}
+
+.bg2-redo {
+    background-image: url(../icons/redo_2.png);
+    background-position: 0px -2px;
+}

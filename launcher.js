@@ -5,7 +5,7 @@ const path = require('path');
 const menu = require(__dirname + '/src-main/menu');
 const WindowStateManager = require('electron-window-state-manager');
 
-function launch(indexFile) {
+function launch(indexFile,debug) {
     let win = null;
     
     const mainWindowState = new WindowStateManager('mainWindow', {
@@ -37,16 +37,16 @@ function launch(indexFile) {
     app.on('ready', () => {
         createWindow();
     
-        menu.buildMenu();
+        menu.buildMenu(debug);
     });    
 }
 
 module.exports = {
     launchRelease: function() {
-        launch("index.html");
+        launch("index.html",false);
     },
 
     launchDebug: function() {
-        launch("index-debug.html");
+        launch("index-debug.html",true);
     }
 }
