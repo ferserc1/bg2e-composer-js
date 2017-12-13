@@ -130,12 +130,28 @@ texture-picker img {
     vertical-align: top;
 }
 
+.bg2-button-mid {
+    font-size: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.bg2-button-mini {
+    font-size: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
 .bg2-text-right {
     text-align: right !important;
 }
 
 .bg2-text-left {
     text-align: left !important;
+}
+
+.bg2-message-info {
+    color: white;
 }
 
 .bg2-message-warning {

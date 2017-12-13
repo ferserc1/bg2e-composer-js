@@ -1,3 +1,19 @@
-<ul>
-    <li>status bar</li>
-</ul>
+<div class="bg2-width-40 bg2-info">
+    {{ selectionText }}
+</div>
+<div class="bg2-width-10 bg2-pull-right bg2-text-right">
+    <button class="bg2-button-mid" ng-click="openLog()">Open Log</button>
+</div>
+<div class="bg2-width-40 bg2-pull-right bg2-info bg2-text-right bg2-message-{{ lastMessageType }}" ng-click="openLog()">
+    {{ lastMessage }}
+</div>
+
+
+<div class="bg2-log-window bg2-widget" ng-show="logWindowVisible">
+    <div class="bg2-title">
+        <h4>Log <button class="bg2-button-mini bg2-pull-right" ng-click="closeLog()">Close</button></h4>
+    </div>
+    <div class="bg2-log-container">
+        <p ng-repeat="msg in logMessages" class="bg2-message-{{ msg.level }}">{{ msg.text }}</p>
+    </div>
+</div>

@@ -9,6 +9,17 @@ app.addDefinitions(() => {
         constructor(scene,selectionManager) {
             this._scene = scene;
             this._selectionManager = selectionManager;
+            this._observers = {};
+        }
+
+        gizmoUpdated(observer,callback) {
+            this._observers[observer] = callback;
+        }
+
+        notifyGizmoUpdated() {
+            for (let key in this._observers) {
+                this._observers[key]();
+            }
         }
 
         init() {
@@ -64,6 +75,7 @@ app.addDefinitions(() => {
         mouseDrag(event) {
             if (this._gizmoManager.working) {
                 this._gizmoManager.move(new bg.Vector2(event.x, event.y), this._scene.camera);
+                this.notifyGizmoUpdated();
                 return true;
             }
             return false;
