@@ -29,6 +29,8 @@
     "bg2e-js": "git+https://bitbucket.org/ferserc1/bg2e-js.git",
     "electron-settings": "^3.1.3",
     "electron-window-state-manager": "^0.3.2",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
     "traceur": "0.0.111"
   }
 }

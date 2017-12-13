@@ -1,4 +1,9 @@
 
+const launcher = require(__dirname + '/launcher');
+
+launcher.launchRelease();
+
+/*
 const {app, BrowserWindow} = require('electron');
 const url = require('url');
 const path = require('path');
@@ -38,3 +43,4 @@ app.on('ready', () => {
 
     menu.buildMenu();
 });
+*/

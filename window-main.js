@@ -1,6 +1,9 @@
 var app = app || {};
 var GLOBAL_APP_NAME = "";
 
+var BG2E_COMPOSER_RELEASE = BG2E_COMPOSER_RELEASE || false;
+var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
+
 (function() {
     let fs = require("fs");
     let path = require("path");
@@ -141,8 +144,11 @@ var GLOBAL_APP_NAME = "";
 
         angular.bootstrap(document, [ GLOBAL_APP_NAME ]);
     };
-    
-    requireSources(__dirname + '/src');
+ 
+    if (BG2E_COMPOSER_DEBUG) {
+        // Debug mode: require scripts
+        requireSources(__dirname + '/src');
+    }
     requireStylesheets();
 
     setTimeout(() => loadApp(), 100);
