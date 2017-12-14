@@ -91,7 +91,50 @@ module.exports = {
 									}
 								]
 							},
-							{type: 'separator'},
+							{
+								label: "Icons",
+								submenu: [
+									{
+										label: "Camera",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleCameraIcon'} );
+										}
+									},
+									{
+										label: "Light",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleLightIcon'} );
+										}
+									},
+									{
+										label: "Transform",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleTransformIcon'} );
+										}
+									},
+									{
+										label: "Drawable",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleDrawableIcon'} );
+										}
+									},
+									{ type: 'separator' },
+									{
+										label: "Show all",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'showAllIcons'} );
+										}
+									},
+									{
+										label: "Hide all",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'hideAllIcons'} );
+										}
+									},
+
+								]
+							},
+							{ type: 'separator'},
 
 							{
 								label: 'Graphic Settings',

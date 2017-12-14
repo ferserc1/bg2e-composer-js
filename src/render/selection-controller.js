@@ -22,6 +22,25 @@ app.addDefinitions(() => {
             }
         }
 
+        showIcon(icon) {
+            this._gizmoManager.showGizmoIcon(icon);
+        }
+
+        hideIcon(icon) {
+            this._gizmoManager.hideGizmoIcon(icon);
+        }
+
+        getIconVisibility(icon) {
+            let visible = false;
+            this._gizmoManager.gizmoIcons.some((iconData) => {
+                if (iconData.type==icon) {
+                    visible = iconData.visible;
+                    return true;
+                }
+            })
+            return visible;
+        }
+
         init() {
             let context = app.ComposerWindowController.Get().gl;
             this._mousePicker = new bg.manipulation.MousePicker(context);
