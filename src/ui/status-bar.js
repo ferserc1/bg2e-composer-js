@@ -31,6 +31,16 @@ app.addDefinitions(() => {
         // This function register the required observers to show the
         // selection data
         init() {
+            let selectedTriangles = (s) => {
+                let count = 0;
+                s.selection.forEach((selItem) => {
+                    if (selItem.plist) {
+                        count += selItem.plist.index.length / 3;
+                    }
+                })
+                return count;
+            }
+
             let printSelection = (s) => {
                 if (s.selection.length==0) {
                     this._selection = "nothing selected";
@@ -49,10 +59,14 @@ app.addDefinitions(() => {
                     }
                     else {
                         this._selection += " (select a drawable node to view size)";
-                    }
+                    }   
                 }
                 else {
                     this._selection = s.selection.length + " items selected (select single node to view size)";
+                }
+                let count = selectedTriangles(s);
+                if (count) {
+                    this._selection += `,    ${ count } triangles selected.`;
                 }
             }
 
