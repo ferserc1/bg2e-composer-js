@@ -41,6 +41,9 @@ app.addDefinitions(() => {
             return visible;
         }
 
+        set gizmoIconScale(s) { this._gizmoManager.gizmoIconScale = s; }
+        get gizmoIconScale() { return this._gizmoManager.gizmoIconScale; }
+
         init() {
             let context = app.ComposerWindowController.Get().gl;
             this._mousePicker = new bg.manipulation.MousePicker(context);
@@ -58,7 +61,7 @@ app.addDefinitions(() => {
                 { type:'bg.scene.Transform', icon:'gizmo_icon_transform.png' },
                 { type:'bg.scene.Drawable', icon:'gizmo_icon_drawable.png' }
             ], `templates/${ app.config.templateName }/gizmos`);
-            this._gizmoManager.gizmoIconScale = 2;
+            this._gizmoManager.gizmoIconScale = 0.5;
 
             this._selectionManager.selectionChanged("selectionController",() => {
                 if (this._gizmoNode && !this._gizmoNode.selected) {

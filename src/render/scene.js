@@ -60,7 +60,15 @@ app.addDefinitions(() => {
 
         set camera(c) {
             if (this.belongsToScene(c.node)) {
+                let currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
+                if (currentController) {
+                    currentController.enabled = false;
+                }
                 this._camera = c;
+                currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
+                if (currentController) {
+                    currentController.enabled = true;
+                }
             }
             else {
                 throw new Error("Could not set camera as main: this camera does not belongs to the scene.");
@@ -183,7 +191,7 @@ app.addDefinitions(() => {
                         this._camera = cameraNode.camera;
     
                         // Add a camera handler component
-                        cameraNode.addComponent(this.createCameraController());
+                        //cameraNode.addComponent(this.createCameraController());
                         cameraNode.addComponent(new bg.scene.Transform());
    
                         this.selectionManager.initScene(this.root);
