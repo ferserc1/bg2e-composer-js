@@ -161,6 +161,9 @@ app.addDefinitions(() => {
             if (!this.scene.camera.projectionStrategy) {
                 this.scene.camera.projection.perspective(60,this.scene.camera.viewport.aspectRatio,0.1,100);
             }
+            let visitor = new bg.scene.FindComponentVisitor("bg.scene.Camera");
+            this.scene.root.accept(visitor);
+            visitor.result.forEach((cam) => cam.camera.recalculateGizmo());
         }
     
         keyDown(evt) {

@@ -12,6 +12,7 @@ app.addSource(() => {
         execute() {
             return new Promise((resolve,reject) => {
                 this._camera.projectionStrategy = this._strategy;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
@@ -19,6 +20,7 @@ app.addSource(() => {
         undo() {
             return new Promise((resolve) => {
                 this._camera.projectionStrategy = this._prevStrategy;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
@@ -50,6 +52,7 @@ app.addSource(() => {
                 this._camera.projectionStrategy.fov = this._fov;
                 this._camera.projectionStrategy.near = this._near;
                 this._camera.projectionStrategy.far = this._far;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
@@ -62,6 +65,7 @@ app.addSource(() => {
                 this._camera.projectionStrategy.fov = this._prevFov;
                 this._camera.projectionStrategy.near = this._prevNear;
                 this._camera.projectionStrategy.far = this._prevFar;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
@@ -96,6 +100,7 @@ app.addSource(() => {
                 this._camera.projectionStrategy.frameSize = this._frameSize;
                 this._camera.projectionStrategy.near = this._near;
                 this._camera.projectionStrategy.far = this._far;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
@@ -109,6 +114,7 @@ app.addSource(() => {
                 this._camera.projectionStrategy.frameSize = this._prevFrameSize;
                 this._camera.projectionStrategy.near = this._prevNear;
                 this._camera.projectionStrategy.far = this._prevFar;
+                this._camera.recalculateGizmo();
                 resolve();
             });
         }
