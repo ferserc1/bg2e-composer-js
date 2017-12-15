@@ -169,7 +169,7 @@ app.addDefinitions(() => {
         }
 
         keyUp(evt) {
-            this._inputVisitor.keyDown(this.scene.root, evt);
+            this._inputVisitor.keyUp(this.scene.root, evt);
             this.updateView();
         }
 

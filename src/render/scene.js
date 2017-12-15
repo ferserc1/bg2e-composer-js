@@ -67,8 +67,9 @@ app.addDefinitions(() => {
                 this._camera = c;
                 currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
                 if (currentController) {
-                    currentController.enabled = true;
+                    bg.manipulation.OrbitCameraController.SetUniqueEnabled(currentController,this.root);
                 }
+                bg.scene.Camera.SetAsMainCamera(this._camera,this.root);
             }
             else {
                 throw new Error("Could not set camera as main: this camera does not belongs to the scene.");
@@ -142,10 +143,13 @@ app.addDefinitions(() => {
             this._root.addChild(this._cameraNode);
     
             this._camera = new bg.scene.Camera();
+            this._camera.isMain = true;
             this._cameraNode.addComponent(this._camera);
             this._cameraNode.addComponent(new bg.scene.Transform());
-            this._cameraNode.addComponent(this.createCameraController());
-           // this._camera.projectionStrategy = new bg.scene.OpticalProjectionStrategy();
+            let ctrl = this.createCameraController();
+            this._cameraNode.addComponent(ctrl);
+            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);
+
 
             let lightNode = new bg.scene.Node(this.gl);
             this._root.addChild(lightNode);
@@ -190,9 +194,11 @@ app.addDefinitions(() => {
                         let cameraNode = result.cameraNode;
                         this._camera = cameraNode.camera;
     
-                        // Add a camera handler component
-                        //cameraNode.addComponent(this.createCameraController());
                         cameraNode.addComponent(new bg.scene.Transform());
+                        let ctrl = cameraNode.component("bg.manipulation.OrbitCameraController");
+                        if (ctrl) {
+                            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);                            
+                        }
    
                         this.selectionManager.initScene(this.root);
                         this.notifySceneChanged();

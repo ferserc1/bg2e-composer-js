@@ -16,6 +16,7 @@ app.addSource(() => {
                 cameraController.maxPitch = 90;
                 cameraController.minPitch = -90;
                 cameraController.maxDistance = Number.MAX_VALUE;
+                cameraController.enabled = false;
                 return cameraController;
             }
         }
@@ -31,7 +32,7 @@ app.addSource(() => {
                 component: "="
             },
             controller: ['$scope',function($scope) {
-                
+
             }]
         }
     })
