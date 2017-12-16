@@ -5,6 +5,8 @@
     function importFile(file) {
         let script = document.createElement("script");
         script.src = file;
+        script.type = "text/javascript";
+        script.async = false;
         document.head.appendChild(script);
     }
 

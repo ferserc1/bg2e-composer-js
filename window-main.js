@@ -32,6 +32,8 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         let head = document.getElementsByTagName('head')[0];
         let script = document.createElement('script');
         script.src = file;
+        script.type = "text/javascript";
+        script.async = false;
         head.appendChild(script);
     }
 
