@@ -62,6 +62,10 @@ app.addSource(() => {
         $scope.castShadows = true;
         $scope.receiveShadows = true;
         $scope.cullFace = true;
+        $scope.roughness = 0;
+        $scope.roughnessMask = "";
+        $scope.roughnessMaskChannel = $scope.maskChannels[0];
+        $scope.roughnessMaskInvert = false;
 
         $scope.isDisabled = true;
 
@@ -115,6 +119,10 @@ app.addSource(() => {
                 m.castShadows = $scope.castShadows;
                 m.receiveShadows = $scope.receiveShadows;
                 m.cullFace = $scope.cullFace;
+                m.roughness = $scope.roughness;
+                updateTexture(m,'roughnessMask',$scope.roughnessMask);
+                m.roughnessMaskChannel = $scope.roughnessMaskChannel.id;
+                m.roughnessMaskInvert = $scope.roughnessMaskInvert;
 
                 if ($scope.materialChanged) {
                     $scope.materialChanged($scope.material);
@@ -150,6 +158,10 @@ app.addSource(() => {
                 $scope.castShadows = m.castShadows;
                 $scope.receiveShadows = m.receiveShadows;
                 $scope.cullFace = m.cullFace;
+                $scope.roughness = m.roughness;
+                $scope.roughnessMask = m.roughnessMask && m.roughnessMask.fileName || "";
+                $scope.roughnessMaskChannel = $scope.maskChannels[m.roughnessMaskChannel] || $scope.maskChannels[0];
+                $scope.roughnessMaskInvert = m.roughnessMaskInvert;
                 $scope.isDisabled = false;
             }
             else {
@@ -252,6 +264,24 @@ app.addSource(() => {
         $scope.$watch("reflectionMaskInvert",() => {
             updateMaterial();
         });
+
+        $scope.$watch("roughness",() => {
+            updateMaterial();
+        });
+
+        $scope.$watch("roughnessMask",() => {
+            updateMaterial();
+        });
+
+        $scope.$watch("roughnessMaskChannel",() => {
+            updateMaterial();
+        });
+
+        $scope.$watch("roughnessMaskInvert",() => {
+            updateMaterial();
+        });
+
+
 
         $scope.$watch("castShadows",() => {
             updateMaterial();

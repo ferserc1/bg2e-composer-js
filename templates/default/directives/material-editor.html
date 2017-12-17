@@ -44,6 +44,14 @@
         <select-picker label="Channel" value="reflectionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
         <bool-picker label="Invert values" value="reflectionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
+
+    <h4>Roughness</h4>
+    <div class="bg2-widget-panel">
+        <slider-picker value="roughness" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="roughnessMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="roughnessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="roughnessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
+    </div>
     
     <h4>Other</h4>
     <div class="bg2-widget-panel">

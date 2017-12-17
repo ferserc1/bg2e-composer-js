@@ -6,7 +6,7 @@ app.addSource(() => {
             }
 
             createInstance() {
-                return new bg.scene.Transform(bg.Matrix4.Translation(0,1,0));
+                return new bg.scene.Transform(bg.Matrix4.Translation(0,0,0));
             }
 
             resetPosition() {
