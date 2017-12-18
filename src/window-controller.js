@@ -92,7 +92,7 @@ app.addDefinitions(() => {
             this.updateView();
         }
 
-        updateView(updateFrames = 10) {
+        updateView(updateFrames = 3) {
             this._updateFrames = updateFrames;
             this.postRedisplay();
         }
@@ -147,7 +147,7 @@ app.addDefinitions(() => {
             this.renderer.frame(this.scene.root, delta);
             --this._updateFrames;
             if (this._updateFrames>=0) {
-                this.postRedisplay();
+                setTimeout(this.postRedisplay,1);
             }
         }
     

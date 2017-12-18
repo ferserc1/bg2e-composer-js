@@ -6,11 +6,13 @@ app.addSource(() => {
         $scope.selectedNode = null;
         $scope.components = [];
         $scope.nodeName = "";
+        $scope.nodeEnabled = true;
         $scope.visible = $scope.selection.length>0;
 
         function updateComponents() {
             $scope.selectedNode = $scope.selection.length && $scope.selection[0];
             $scope.nodeName = $scope.selectedNode && $scope.selectedNode.name;
+            $scope.nodeEnabled = $scope.selectedNode && $scope.selectedNode.enabled;
             $scope.components = [];
             $scope.unknownComponents = [];
             $scope.visible = $scope.selection.length>0;
@@ -82,6 +84,15 @@ app.addSource(() => {
                 app.render.Scene.Get().notifySceneChanged();
             });
         };
+
+        $scope.setNodeEnabled = function() {
+            app.CommandManager.Get().doCommand(
+                new app.nodeCommands.SetEnabled($scope.selectedNode,$scope.nodeEnabled)
+            )
+            .then(() => {
+                app.render.Scene.Get().notifySceneChanged();
+            })
+        }
 
         app.CommandManager.Get().onUndo("commandManager",() => {
             updateComponents();

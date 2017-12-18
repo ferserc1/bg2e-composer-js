@@ -26,6 +26,31 @@ app.addSource(() => {
 
     app.nodeCommands.SetName = SetName;
 
+    class SetEnabled extends app.Command {
+        constructor(node,enabled) {
+            super();
+            this._node = node;
+            this._enabled = enabled;
+            this._restoreEnabled = node.enabled;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._node.enabled = this._enabled;
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.enabled = this._restoreEnabled;
+                resolve();
+            });
+        }
+    }
+
+    app.nodeCommands.SetEnabled = SetEnabled;
+
     function checkValidParents(newParent,node) {
         // The node shouldn't be an ancestor of the newParent node or the same node
         if (newParent.parent==null) {
