@@ -19,6 +19,29 @@ app.addSource(() => {
                 cameraController.enabled = false;
                 return cameraController;
             }
+
+            saveConstraints(minD,maxD,minP,maxP,minX,maxX,minY,maxY,minZ,maxZ) {
+                minD = minD===null ? -Number.MAX_VALUE : minD;
+                maxD = maxD===null ?  Number.MAX_VALUE : maxD;
+                minX = minX===null ? -Number.MAX_VALUE : minX;
+                maxX = maxX===null ?  Number.MAX_VALUE : maxX;
+                minY = minY===null ? -Number.MAX_VALUE : minY;
+                maxY = maxY===null ?  Number.MAX_VALUE : maxY;
+                minZ = minZ===null ? -Number.MAX_VALUE : minZ;
+                maxZ = maxZ===null ?  Number.MAX_VALUE : maxZ;
+
+                return app.CommandManager.Get().doCommand(
+                    new app.orbitCameraCommands.SetConstraints(
+                        this.componentInstance,
+                        minD,maxD,minP,maxP,minX,maxX,minY,maxY,minZ,maxZ
+                    )
+                )
+            }
+
+            setGizmoProperties(showLimits,gizmoColor) {
+                this.componentInstance.showLimitGizmo = showLimits;
+                this.componentInstance.limitGizmoColor = new bg.Color(gizmoColor);
+            }
         }
     });
 
@@ -32,7 +55,56 @@ app.addSource(() => {
                 component: "="
             },
             controller: ['$scope',function($scope) {
+                function updateUI() {
+                    if (!$scope.component) return;
 
+                    $scope.minDistance = $scope.component.componentInstance.minDistance!=-Number.MAX_VALUE ? $scope.component.componentInstance.minDistance : null;
+                    $scope.maxDistance = $scope.component.componentInstance.maxDistance!= Number.MAX_VALUE ? $scope.component.componentInstance.maxDistance : null;
+                    $scope.minPitch = $scope.component.componentInstance.minPitch;
+                    $scope.maxPitch = $scope.component.componentInstance.maxPitch;
+                    $scope.minX = $scope.component.componentInstance.minX!=-Number.MAX_VALUE ? $scope.component.componentInstance.minX : null;
+                    $scope.maxX = $scope.component.componentInstance.maxX!= Number.MAX_VALUE ? $scope.component.componentInstance.maxX : null;
+                    $scope.minY = $scope.component.componentInstance.minY!=-Number.MAX_VALUE ? $scope.component.componentInstance.minY : null;
+                    $scope.maxY = $scope.component.componentInstance.maxY!= Number.MAX_VALUE ? $scope.component.componentInstance.maxY : null;
+                    $scope.minZ = $scope.component.componentInstance.minZ!=-Number.MAX_VALUE ? $scope.component.componentInstance.minZ : null;
+                    $scope.maxZ = $scope.component.componentInstance.maxZ!= Number.MAX_VALUE ? $scope.component.componentInstance.maxZ : null;
+
+                    $scope.showLimits = $scope.component.componentInstance.showLimitGizmo;
+                    $scope.gizmoColor = $scope.component.componentInstance.limitGizmoColor.toArray();
+                }
+
+                $scope.onCommitChanges = function() {
+                    $scope.component.saveConstraints(
+                        $scope.minDistance,$scope.maxDistance,
+                        $scope.minPitch,$scope.maxPitch,
+                        $scope.minX,$scope.maxX,$scope.minY,$scope.maxY,$scope.minZ,$scope.maxZ
+                    )
+                    .then(() => {
+                        app.ComposerWindowController.Get().updateView();
+                    });
+                };
+
+                $scope.updateGizmo = function() {
+                    $scope.component.setGizmoProperties($scope.showLimits,$scope.gizmoColor);
+                    app.ComposerWindowController.Get().updateView();
+                };
+
+                $scope.$watch('gizmoColor',() => {
+                    $scope.component.setGizmoProperties($scope.showLimits,$scope.gizmoColor);
+                    app.ComposerWindowController.Get().updateView();
+                });
+
+                app.CommandManager.Get().onUndo(() => {
+                    updateUi();
+                    $scpoe.$apply();
+                });
+
+                app.CommandManager.Get().onRedo(() => {
+                    updateUi();
+                    $scpoe.$apply();
+                });
+
+                updateUI();
             }]
         }
     })
