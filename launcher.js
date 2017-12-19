@@ -1,5 +1,8 @@
 
 const {app, BrowserWindow} = require('electron');
+
+app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
+
 const url = require('url');
 const path = require('path');
 const menu = require(__dirname + '/src-main/menu');
