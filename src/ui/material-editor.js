@@ -66,6 +66,7 @@ app.addSource(() => {
         $scope.roughnessMask = "";
         $scope.roughnessMaskChannel = $scope.maskChannels[0];
         $scope.roughnessMaskInvert = false;
+        $scope.unlit = false;
 
         $scope.isDisabled = true;
 
@@ -123,6 +124,7 @@ app.addSource(() => {
                 updateTexture(m,'roughnessMask',$scope.roughnessMask);
                 m.roughnessMaskChannel = $scope.roughnessMaskChannel.id;
                 m.roughnessMaskInvert = $scope.roughnessMaskInvert;
+                m.unlit = $scope.unlit;
 
                 if ($scope.materialChanged) {
                     $scope.materialChanged($scope.material);
@@ -162,6 +164,7 @@ app.addSource(() => {
                 $scope.roughnessMask = m.roughnessMask && m.roughnessMask.fileName || "";
                 $scope.roughnessMaskChannel = $scope.maskChannels[m.roughnessMaskChannel] || $scope.maskChannels[0];
                 $scope.roughnessMaskInvert = m.roughnessMaskInvert;
+                $scope.unlit = m.unlit;
                 $scope.isDisabled = false;
             }
             else {
@@ -294,6 +297,10 @@ app.addSource(() => {
         $scope.$watch("cullFace",() => {
             updateMaterial();
         });
+
+        $scope.$watch("unlit",() => {
+            updateMaterial();
+        })
     }]);
 
     angularApp.directive("materialEditor", function() {
