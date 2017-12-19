@@ -3,6 +3,11 @@ const concat = require("gulp-concat");
 const fs = require("fs");
 const path = require("path");
 
+let fbxPluginPath = {
+    win64: `${ __dirname }/../fbx2json/build/win64/release`,
+    macOS: `${ __dirname }/../fbx2json/build/macOS`
+};
+
 gulp.task("compile", function() {
     let sources = [];
 
@@ -32,4 +37,20 @@ gulp.task("compile", function() {
         .pipe(gulp.dest(__dirname));
 });
 
-gulp.task("default",["compile"]);
+gulp.task("fbxPlugin", function() {
+    if (fs.existsSync(fbxPluginPath.win64)) {
+        return gulp.src([
+            `${ fbxPluginPath.win64 }/concrt140.dll`,
+            `${ fbxPluginPath.win64 }/libfbxsdk.dll`,
+            `${ fbxPluginPath.win64 }/msvcp140.dll`,
+            `${ fbxPluginPath.win64 }/vccorlib140.dll`,
+            `${ fbxPluginPath.win64 }/vcruntime140.dll`
+        ])
+            .pipe(gulp.dest(__dirname + '/fbx2json'));
+    }
+    else if (fs.existsSync(fbxPluginPath.macOS)) {
+        // TODO: implement this
+    }
+});
+
+gulp.task("default",["compile","fbxPlugin"]);
