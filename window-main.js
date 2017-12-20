@@ -33,7 +33,8 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
             composerPluginsPath,
             path.join(__dirname, 'plugins'),
             path.resolve(path.join(__dirname,`..${ path.sep}composer-plugins`))
-        ]
+        ],
+        modules:[]
     };
 
     app.plugins.find = function(pluginFolder) {
@@ -51,6 +52,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     let g_appDefines = [];
     let g_appSource = [];
     let g_workspaces = [];
+    let g_plugins = [];
     let g_evtObservers = {};
 
     app.angular = {
@@ -105,6 +107,13 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
                 link.href = filePath;
                 head.appendChild(link);
             }
+        })
+    }
+
+    function requirePlugins() {
+        g_plugins.forEach((filePath) => {
+            let pluginModule = require(filePath)(app,GLOBAL_APP_NAME,bg);
+            app.plugins.modules.push(pluginModule);
         })
     }
 
@@ -256,8 +265,11 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     function loadApp() {
         let ng = angular.module(GLOBAL_APP_NAME, app.angular.deps);
 
+        requirePlugins();
+        
         g_appDefines.forEach((cb) => cb());
         g_appSource.forEach((cb) => cb());
+        
 
         ng.config(['$routeProvider', function($routeProvider) {
             let defaultWorkspace = null;
@@ -291,19 +303,38 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     app.plugins.paths.forEach((p) => {
         console.log("  " + p);
     });
-    
+
     app.plugins.paths.forEach((pluginPath) => {
         if (fs.existsSync(pluginPath)) {
             fs.readdirSync(pluginPath).forEach((plugin) => {
                 let fullPluginPath = path.join(pluginPath,plugin);
                 let stat = fs.statSync(fullPluginPath);
                 if (stat.isDirectory) {
-                    console.log("Plugin candidate found at " + fullPluginPath);
-                    requireSources(fullPluginPath);
+                    let source = path.join(fullPluginPath,"src");
+                    if (fs.existsSync(source)) {
+                        stat = fs.statSync(source);
+                        if (stat.isDirectory) {
+                            requireSources(source);
+                        }
+                    }
+
+                    let pluginSources = path.join(fullPluginPath,"plugin");
+                    if (fs.existsSync(pluginSources)) {
+                        stat = fs.statSync(pluginSources);
+                        if (stat.isDirectory) {
+                            fs.readdirSync(pluginSources).forEach((pluginFile) => {
+                                if (pluginFile.split(".").pop()=="js") {
+                                    g_plugins.push(path.join(pluginSources,pluginFile));
+                                }
+                            })
+    
+                        }
+                    }
                 }
             })
         }
     });
+
 
     setTimeout(() => loadApp(), 100);
 
