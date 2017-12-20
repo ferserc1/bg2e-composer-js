@@ -40,14 +40,21 @@ app.addSource(() => {
             let context = app.ComposerWindowController.Get().gl;
             const {dialog} = require('electron').remote;
             
-            let filePath = dialog.showOpenDialog({
-                properties: ['openFile'],
+            let options = {properties: ['openFile'],
                 filters: [
                     { name:"Compatible files", extensions:['bg2','vwglb','obj']},
                     { name:"bg2 object", extensions:['bg2','vwglb']},
                     { name:"Wavefront OBJ", extensions:['obj']}
                 ]
-            });
+            };
+            if (app.fbxPlugin.available) {
+                options.filters.push({
+                    name:"Autodesk FBX", extensions:['fbx']
+                });
+                options.filters[0].extensions.push('fbx');
+            }
+            let filePath = dialog.showOpenDialog(options);
+
             if (filePath && filePath.length>0) {
                 filePath = app.standarizePath(filePath[0]);
                 let cmd = new app.fileCommands.OpenFile(context,app.render.Scene.Get().root,filePath);

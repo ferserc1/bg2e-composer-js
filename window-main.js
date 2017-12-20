@@ -9,6 +9,45 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     let path = require("path");
     const settings = require('electron-settings');
 
+    let remote = require("electron").remote;
+    let electronApp = remote.app;
+    
+    app.appPath = electronApp.getAppPath().split(path.sep);
+    app.appPath.pop();
+    app.appPath = app.appPath.join(path.sep);
+    app.appPath = path.resolve(path.join(app.appPath,'..'));
+    
+    let composerPluginsPath = "";
+    if (/darwin/i.test(process.platform)) {
+        // composer-plugins folder in the same folder as Composer.app bundle
+        composerPluginsPath = path.resolve(path.join(app.appPath,"../../composer-plugins"));
+    }
+    else if (/win/i.test(process.platform)) {
+        // composer-plugins folder in the same folder as composer application directory
+        composerPluginsPath = path.resolve(path.join(app.appPath,"../composer-plugins"));
+    }
+
+    app.plugins = {
+        paths:[
+            path.join(app.appPath, '/plugins'),
+            composerPluginsPath,
+            __dirname + '/plugins',
+            path.resolve(path.join(__dirname,'../composer-plugins'))
+        ]
+    };
+
+    app.plugins.find = function(pluginFolder) {
+        let result = null;
+        app.plugins.paths.some((item) => {
+            let fullPath = path.join(item,pluginFolder);
+            if (fs.existsSync(fullPath)) {
+                result = fullPath;
+            }
+            return result!=null;
+        });
+        return result;
+    };
+
     let g_appDefines = [];
     let g_appSource = [];
     let g_workspaces = [];

@@ -9,6 +9,10 @@ app.addDefinitions(() => {
         
         bg.base.Writer.RegisterPlugin(new bg.base.Bg2WriterPlugin());
         bg.base.Writer.RegisterPlugin(new bg.base.SceneWriterPlugin());
+
+        if (app.fbxPlugin.available) {
+            bg.base.Loader.RegisterPlugin(new app.fbxPlugin.FbxLoaderPlugin());
+        }
     }
 
     function sceneWillOpen(oldSceneRoot,newSceneRoot) {

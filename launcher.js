@@ -2,6 +2,7 @@
 const {app, BrowserWindow} = require('electron');
 
 app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
+app.commandLine.appendSwitch('disable-http-cache');
 
 const url = require('url');
 const path = require('path');
