@@ -7,7 +7,7 @@ app.addDefinitions(() => {
     
     let commandPath = app.plugins.find("fbx2json");
 
-    if (/darwin/i.test(process.platform)) {
+    if (commandPath && /darwin/i.test(process.platform)) {
         // macOS
         commandPath = path.join(commandPath,"macOS");
         if (fs.existsSync(commandPath)) {
@@ -16,7 +16,7 @@ app.addDefinitions(() => {
             app.fbxPlugin.defaultScale = 0.001;
         }
     }
-    else if (/win/i.test(process.platform)) {
+    else if (commandPath && /win/i.test(process.platform)) {
         // Windows
         commandPath = path.join(process.platform);
         if (fs.existsSync(commandPath)) {
