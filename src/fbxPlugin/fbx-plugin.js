@@ -18,7 +18,7 @@ app.addDefinitions(() => {
     }
     else if (commandPath && /win/i.test(process.platform)) {
         // Windows
-        commandPath = path.join(process.platform);
+        commandPath = path.join(commandPath,"win64");
         if (fs.existsSync(commandPath)) {
             app.fbxPlugin.available = true;
             app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");

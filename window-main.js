@@ -24,15 +24,15 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     }
     else if (/win/i.test(process.platform)) {
         // composer-plugins folder in the same folder as composer application directory
-        composerPluginsPath = path.resolve(path.join(app.appPath,"../composer-plugins"));
+        composerPluginsPath = path.resolve(path.join(app.appPath,"..\\composer-plugins"));
     }
 
     app.plugins = {
         paths:[
-            path.join(app.appPath, '/plugins'),
+            path.join(app.appPath, 'plugins'),
             composerPluginsPath,
-            __dirname + '/plugins',
-            path.resolve(path.join(__dirname,'../composer-plugins'))
+            path.join(__dirname, 'plugins'),
+            path.resolve(path.join(__dirname,`..${ path.sep}composer-plugins`))
         ]
     };
 
@@ -184,6 +184,11 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         }]);
 
         angular.bootstrap(document, [ GLOBAL_APP_NAME ]);
+
+        console.log("Plugin folders:");
+        app.plugins.paths.forEach((p) => {
+            console.log("  " + p);
+        })
     };
  
     if (BG2E_COMPOSER_DEBUG) {
