@@ -5,16 +5,28 @@ app.addDefinitions(() => {
     const path = require("path");
     const { exec } = require("child_process");
 
-    const commandPath = path.resolve(path.join(__dirname,"fbx2json"));
+    let commandPath = path.resolve(path.join(__dirname,"fbx2json"));
 
-    if (fs.existsSync(commandPath)) {
-        app.fbxPlugin.available = true;
+    if (/darwin/i.test(process.platform)) {
+        // macOS
+        commandPath = path.join(commandPath,"macOS");
+        if (fs.existsSync(commandPath)) {
+            app.fbxPlugin.available = true;
+            app.fbxPlugin.path = path.join(commandPath,"fbx2json");
+        }
+    }
+    else if (/win/i.test(process.platform)) {
+        // Windows
+        commandPath = path.join(process.platform);
+        if (fs.existsSync(commandPath)) {
+            app.fbxPlugin.available = true;
+            app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");
+        }
     }
 
     app.fbxPlugin.loadFbxJson = function(filePath) {
         return new Promise((resolve,reject) => {
-            let fbx2jsonCmd = path.resolve(path.join(commandPath,"fbx2json"));
-            exec(`${ fbx2jsonCmd } ${filePath}`, (err,stdout,stderr) => {
+            exec(`${ app.fbxPlugin.path } ${filePath}`, (err,stdout,stderr) => {
                 if (err) {
                     reject(err);
                 }

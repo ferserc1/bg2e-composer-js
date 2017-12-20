@@ -47,10 +47,14 @@ gulp.task("fbxPlugin", function() {
             `${ fbxPluginPath.win64 }/vcruntime140.dll`,
             `${ fbxPluginPath.win64 }/fbx2json.exe`
         ])
-            .pipe(gulp.dest(__dirname + '/fbx2json'));
+            .pipe(gulp.dest(__dirname + '/fbx2json/win64'));
     }
     else if (fs.existsSync(fbxPluginPath.macOS)) {
-        // TODO: implement this
+        return gulp.src([
+            `${ fbxPluginPath.macOS }/libfbxsdk.dylib`,
+            `${ fbxPluginPath.macOS }/fbx2json`
+        ])
+            .pipe(gulp.dest(__dirname + '/fbx2json/macOS'));
     }
 });
 
