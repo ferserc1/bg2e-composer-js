@@ -1,0 +1,20 @@
+<h1>About bg2 engine Composer</h1>
+<h2>Version {{ versionString }}</h2>
+<a ng-click="openLink('http://www.bg2engine.com')">http://www.bg2engine.com</a>
+<h3>This software is Open Source and distributed under the MIT license</h3>
+<p>Copyright 2017 Fernando Serrano Carpena</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<ul>
+    <li>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</li>
+    <li>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</li>
+</ul>
+
+<div ng-show="otherCopyrightNotices.length">
+    <h3>This software also contains or uses some libraries or resources that have other license terms that you must accept:</h3>
+    <div ng-repeat="copyright in otherCopyrightNotices">
+        <h4>{{ copyright.title }}</h4>
+        <a ng-click="openLink('https://www.autodesk.com/products/fbx/overview')">https://www.autodesk.com/products/fbx/overview</a>
+        <p ng-repeat="paragraph in copyright.paragraphs">{{ paragraph }}</p>
+    </div>
+</div>

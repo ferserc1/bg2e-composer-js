@@ -54,6 +54,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     let g_workspaces = [];
     let g_plugins = [];
     let g_evtObservers = {};
+    let g_copyright = [];
 
     app.angular = {
         deps: [
@@ -130,6 +131,19 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         g_workspaces.push(callback);
     };
 
+    app.addCopyright = function(title,link,paragraphs) {
+        if (typeof(paragraphs)=='string') {
+            paragraphs = [paragraphs];
+        }
+        g_copyright.push(
+            {
+                title:title,
+                link:link,
+                paragraphs:paragraphs
+            }
+        )
+    }
+
     app.configureWorkspaceElement = function(element) {
         element.attr('class','bg2-widget');
     };
@@ -167,6 +181,63 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         }
     };
 
+    Object.defineProperty(app,'copyrightNotices', {
+        get: function() { return g_copyright; }
+    });
+
+    loadLog();
+    
+    if (BG2E_COMPOSER_DEBUG) {
+        // Debug mode: require scripts
+        requireSources(__dirname + '/src');
+    }
+    requireStylesheets();
+
+    console.log("Plugin folders:");
+    app.plugins.paths.forEach((p) => {
+        console.log("  " + p);
+    });
+
+    app.plugins.paths.forEach((pluginPath) => {
+        if (fs.existsSync(pluginPath)) {
+            fs.readdirSync(pluginPath).forEach((plugin) => {
+                let fullPluginPath = path.join(pluginPath,plugin);
+                let stat = fs.statSync(fullPluginPath);
+                if (stat.isDirectory) {
+                    let source = path.join(fullPluginPath,"src");
+                    if (fs.existsSync(source)) {
+                        stat = fs.statSync(source);
+                        if (stat.isDirectory) {
+                            requireSources(source);
+                        }
+                    }
+
+                    let pluginSources = path.join(fullPluginPath,"plugin");
+                    if (fs.existsSync(pluginSources)) {
+                        stat = fs.statSync(pluginSources);
+                        if (stat.isDirectory) {
+                            fs.readdirSync(pluginSources).forEach((pluginFile) => {
+                                if (pluginFile.split(".").pop()=="js") {
+                                    g_plugins.push(path.join(pluginSources,pluginFile));
+                                }
+                            })
+    
+                        }
+                    }
+                }
+            })
+        }
+    });
+
+    setTimeout(() => loadApp(), 100);
+
+    const {ipcRenderer} = require('electron');
+    ipcRenderer.on('triggerMenu', (event,arg) => {
+        app.CommandHandler.Trigger(arg.msg,arg);
+    });
+    
+
+    ////// Functions
     function loadLog() {
         // The log class is defined here, because we need to capture all the console messages
         app.ui = app.ui || {};
@@ -259,8 +330,6 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         // Initialize log
         Log.Get();
     }
-
-    loadLog();
     
     function loadApp() {
         let ng = angular.module(GLOBAL_APP_NAME, app.angular.deps);
@@ -292,55 +361,4 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
 
         angular.bootstrap(document, [ GLOBAL_APP_NAME ]);
     };
- 
-    if (BG2E_COMPOSER_DEBUG) {
-        // Debug mode: require scripts
-        requireSources(__dirname + '/src');
-    }
-    requireStylesheets();
-
-    console.log("Plugin folders:");
-    app.plugins.paths.forEach((p) => {
-        console.log("  " + p);
-    });
-
-    app.plugins.paths.forEach((pluginPath) => {
-        if (fs.existsSync(pluginPath)) {
-            fs.readdirSync(pluginPath).forEach((plugin) => {
-                let fullPluginPath = path.join(pluginPath,plugin);
-                let stat = fs.statSync(fullPluginPath);
-                if (stat.isDirectory) {
-                    let source = path.join(fullPluginPath,"src");
-                    if (fs.existsSync(source)) {
-                        stat = fs.statSync(source);
-                        if (stat.isDirectory) {
-                            requireSources(source);
-                        }
-                    }
-
-                    let pluginSources = path.join(fullPluginPath,"plugin");
-                    if (fs.existsSync(pluginSources)) {
-                        stat = fs.statSync(pluginSources);
-                        if (stat.isDirectory) {
-                            fs.readdirSync(pluginSources).forEach((pluginFile) => {
-                                if (pluginFile.split(".").pop()=="js") {
-                                    g_plugins.push(path.join(pluginSources,pluginFile));
-                                }
-                            })
-    
-                        }
-                    }
-                }
-            })
-        }
-    });
-
-
-    setTimeout(() => loadApp(), 100);
-
-    const {ipcRenderer} = require('electron');
-    ipcRenderer.on('triggerMenu', (event,arg) => {
-        app.CommandHandler.Trigger(arg.msg,arg);
-    });
-    
 })();

@@ -9,6 +9,11 @@ dialog-view .bg2-dialog-container {
     pointer-events: none;
 }
 
+dialog-view a {
+    color: lightgrey;
+    cursor: pointer;
+}
+
 .bg2-dialog-container.bg2-dialog-modal {
     pointer-events: all;
     background-color: rgba(0,0,0,0.4);

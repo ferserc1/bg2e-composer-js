@@ -181,6 +181,10 @@ module.exports = {
 							{
 								label: 'Learn More',
 								click () { require('electron').shell.openExternal('https://electron.atom.io') }
+							},
+							{
+								label: 'About',
+								click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'about' }) }
 							}
 						]
 					}
