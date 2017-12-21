@@ -43,6 +43,7 @@ app.addDefinitions(() => {
             g_scene = this;
             this.gl = gl;
             this._root = null;
+            this._grid = null;
             this._camera = null;
             this._selectionManager = new app.render.SelectionManager(this);
             this._selectionController = new app.render.SelectionController(this,this._selectionManager);
@@ -56,6 +57,10 @@ app.addDefinitions(() => {
 
         get root() {
             return this._root;
+        }
+
+        get grid() {
+            return this._grid;
         }
 
         get camera() {
@@ -142,6 +147,9 @@ app.addDefinitions(() => {
         createDefaultScene() {
             // TODO: Import scene file
             this._root = new bg.scene.Node(this.gl,"SceneRoot");
+
+            this._grid = new app.render.Grid();
+            this._root.addComponent(this._grid);
 
             this._cameraNode = new bg.scene.Node(this.gl, "Main Camera");
             this._root.addChild(this._cameraNode);

@@ -117,6 +117,8 @@ app.addSource(() => {
         $scope.lastMessage = "";
         $scope.lastMessageType = "";
         $scope.logMessages = [];
+        $scope.gridSize = app.render.Scene.Get().grid.gridSize;
+        $scope.gridPlane = app.render.Scene.Get().grid.planeSize;
 
         $scope.logWindowVisible = false;
 
@@ -136,6 +138,12 @@ app.addSource(() => {
             }, 50);
         });
 
+        app.render.Scene.Get().sceneChanged("statusBarGrid",() => {
+            $scope.gridSize = app.render.Scene.Get().grid.gridSize;
+            $scope.gridPlane = app.render.Scene.Get().grid.planeSize;
+            $scope.$apply();
+        });
+
         $scope.openLog = function() {
             $scope.logWindowVisible = true;
         }
@@ -143,6 +151,24 @@ app.addSource(() => {
         $scope.closeLog = function() {
             $scope.logWindowVisible = false;
         }
+
+        $scope.switchGrid = function() {
+            $scope.switchGridVisible = !$scope.switchGridVisible;
+        }
+
+        $scope.$watch('gridSize',() => {
+            if ($scope.gridSize!=app.render.Scene.Get().grid.gridSize) {
+                app.render.Scene.Get().grid.gridSize = $scope.gridSize;
+                app.ComposerWindowController.Get().updateView();
+            }
+        });
+        
+        $scope.$watch('gridPlane',() => {
+            if (app.render.Scene.Get().grid.planeSize!=$scope.gridPlane) {
+                app.render.Scene.Get().grid.planeSize = $scope.gridPlane
+                app.ComposerWindowController.Get().updateView();
+            }
+        });
     }]);
 
     angularApp.directive("statusBar", function() {
