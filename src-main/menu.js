@@ -161,6 +161,15 @@ module.exports = {
 									focusedWindow.webContents.send('triggerMenu', { msg:'createEmptyNode' })
 								}
 							},
+							{
+								label: 'Node',
+								submenu: [
+									{ label: 'Camera', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createCameraNode' }) }},
+									{ label: 'Transform', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createTransformNode' }) }},
+									{ label: 'Light', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createLightNode' }) }},
+									{ label: 'Drawable', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createDrawableNode' }) }}
+								]
+							},
 							{ type: 'separator' },
 							{
 								label: 'Add Component',

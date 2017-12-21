@@ -11,7 +11,7 @@ app.addSource(() => {
         });
         let node = new bg.scene.Node(context);
         if (onCreateCallback) {
-            onCreateCallack(node);
+            onCreateCallback(node);
         }
         app.CommandManager.Get().doCommand(new app.nodeCommands.CreateNode(node,parent))
             .then(() => {
@@ -58,7 +58,11 @@ app.addSource(() => {
                 'createCameraComponent',
                 'createTransformComponent',
                 'createLightComponent',
-                'createDrawableComponent'
+                'createDrawableComponent',
+                'createCameraNode',
+                'createTransformNode',
+                'createLightNode',
+                'createDrawableNode'
             ]
         }
 
@@ -79,6 +83,26 @@ app.addSource(() => {
                 break;
             case 'createDrawableComponent':
                 cmd = this.createDrawableComponent();
+                break;
+            case 'createCameraNode':
+                cmd = createNode((node) => {
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Camera").createInstance());
+                });
+                break;
+            case 'createTransformNode':
+                cmd = createNode((node) => {
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Transform").createInstance());
+                });
+                break;
+            case 'createLightNode':
+                cmd = createNode((node) => {
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Light").createInstance());
+                });
+                break;
+            case 'createDrawableNode':
+                cmd = createNode((node) => {
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Drawable").createInstance());
+                });
                 break;
             }
 
