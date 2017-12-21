@@ -194,7 +194,7 @@ app.addDefinitions(() => {
             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);
 
 
-            let lightNode = new bg.scene.Node(this.gl);
+            let lightNode = new bg.scene.Node(this.gl, "Main Light");
             this._root.addChild(lightNode);
     
             lightNode.addComponent(new bg.scene.Light(new bg.base.Light(this.gl)));
@@ -206,7 +206,7 @@ app.addDefinitions(() => {
                     .translate(0,1.4,3)
             ));
 
-            let floorNode = new bg.scene.Node(this.gl);
+            let floorNode = new bg.scene.Node(this.gl, "Floor");
             this._root.addChild(floorNode);
             floorNode.addComponent(bg.scene.PrimitiveFactory.Plane(this.gl,10));
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));

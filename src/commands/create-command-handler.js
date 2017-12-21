@@ -15,6 +15,7 @@ app.addSource(() => {
         }
         app.CommandManager.Get().doCommand(new app.nodeCommands.CreateNode(node,parent))
             .then(() => {
+                app.render.Scene.Get().selectionManager.prepareNode(node);
                 app.render.Scene.Get().notifySceneChanged();
                 app.ComposerWindowController.Get().updateView();
             })
