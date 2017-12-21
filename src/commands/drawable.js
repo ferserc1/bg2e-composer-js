@@ -196,4 +196,62 @@ app.addSource(() => {
     }
 
     app.drawableCommands.SetName = SetName;
+
+    function applyTransform(polyList,matrix) {
+        let newVertex = [];
+        let newNormal = [];
+        let rotationMatrix = matrix.rotation;
+        for (let i=0; i<polyList.vertex.length; i+=3) {
+            let newV = new bg.Vector3(polyList.vertex[i],polyList.vertex[i + 1],polyList.vertex[i + 2]);
+            newV = matrix.multVector(newV);
+            newVertex.push(newV.x,newV.y,newV.z);
+
+            let newN = new bg.Vector3(polyList.normal[i],polyList.normal[i + 1],polyList.normal[i + 2]);
+            newN = rotationMatrix.multVector(newN);
+            newN.normalize();
+            newNormal.push(newN.x,newN.y,newN.z);
+        }
+        polyList.vertex = newVertex;
+        polyList.normal = newNormal;
+        polyList.build();
+    }
+
+    class ApplyTransform extends app.Command {
+        constructor(node) {
+            super();
+            this._node = node;
+            if (node.drawable && node.transform) {
+                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
+                this._inverseMatrix = new bg.Matrix4(node.transform.matrix);
+                this._inverseMatrix.invert();
+            }
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._node.transform && this._node.drawable) {
+                    this._node.drawable.forEach((plist) => {
+                        applyTransform(plist,this._prevMatrix);
+                    });
+                    this._node.transform.matrix.identity();
+                    resolve();
+                }
+                else {
+                    reject(new Error("The selected node hasn't a transform or drawable node attached."))
+                }
+            })
+        }
+
+        undo() {
+            return new Promise((resolve) => {
+                this._node.drawable.forEach((plist) => {
+                    applyTransform(plist,this._inverseMatrix);
+                });
+                this._node.transform.matrix.assign(this._prevMatrix);
+                resolve();
+            })
+        }
+    }
+
+    app.drawableCommands.ApplyTransform = ApplyTransform;
 })

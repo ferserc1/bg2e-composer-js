@@ -47,6 +47,10 @@ app.addSource(() => {
             setName(name) {
                 return this.execCommand(new app.drawableCommands.SetName(this.componentInstance,name));
             }
+
+            applyTransform() {
+                return this.execCommand(new app.drawableCommands.ApplyTransform(this.componentInstance));
+            }
         }
     });
 
@@ -79,6 +83,14 @@ app.addSource(() => {
                 $scope.stacks = 20;
 
                 $scope.createButtonName = $scope.component.componentInstance._items>0 ? "Create" : "Replace Drawable";
+
+                $scope.canApplyTransform = $scope.component.componentInstance.transform!=null;
+
+                $scope.applyTransform = function() {
+                    if ($scope.canApplyTransform) {
+                        $scope.component.applyTransform();
+                    }
+                };
 
                 $scope.$watch('creationTool', () => {
 

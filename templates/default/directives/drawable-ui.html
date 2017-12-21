@@ -1,5 +1,5 @@
+<string-picker label="Model Name" value="name" commit-changes="setDrawableName"></string-picker>
 <div class="bg2-widget-panel">
-    <string-picker label="Model Name" value="name" commit-changes="setDrawableName"></string-picker>
     <h3>Creation tools</h3>
     <select-picker label="Type" value="creationTool" options="creationTools"></select-picker>
     <div ng-show="creationTool.id==0">
@@ -20,4 +20,8 @@
         <number-picker label="Depth" value="depth"></number-picker>
     </div>
     <button ng-click="createDrawable()">{{ createButtonName }}</button>
+</div>
+<div class="bg2-widget-panel">
+    <h3>Operations</h3>
+    <button ng-click="applyTransform()" ng-class="{ 'disabled' : !canApplyTransform }">Apply transform</button>
 </div>
