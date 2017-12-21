@@ -23,6 +23,34 @@ app.addSource(() => {
             });
     }
 
+    function selectedNode() {
+        let sel = app.render.Scene.Get().selectionManager.selection;
+        if (sel.length) {
+            return sel[0].node;
+        }
+        return false;
+    }
+
+    function addComponent(componentUi) {
+        let sel = selectedNode();
+        if (sel) {
+            let instance = componentUi.createInstance();
+            app.CommandManager.Get().doCommand(
+                new app.nodeCommands.AddComponent(sel,instance)
+            )
+            .then(() => {
+                app.render.Scene.Get().notifySceneChanged();
+                app.ComposerWindowController.Get().updateView();
+            })
+            .catch((err) => {
+    
+            });
+        }
+        else {
+            console.error("Could not create component: you must to select a node first.",true);
+        }
+    }
+
     class CreateCommandHandler extends app.CommandHandler {
         getMessages() {
             return [
@@ -30,11 +58,7 @@ app.addSource(() => {
                 'createCameraComponent',
                 'createTransformComponent',
                 'createLightComponent',
-                'createDrawableComponent',
-                'createCubeComponent',
-                'createPlaneComponent',
-                'createSphereComponent',
-                'createLightComponent'
+                'createDrawableComponent'
             ]
         }
 
@@ -56,15 +80,6 @@ app.addSource(() => {
             case 'createDrawableComponent':
                 cmd = this.createDrawableComponent();
                 break;
-            case 'createCubeComponent':
-                cmd = this.createCubeComponent();
-                break;
-            case 'createPlaneComponent':
-                cmd = this.createPlaneComponent();
-                break;
-            case 'createSphereComponent':
-                cmd = this.createSphereComponent();
-                break;
             }
 
             if (cmd) {
@@ -85,35 +100,19 @@ app.addSource(() => {
         }
 
         createCameraComponent() {
-            alert("Not implemented");
+            addComponent(app.components.getUIForComponent("bg.scene.Camera"));
         }
 
         createTransformComponent() {
-            alert("Not implemented");
+            addComponent(app.components.getUIForComponent("bg.scene.Transform"));
         }
 
         createLightComponent() {
-            alert("Not implemented");
+            addComponent(app.components.getUIForComponent("bg.scene.Light"));
         }
 
         createDrawableComponent() {
-            alert("Not implemented");
-        }
-
-        createCubeComponent() {
-            alert("Not implemented");
-        }
-
-        createPlaneComponent() {
-            alert("Not implemented");
-        }
-
-        createSphereComponent() {
-            alert("Not implemented");
-        }
-
-        createLightComponent() {
-            alert("Not implemented");
+            addComponent(app.components.getUIForComponent("bg.scene.Drawable"));
         }
 
     }

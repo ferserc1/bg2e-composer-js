@@ -168,10 +168,7 @@ module.exports = {
 									{ label: 'Camera', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createCameraComponent' }) }},
 									{ label: 'Transform', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createTransformComponent' }) }},
 									{ label: 'Light', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createLightComponent' }) }},
-									{ label: 'Drawable', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createDrawableComponent' }) }},
-									{ label: 'Cube', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createCubeComponent' }) }},
-									{ label: 'Plane', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createPlaneComponent' }) }},
-									{ label: 'Sphere', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createSphereComponent' }) }}
+									{ label: 'Drawable', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg: 'createDrawableComponent' }) }}
 								]
 							}
 						]

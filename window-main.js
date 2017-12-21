@@ -263,14 +263,14 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
                 console.__error = console.error;
                 this._messages = [];
                 this._observers = {};
-                console.log = function(message) {
-                    Log.Get().log(message,app.ui.LogLevel.INFO);
+                console.log = function(message,showDialog) {
+                    Log.Get().log(message,app.ui.LogLevel.INFO,showDialog);
                 };
-                console.warn = function(message) {
-                    Log.Get().log(message,app.ui.LogLevel.WARNING);
+                console.warn = function(message,showDialog) {
+                    Log.Get().log(message,app.ui.LogLevel.WARNING,showDialog);
                 };
-                console.error = function(message) {
-                    Log.Get().log(message,app.ui.LogLevel.ERROR);
+                console.error = function(message,showDialog) {
+                    Log.Get().log(message,app.ui.LogLevel.ERROR,showDialog);
                 };
             }
     
@@ -294,16 +294,20 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
             get lastMessage() { return this.lastMessageData.text; }
             get lastLevel() { return this.lastMessageData.level; }
     
-            log(message,level=app.ui.LogLevel.INFO) {
+            log(message,level=app.ui.LogLevel.INFO,showDialog=false) {
+                let dialogType = "";
                 switch (level) {
                 case app.ui.LogLevel.INFO:
                     if (console.__log) console.__log(message);
+                    dialogType = 'info';
                     break;
                 case app.ui.LogLevel.WARNING:
                     if (console.__warn) console.__warn(message);
+                    dialogType = 'warning';
                     break;
                 case app.ui.LogLevel.ERROR:
                     if (console.__error) console.__error(message);
+                    dialogType = 'error';
                     break;
                 }
                 
@@ -312,6 +316,18 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
                     level:level
                 });
                 this.notifyLogChanged();
+
+                if (showDialog) {
+                    let { dialog } = require('electron').remote;
+
+                    dialog.showMessageBox({
+                        type: dialogType,
+                        buttons: ['Ok'],
+                        title: 'bg2 Engine Composer',
+                        message: message
+                    }, function (response) {
+                    });
+                }
             }
     
             logChanged(observer,callback) {
