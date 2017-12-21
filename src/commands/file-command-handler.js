@@ -8,6 +8,7 @@ app.addSource(() => {
 
         getMessages() {
             return [
+                "newScene",
                 "openFile",
                 "openScene",
                 "exportSelected",
@@ -18,6 +19,9 @@ app.addSource(() => {
 
         execute(message,params) {
             switch (message) {
+            case 'newScene':
+                this.newScene(params);
+                break;
             case 'openFile':
                 this.openFile(params);
                 break;
@@ -34,6 +38,21 @@ app.addSource(() => {
                 this.saveSceneAs(params);
                 break;
             }
+        }
+
+        newScene() {
+            let context = app.ComposerWindowController.Get().gl;
+            let cmd = new app.fileCommands.NewFile(context,app.render.Scene.Get().root);
+            app.CommandManager.Get().doCommand(cmd)
+                .then(() => {
+                    this._currentScenePath = "";
+                })
+                .catch((err) => {
+                    if (err) {
+                        console.error(err.message)
+                    }
+                    // else, cancel by user 
+                });
         }
 
         openFile() {
@@ -60,35 +79,42 @@ app.addSource(() => {
                 let cmd = new app.fileCommands.OpenFile(context,app.render.Scene.Get().root,filePath);
                 app.CommandManager.Get().doCommand(cmd)
                     .then(() => {})
-                    .catch((err) => console.log(err.message));
+                    .catch((err) => {
+                        if (err) {
+                            console.error(err.message)
+                        }
+                        // else, cancel by user
+                    });
             }
         }
 
         openScene() {
-            let context = app.ComposerWindowController.Get().gl;
-            const {dialog} = require('electron').remote;
-            
-            let filePath = dialog.showOpenDialog({
-                properties:['openFile'],
-                filters: [
-                    { name:"bg2 engine scenes", extensions:["vitscnj"]}
-                ]
-            });
-            if (filePath && filePath.length>0) {
-                filePath = app.standarizePath(filePath[0]);
-                let cmd = new app.fileCommands.OpenScene(context,filePath);
-                app.CommandManager.Get().doCommand(cmd)
-                    .then(() => {
-                        this._currentScenePath = filePath;
-                    })
-                    .catch((err) => {
-                        if (err) {
-                            console.log(err.message);
-                        }
-                        else {
-                            // command cancelled by user
-                        }
-                    });
+            if (app.render.Scene.Get().confirmClearScene('openScene')) {
+                let context = app.ComposerWindowController.Get().gl;
+                const {dialog} = require('electron').remote;
+                
+                let filePath = dialog.showOpenDialog({
+                    properties:['openFile'],
+                    filters: [
+                        { name:"bg2 engine scenes", extensions:["vitscnj"]}
+                    ]
+                });
+                if (filePath && filePath.length>0) {
+                    filePath = app.standarizePath(filePath[0]);
+                    let cmd = new app.fileCommands.OpenScene(context,filePath);
+                    app.CommandManager.Get().doCommand(cmd)
+                        .then(() => {
+                            this._currentScenePath = filePath;
+                        })
+                        .catch((err) => {
+                            if (err) {
+                                console.log(err.message);
+                            }
+                            else {
+                                // command cancelled by user
+                            }
+                        });
+                }
             }
         }
 
@@ -123,15 +149,20 @@ app.addSource(() => {
             }
         }
 
-        saveScene() {
+        saveScene(params) {
             if (!this._currentScenePath) {
-                this.saveSceneAs();
+                this.saveSceneAs(params);
             }
             else {
                 let context = app.ComposerWindowController.Get().gl;
                 let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
                 app.CommandManager.Get().doCommand(cmd)
-                    .then(() => {})
+                    .then(() => {
+                        app.CommandManager.Get().clear();
+                        if (params.followingCommand) {
+                            app.CommandHandler.Trigger(params.followingCommand,{});
+                        }
+                    })
                     .catch((err) => {
                         if (err) {
                             console.log(err.message);
@@ -143,7 +174,7 @@ app.addSource(() => {
             }
         }
 
-        saveSceneAs() {
+        saveSceneAs(params) {
             let context = app.ComposerWindowController.Get().gl;
             const {dialog} = require('electron').remote;
             
@@ -157,7 +188,13 @@ app.addSource(() => {
                 let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
                 app.CommandManager.Get().doCommand(cmd)
                     .then(() => {
+                        app.CommandManager.Get().clear();
                         this._currentScenePath = filePath;
+                        if (params.followingCommand) {
+                            setTimeout(() => {
+                                app.CommandHandler.Trigger(params.followingCommand,{});
+                            },10);
+                        }
                     })
                     .catch((err) => {
                         if (err) {

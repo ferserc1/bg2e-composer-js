@@ -7,6 +7,14 @@ module.exports = {
 						label: 'File',
 						submenu: [
 							{
+								label: 'New Scene',
+								accelerator: 'CmdOrCtrl+O',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'newScene' });
+								}
+							},
+							{ type:'separator' },
+							{
 								label: 'Open Scene...',
 								accelerator: 'CmdOrCtrl+O',
 								click: function(item, focusedWindow) {

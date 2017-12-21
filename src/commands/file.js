@@ -1,6 +1,29 @@
 app.addSource(() => {
     app.fileCommands = {}
 
+    class NewFile extends app.ContextCommand {
+        constructor(context) {
+            super(context);
+            this._undoable = false;
+            this._clearCommandHistory = true;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                app.render.Scene.Get().newScene()
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    })
+            })
+        }
+    }
+
+    app.fileCommands.NewFile = NewFile;
+
+
     class OpenFile extends app.ContextCommand {
         constructor(context,parentNode,path) {
             super(context);

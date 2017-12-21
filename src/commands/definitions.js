@@ -48,6 +48,15 @@ app.addDefinitions(() => {
             this._redoObservers = {};
         }
 
+        get sceneChanged() {
+            return this._undoStack.length>0;
+        }
+
+        clear() {
+            this._undoStack = [];
+            this._redoStack = [];
+        }
+
         onDoCommand(observerName,callback) {
             this._doObservers[observerName] = callback;
         }
@@ -106,7 +115,6 @@ app.addDefinitions(() => {
         }
 
         redo() {
-            // TODO: Implement rendo
             return new Promise((resolve,reject) => {
                 let cmd = this._redoStack.pop();
                 if (cmd) {

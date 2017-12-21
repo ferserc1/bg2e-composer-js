@@ -95,7 +95,10 @@ app.addDefinitions(() => {
             if (this._plist) {
                 super.display(pipeline,matrixState);
             }
-        }        
+        }
+
+        // Do not save or restore this component
+        get shouldSerialize() { return false; }
     }
 
     bg.scene.registerComponent(app.render,Grid,"app.ui.Grid");

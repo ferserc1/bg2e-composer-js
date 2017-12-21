@@ -34,6 +34,34 @@ app.addDefinitions(() => {
         return status;
     }
 
+    // Return false if the scene have changes and the user want to save it, or
+    // if the user press cancel. If the user press Yes, the saveScene command will
+    // be triggered, and after that, the nextCommand command will be triggered
+    function saveConfirm(nextCommand) {
+        let confirm = true;
+        if (app.CommandManager.Get().sceneChanged) {
+            const {dialog} = require('electron').remote;
+
+            let result = dialog.showMessageBox({
+                type:"warning",
+                title:"Save changes",
+                message:"The scene has changed, ¿do you want to save it before continue?",
+                buttons:["Yes","No","Cancel"]
+            });
+
+            if (result==0) {
+                setTimeout(() => {
+                    app.CommandHandler.Trigger('saveScene',{ followingCommand:nextCommand });
+                },10);
+                return false;
+            }
+            else if (result==2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     class Scene {
         static Get() {
             return g_scene;
@@ -187,6 +215,30 @@ app.addDefinitions(() => {
             this.notifySceneChanged();
         }
 
+        confirmClearScene(nextCommand) {
+            return saveConfirm(nextCommand);
+        }
+
+        newScene() {
+            return new Promise((resolve,reject) => {
+                if (saveConfirm('newScene')) {
+                    if (!sceneWillClose.apply(this,[this.root])) {
+                        reject(null);
+                        return;
+                    }
+    
+                    app.CommandManager.Get().clear();                
+                    bg.scene.Node.CleanupNode(this._root);
+                
+                    this.createDefaultScene();
+                    resolve();
+                }
+                else {
+                    reject();
+                }
+            })
+        }
+
         openScene(scenePath) {
             return new Promise((resolve,reject) => {
                 if (!sceneWillClose.apply(this,[this.root])) {
@@ -204,17 +256,22 @@ app.addDefinitions(() => {
                         }
 
                         sceneWillOpen.apply(this,[this.root,result.sceneRoot]);
+
+                        app.CommandManager.Get().clear();
     
                         this._root = result.sceneRoot;
                         let cameraNode = result.cameraNode;
                         this._camera = cameraNode.camera;
+
+                        this._grid = new app.render.Grid();
+                        this._root.addComponent(this._grid);
     
                         cameraNode.addComponent(new bg.scene.Transform());
                         let ctrl = cameraNode.component("bg.manipulation.OrbitCameraController");
                         if (ctrl) {
                             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);                            
                         }
-   
+    
                         this.selectionManager.initScene(this.root);
                         this.notifySceneChanged();
                         
@@ -226,6 +283,7 @@ app.addDefinitions(() => {
                     })
 
                     .catch((err) => reject(err));
+            
             });
         }
 
