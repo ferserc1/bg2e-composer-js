@@ -58,6 +58,10 @@ app.addSource(() => {
                 function updateUI() {
                     if (!$scope.component) return;
 
+                    $scope.rotation = $scope.component.componentInstance.rotation.toArray();
+                    $scope.distance = $scope.component.componentInstance.distance;
+                    $scope.center = $scope.component.componentInstance.center.toArray();
+
                     $scope.minDistance = $scope.component.componentInstance.minDistance!=-Number.MAX_VALUE ? $scope.component.componentInstance.minDistance : null;
                     $scope.maxDistance = $scope.component.componentInstance.maxDistance!= Number.MAX_VALUE ? $scope.component.componentInstance.maxDistance : null;
                     $scope.minPitch = $scope.component.componentInstance.minPitch;
@@ -72,6 +76,33 @@ app.addSource(() => {
                     $scope.showLimits = $scope.component.componentInstance.showLimitGizmo;
                     $scope.gizmoColor = $scope.component.componentInstance.limitGizmoColor.toArray();
                 }
+
+                $scope.$watch("rotation",() => {
+                    $scope.component.componentInstance.enabled = true;
+                    $scope.component.componentInstance.rotation.x = isNaN($scope.rotation[0]) ? $scope.component.componentInstance.rotation.x : $scope.rotation[0];
+                    $scope.component.componentInstance.rotation.y = isNaN($scope.rotation[1]) ? $scope.component.componentInstance.rotation.y : $scope.rotation[1];
+                    $scope.component.componentInstance.frame(0);
+                    $scope.component.componentInstance.enabled = false;
+                    app.ComposerWindowController.Get().updateView();
+                },true)
+
+                $scope.$watch("distance", () => {
+                    $scope.component.componentInstance.enabled = true;
+                    $scope.component.componentInstance.distance = isNaN($scope.distance) ? $scope.component.componentInstance.distance : $scope.distance;
+                    $scope.component.componentInstance.frame(0);
+                    $scope.component.componentInstance.enabled = false;
+                    app.ComposerWindowController.Get().updateView();
+                })
+
+                $scope.$watch("center",() => {
+                    $scope.component.componentInstance.enabled = true;
+                    $scope.component.componentInstance.center.x = isNaN($scope.center[0]) ? $scope.component.componentInstance.center.x : $scope.center[0];
+                    $scope.component.componentInstance.center.y = isNaN($scope.center[1]) ? $scope.component.componentInstance.center.y : $scope.center[1];
+                    $scope.component.componentInstance.center.z = isNaN($scope.center[2]) ? $scope.component.componentInstance.center.z : $scope.center[2];
+                    $scope.component.componentInstance.frame(0);
+                    $scope.component.componentInstance.enabled = false;
+                    app.ComposerWindowController.Get().updateView();
+                },true)
 
                 $scope.onCommitChanges = function() {
                     $scope.component.saveConstraints(

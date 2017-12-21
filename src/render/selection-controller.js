@@ -44,6 +44,20 @@ app.addDefinitions(() => {
         set gizmoIconScale(s) { this._gizmoManager.gizmoIconScale = s; }
         get gizmoIconScale() { return this._gizmoManager.gizmoIconScale; }
 
+        showGizmoForNode(node) {
+            clearGizmo.apply(this);
+            this._gizmoNode = node;
+            if (this._gizmoNode && !this._gizmoNode.component("bg.manipulation.Gizmo") && this._gizmoNode.transform) {
+                let gizmo = this._selectionManager.getGizmo();
+                this._gizmoNode.addComponent(gizmo);
+                gizmo.init();
+                gizmo.visible = true;
+            }
+            else if (this._gizmoNode && this._gizmoNode.component("bg.manipulation.Gizmo") && this._gizmoNode.transform) {
+                this._gizmoNode.component("bg.manipulation.Gizmo").visible = true;
+            }
+        }  
+
         init() {
             let context = app.ComposerWindowController.Get().gl;
             this._mousePicker = new bg.manipulation.MousePicker(context);

@@ -123,6 +123,7 @@ app.addSource(() => {
                         app.render.Scene.Get().selectionManager.clear();
                     }
                     app.render.Scene.Get().selectionManager.selectNode($scope.family);
+                    app.render.Scene.Get().selectionController.showGizmoForNode($scope.family);
                 };
             }]
         };
