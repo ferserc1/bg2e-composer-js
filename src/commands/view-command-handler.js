@@ -72,7 +72,7 @@ app.addSource(() => {
                 onAccept:() => { return true; }
             })
                 .then((s) => {})
-                .catch((err) => console.log(err));
+                .catch((err) => console.error(err));
         }
 
         toggleIcon(icon) {

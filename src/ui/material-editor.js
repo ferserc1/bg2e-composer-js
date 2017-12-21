@@ -15,7 +15,7 @@ app.addSource(() => {
                     material[field] = texture;
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.error(err,true);
                 });
         }
     }

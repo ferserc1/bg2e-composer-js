@@ -108,7 +108,7 @@ app.addSource(() => {
                         })
                         .catch((err) => {
                             if (err) {
-                                console.log(err.message);
+                                console.error(err.message,true);
                             }
                             else {
                                 // command cancelled by user
@@ -136,7 +136,7 @@ app.addSource(() => {
                         .then(() => {})
                         .catch((err) => {
                             if (err) {
-                                console.log(err.message);
+                                console.error(error.message,true);
                             }
                             else {
                                 // command cancelled by user
@@ -165,7 +165,7 @@ app.addSource(() => {
                     })
                     .catch((err) => {
                         if (err) {
-                            console.log(err.message);
+                            console.error(err.message,true);
                         }
                         else {
                             // command cancelled by user
@@ -198,7 +198,7 @@ app.addSource(() => {
                     })
                     .catch((err) => {
                         if (err) {
-                            console.log(err.message);
+                            console.error(err.message,true);
                         }
                         else {
                             // command cancelled by user
