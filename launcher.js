@@ -11,6 +11,7 @@ const WindowStateManager = require('electron-window-state-manager');
 
 function launch(indexFile,debug) {
     let win = null;
+    app.showExitPrompt = true;
     
     const mainWindowState = new WindowStateManager('mainWindow', {
         defaultWidth: 1024,
@@ -33,7 +34,22 @@ function launch(indexFile,debug) {
             protocol: 'file',
             slashes: true
         }));
-        win.on('close', () => {
+        win.on('close', (e) => {
+            if (app.showExitPrompt) {
+                e.preventDefault() // Prevents the window from closing 
+                let { dialog } = require('electron');
+                dialog.showMessageBox({
+                    type: 'question',
+                    buttons: ['Yes', 'No'],
+                    title: 'Confirm',
+                    message: 'Unsaved data will be lost. Are you sure you want to quit?'
+                }, function (response) {
+                    if (response === 0) { // Runs the following if 'Yes' is clicked
+                        app.showExitPrompt = false;
+                        win.close();
+                    }
+                });
+            }
             mainWindowState.saveState(win);
         });
     }
