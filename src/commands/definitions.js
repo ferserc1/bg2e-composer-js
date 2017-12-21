@@ -87,6 +87,7 @@ app.addDefinitions(() => {
                         resolve();
                     })
                     .catch((err) => {
+                        console.error(err.message);
                         reject(err);
                     });
             });
@@ -104,6 +105,7 @@ app.addDefinitions(() => {
                         })
 
                         .catch((err) => {
+                            console.error(err.message);
                             this._redoStack = [];
                             reject(err);
                         });
@@ -126,6 +128,7 @@ app.addDefinitions(() => {
                         })
                         
                         .catch((err) => {
+                            console.error(err.message);
                             this._undoStack = [];
                             reject(err);
                         });
