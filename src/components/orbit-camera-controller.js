@@ -78,29 +78,32 @@ app.addSource(() => {
                 }
 
                 $scope.$watch("rotation",() => {
+                    let e = $scope.component.componentInstance.enabled;
                     $scope.component.componentInstance.enabled = true;
                     $scope.component.componentInstance.rotation.x = isNaN($scope.rotation[0]) ? $scope.component.componentInstance.rotation.x : $scope.rotation[0];
                     $scope.component.componentInstance.rotation.y = isNaN($scope.rotation[1]) ? $scope.component.componentInstance.rotation.y : $scope.rotation[1];
                     $scope.component.componentInstance.frame(0);
-                    $scope.component.componentInstance.enabled = false;
+                    $scope.component.componentInstance.enabled = e;
                     app.ComposerWindowController.Get().updateView();
                 },true)
 
                 $scope.$watch("distance", () => {
+                    let e = $scope.component.componentInstance.enabled;
                     $scope.component.componentInstance.enabled = true;
                     $scope.component.componentInstance.distance = isNaN($scope.distance) ? $scope.component.componentInstance.distance : $scope.distance;
                     $scope.component.componentInstance.frame(0);
-                    $scope.component.componentInstance.enabled = false;
+                    $scope.component.componentInstance.enabled = e;
                     app.ComposerWindowController.Get().updateView();
                 })
 
                 $scope.$watch("center",() => {
+                    let e = $scope.component.componentInstance.enabled;
                     $scope.component.componentInstance.enabled = true;
                     $scope.component.componentInstance.center.x = isNaN($scope.center[0]) ? $scope.component.componentInstance.center.x : $scope.center[0];
                     $scope.component.componentInstance.center.y = isNaN($scope.center[1]) ? $scope.component.componentInstance.center.y : $scope.center[1];
                     $scope.component.componentInstance.center.z = isNaN($scope.center[2]) ? $scope.component.componentInstance.center.z : $scope.center[2];
                     $scope.component.componentInstance.frame(0);
-                    $scope.component.componentInstance.enabled = false;
+                    $scope.component.componentInstance.enabled = e;
                     app.ComposerWindowController.Get().updateView();
                 },true)
 
