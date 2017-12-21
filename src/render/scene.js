@@ -141,6 +141,9 @@ app.addDefinitions(() => {
             cameraController.maxPitch = 90;
             cameraController.minPitch = -90;
             cameraController.maxDistance = Number.MAX_VALUE;
+            cameraController.rotation.x = 22.5;
+            cameraController.rotation.y = 30;
+            cameraController.distance = 15;
             return cameraController;
         }
 
@@ -178,7 +181,7 @@ app.addDefinitions(() => {
             let floorNode = new bg.scene.Node(this.gl);
             this._root.addChild(floorNode);
             floorNode.addComponent(bg.scene.PrimitiveFactory.Plane(this.gl,10));
-            floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-1,0)));
+            floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
 
             this.selectionManager.initScene(this.root);
             this.notifySceneChanged();
