@@ -179,12 +179,12 @@ module.exports = {
 						role: 'help',
 						submenu: [
 							{
-								label: 'Learn More',
-								click () { require('electron').shell.openExternal('https://electron.atom.io') }
+								label: 'About bg2e Composer',
+								click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'about' }) }
 							},
 							{
-								label: 'About',
-								click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'about' }) }
+								label: 'About Electron.js',
+								click () { require('electron').shell.openExternal('https://electron.atom.io') }
 							}
 						]
 					}
