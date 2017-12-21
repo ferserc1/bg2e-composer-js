@@ -141,6 +141,7 @@ app.addSource(() => {
         app.render.Scene.Get().sceneChanged("statusBarGrid",() => {
             $scope.gridSize = app.render.Scene.Get().grid.gridSize;
             $scope.gridPlane = app.render.Scene.Get().grid.planeSize;
+            $scope.gridHidden = app.render.Scene.Get().grid.hidden;
             $scope.$apply();
         });
 
@@ -154,6 +155,22 @@ app.addSource(() => {
 
         $scope.switchGrid = function() {
             $scope.switchGridVisible = !$scope.switchGridVisible;
+            if ($scope.switchGridVisible) {
+                $scope.showGrid();
+            }
+        }
+
+        $scope.showGrid = function() {
+            app.render.Scene.Get().grid.show();
+            $scope.gridHidden = false;
+            app.ComposerWindowController.Get().updateView();
+        }
+
+        $scope.hideGrid = function() {
+            $scope.switchGridVisible = false;
+            app.render.Scene.Get().grid.hide();
+            $scope.gridHidden = true;
+            app.ComposerWindowController.Get().updateView();
         }
 
         $scope.$watch('gridSize',() => {

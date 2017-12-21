@@ -22,7 +22,16 @@ app.addDefinitions(() => {
             super();
             this._gridSize = 2.5;
             this._planeSize = 100;
+            this._hidden = false;
         }
+
+        set visible(v) { this._hidden = !v; }
+        set hidden(v) { this._hidden = v; }
+        get visible() { return !this._hidden; }
+        get hidden() { return this._hidden; }
+
+        show() { this._hidden = false; }
+        hide() { this._hidden = true; }
 
         set gridSize(size) {
             if (size<0.1) return;
@@ -92,6 +101,7 @@ app.addDefinitions(() => {
         }
 
         display(pipeline,matrixState) {
+            if (this._hidden) return;
             if (this._plist) {
                 super.display(pipeline,matrixState);
             }
