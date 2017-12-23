@@ -1,0 +1,8 @@
+.bg2-camera-thumb {
+    position: fixed;
+    top: 50px;
+    left: 260px;
+    z-index: 20;
+    border: 1px solid white;
+    box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.6);
+}

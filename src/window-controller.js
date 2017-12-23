@@ -71,6 +71,12 @@ app.addDefinitions(() => {
 
             // This will draw the view 5 times. 
             this._updateFrames = 5;
+
+            this._observers = {};
+        }
+
+        onViewUpdated(observer, callback) {
+            this._observers[observer] = callback;
         }
 
         get scene() { return this._scene; }
@@ -151,9 +157,15 @@ app.addDefinitions(() => {
             }
         }
     
-        display() {
+        display(notifyObservers=true) {
             this.renderer.display(this.scene.root, this.scene.camera);
             this.scene.selectionController.drawGizmos();
+
+            if (notifyObservers) {
+                for (let key in this._observers) {
+                    this._observers[key]();
+                }
+            }
         }
     
         reshape(width,height) {

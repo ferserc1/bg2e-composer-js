@@ -112,6 +112,22 @@ app.addSource(() => {
                     { id: 1, label:"Perspective Projection" },
                     { id: 2, label:"Lens Projection" },
                 ]
+
+                app.ComposerWindowController.Get().onViewUpdated("cameraUI", () => {
+                    updateThumb();
+                })
+
+                function updateThumb() {
+                    let sel = app.render.Scene.Get().selectionManager.selection;
+                    if (sel[0] && sel[0].node && sel[0].node.camera==$scope.component.componentInstance) {
+                        let renderer = app.ComposerWindowController.Get().lowQualityRenderer;
+                        let scene = app.render.Scene.Get().root;
+                        let cam = $scope.component.componentInstance;
+                        $scope.cameraThumb = renderer.getImage(scene,cam,200,150,app.render.Scene.Get().camera);
+                        app.ComposerWindowController.Get().display(false);
+                        $scope.$apply();
+                    }
+                }
                 
                 function updateValues() {
                     if (!$scope.component) return false;
@@ -128,6 +144,8 @@ app.addSource(() => {
                     $scope.frameSize = $scope.component.frameSize;
 
                     $scope.isMainCamera = $scope.component.isMainCamera;
+
+                    setTimeout(() => updateThumb(),10);
 
                     return true;
                 }
