@@ -5,6 +5,33 @@ app.addDefinitions(() => {
         }
     }
 
+    class Gizmo3DVisibilityVisitor extends bg.scene.NodeVisitor {
+        constructor(gizmoType,action) {
+            super();
+            this._gizmoType = Array.isArray(gizmoType) ? gizmoType : [gizmoType];
+            this._action = action;
+        }
+
+        visit(node) {
+            this._gizmoType.forEach((t) => {
+                let comp = node.component(t);
+                if (comp) {
+                    switch (this._action) {
+                    case 'show':
+                        comp.draw3DGizmo = true;
+                        break;
+                    case 'hide':
+                        comp.draw3DGizmo = false;
+                        break;
+                    case 'toggle':
+                        comp.draw3DGizmo = !comp.draw3DGizmo;
+                        break;
+                    }
+                }
+            })
+        }
+    }
+
     class SelectionController {
         constructor(scene,selectionManager) {
             this._scene = scene;
@@ -28,6 +55,24 @@ app.addDefinitions(() => {
 
         hideIcon(icon) {
             this._gizmoManager.hideGizmoIcon(icon);
+        }
+
+        toggle3DIcon(icon) {
+            let v = new Gizmo3DVisibilityVisitor(icon,"toggle");
+            this._scene.root.accept(v);
+            app.ComposerWindowController.Get().updateView();
+        }
+
+        hide3DIcon(icon) {
+            let v = new Gizmo3DVisibilityVisitor(icon,"hide");
+            this._scene.root.accept(v);
+            app.ComposerWindowController.Get().updateView();
+        }
+
+        show3DIcon(icon) {
+            let v = new Gizmo3DVisibilityVisitor(icon,"show");
+            this._scene.root.accept(v);
+            app.ComposerWindowController.Get().updateView();
         }
 
         getIconVisibility(icon) {

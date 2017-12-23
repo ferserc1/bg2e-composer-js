@@ -100,6 +100,42 @@ module.exports = {
 								]
 							},
 							{
+								label: "3D Gizmos",
+								submenu: [
+									{
+										label: "Camera",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleCamera3DGizmo' })
+										}
+									},
+									{
+										label: "Light",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleLight3DGizmo' })
+										}
+									},
+									{
+										label: "Orbit Camera Controller",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleOrbitCameraController3DGizmo' })
+										}
+									},
+									{ type: 'separator' },
+									{
+										label: "Show All",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'showAll3DGizmos' })
+										}
+									},
+									{
+										label: "Hide All",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'hideAll3DGizmos' })
+										}
+									}
+								]
+							},
+							{
 								label: "Icons",
 								submenu: [
 									{

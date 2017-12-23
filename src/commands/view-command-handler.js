@@ -18,7 +18,12 @@ app.addSource(() => {
                 "toggleTransformIcon",
                 "toggleDrawableIcon",
                 "showAllIcons",
-                "hideAllIcons"
+                "hideAllIcons",
+                'toggleCamera3DGizmo',
+                'toggleLight3DGizmo',
+                'toggleOrbitCameraController3DGizmo',
+                'showAll3DGizmos',
+                'hideAll3DGizmos'
             ]
         }
 
@@ -60,6 +65,21 @@ app.addSource(() => {
             case 'hideAllIcons':
                 this.hideAllIcons();
                 break;
+            case 'toggleCamera3DGizmo':
+                this.toggleCamera3DGizmo();
+                break;
+            case 'toggleLight3DGizmo':
+                this.toggleLight3DGizmo();
+                break;
+            case 'toggleOrbitCameraController3DGizmo':
+                this.toggleOrbitCameraController3DGizmo();
+                break;
+            case 'showAll3DGizmos':
+                this.showAll3DGizmos();
+                break;
+            case 'hideAll3DGizmos':
+                this.hideAll3DGizmos();
+                break;
             }
         }
 
@@ -99,6 +119,34 @@ app.addSource(() => {
             sel().hideIcon("bg.scene.Transform");
             sel().hideIcon("bg.scene.Drawable");
             app.ComposerWindowController.Get().updateView();
+        }
+
+        toggleCamera3DGizmo() {
+            sel().toggle3DIcon("bg.scene.Camera");
+        }
+
+        toggleLight3DGizmo() {
+            sel().toggle3DIcon("bg.scene.Light");
+        }
+
+        toggleOrbitCameraController3DGizmo() {
+            sel().toggle3DIcon("bg.scene.OrbitCameraController");
+        }
+
+        showAll3DGizmos() {
+            sel().show3DIcon([
+                "bg.scene.Camera",
+                "bg.scene.Light",
+                "bg.manipulation.OrbitCameraController"
+            ]);
+        }
+
+        hideAll3DGizmos() {
+            sel().hide3DIcon([
+                "bg.scene.Camera",
+                "bg.scene.Light",
+                "bg.manipulation.OrbitCameraController"
+            ]);
         }
     }
 
