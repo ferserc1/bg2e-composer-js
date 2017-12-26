@@ -9,24 +9,24 @@ app.addSource(() => {
 
             createInstance() {
                 let skybox = new bg.scene.Skybox();
-                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_X,path.resolve('data/cubemap_posx.jpg'));
-                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_X,path.resolve('data/cubemap_negx.jpg'));
-                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_Y,path.resolve('data/cubemap_posy.jpg'));
-                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Y,path.resolve('data/cubemap_negy.jpg'));
-                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_Z,path.resolve('data/cubemap_posz.jpg'));
-                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Z,path.resolve('data/cubemap_negz.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_X,path.resolve(app.resourcesDir + '/cubemap_posx.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_X,path.resolve(app.resourcesDir + '/cubemap_negx.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_Y,path.resolve(app.resourcesDir + '/cubemap_posy.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Y,path.resolve(app.resourcesDir + '/cubemap_negy.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.POSITIVE_Z,path.resolve(app.resourcesDir + '/cubemap_posz.jpg'));
+                skybox.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Z,path.resolve(app.resourcesDir + '/cubemap_negz.jpg'));
                 skybox.loadSkybox(app.ComposerWindowController.Get().gl)
 
                 return skybox;
             }
 
             save(posX,negX,posY,negY,posZ,negZ) {
-                posX = posX || path.resolve('data/cubemap_posx.jpg')
-                negX = negX || path.resolve('data/cubemap_negx.jpg')
-                posY = posY || path.resolve('data/cubemap_posy.jpg')
-                negY = negY || path.resolve('data/cubemap_negy.jpg')
-                posZ = posZ || path.resolve('data/cubemap_posz.jpg')
-                negZ = negZ || path.resolve('data/cubemap_negz.jpg')
+                posX = posX || path.resolve(app.resourcesDir + '/cubemap_posx.jpg')
+                negX = negX || path.resolve(app.resourcesDir + '/cubemap_negx.jpg')
+                posY = posY || path.resolve(app.resourcesDir + '/cubemap_posy.jpg')
+                negY = negY || path.resolve(app.resourcesDir + '/cubemap_negy.jpg')
+                posZ = posZ || path.resolve(app.resourcesDir + '/cubemap_posz.jpg')
+                negZ = negZ || path.resolve(app.resourcesDir + '/cubemap_negz.jpg')
 
                 return app.CommandManager.Get().doCommand(
                     new app.skyboxCommands.LoadSkybox(

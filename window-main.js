@@ -36,6 +36,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         ],
         modules:[]
     };
+    app.resourcesDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }data`));
 
     app.plugins.find = function(pluginFolder) {
         let result = null;
@@ -197,6 +198,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     app.plugins.paths.forEach((p) => {
         console.log("  " + p);
     });
+    console.log("Data path: " + app.resourcesDir);
 
     app.plugins.paths.forEach((pluginPath) => {
         if (fs.existsSync(pluginPath)) {
