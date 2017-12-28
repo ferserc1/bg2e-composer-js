@@ -49,8 +49,17 @@ app.addSource(() => {
             }
 
             applyTransform() {
-                return this.execCommand(new app.drawableCommands.ApplyTransform(this.componentInstance));
+                return this.execCommand(new app.drawableCommands.ApplyTransform(this.componentInstance.node));
             }
+
+            moveToCenter() {
+                return this.execCommand(new app.drawableCommands.MoveToCenter(this.componentInstance.node));
+            }
+
+            putOnFloor() {
+                return this.execCommand(new app.drawableCommands.PutOnFloor(this.componentInstance.node));
+            }
+
         }
     });
 
@@ -91,6 +100,21 @@ app.addSource(() => {
                         $scope.component.applyTransform();
                     }
                 };
+
+                $scope.moveToCenter = function() {
+                    if ($scope.canApplyTransform) {
+                        $scope.component.moveToCenter();
+                        app.ComposerWindowController.Get().updateView();
+                    }
+                };
+
+                $scope.putOnFloor = function() {
+                    if ($scope.canApplyTransform) {
+                        $scope.component.putOnFloor();
+                        app.ComposerWindowController.Get().updateView();
+                    }
+                };
+
 
                 $scope.$watch('creationTool', () => {
 

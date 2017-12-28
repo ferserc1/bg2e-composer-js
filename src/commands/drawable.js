@@ -254,4 +254,69 @@ app.addSource(() => {
     }
 
     app.drawableCommands.ApplyTransform = ApplyTransform;
+
+    class MoveToCenter extends app.Command {
+        constructor(node) {
+            super();
+            this._node = node;
+            if (node.drawable && node.transform) {
+                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
+            }
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._node.drawable && this._node.transform) {
+                    let bbox = new bg.tools.BoundingBox(this._node.drawable);
+                    this._node.transform.matrix.setPosition(-bbox.center.x,-bbox.center.y,-bbox.center.z);
+                    resolve();
+                }
+                else {
+                    reject(new Error("The selected node hasn't a transformm or drawable node attached"));
+                }
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.transform.matrix = new bg.Matrix4(this._prevMatrix);
+                resolve();
+            })
+        }
+    }
+
+    app.drawableCommands.MoveToCenter = MoveToCenter;
+
+    class PutOnFloor extends app.Command {
+        constructor(node) {
+            super();
+            this._node = node;
+            if (node.drawable && node.transform) {
+                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
+            }
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._node.drawable && this._node.transform) {
+                    let bbox = new bg.tools.BoundingBox(this._node.drawable);
+                    let curPos = this._node.transform.matrix.position;
+                    this._node.transform.matrix.setPosition(curPos.x,-bbox.min.y,curPos.z);
+                    resolve();
+                }
+                else {
+                    reject(new Error("The selected node hasn't a transformm or drawable node attached"));
+                }
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.transform.matrix = new bg.Matrix4(this._prevMatrix);
+                resolve();
+            })
+        }
+    }
+
+    app.drawableCommands.PutOnFloor = PutOnFloor;
 })
