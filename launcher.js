@@ -58,7 +58,11 @@ function launch(indexFile,debug) {
         createWindow();
     
         menu.buildMenu(debug);
-    });    
+    });
+
+    app.on('window-all-closed', () => {
+        app.quit();
+    });
 }
 
 module.exports = {

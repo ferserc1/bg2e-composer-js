@@ -16,6 +16,19 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     app.appPath.pop();
     app.appPath = app.appPath.join(path.sep);
     app.appPath = path.resolve(path.join(app.appPath,'..'));
+    app.paths = {
+        home: electronApp.getPath('home'),
+        userData: electronApp.getPath('userData'),
+        temp: path.join(electronApp.getPath('temp'),'composer'),
+        desktop: electronApp.getPath('desktop'),
+        documents: electronApp.getPath('documents'),
+        downloads: electronApp.getPath('downloads')
+    };
+
+    if (!fs.existsSync(app.paths.temp)) {
+        fs.mkdir(app.paths.temp);
+    }
+
     
     let composerPluginsPath = "";
     if (/darwin/i.test(process.platform)) {

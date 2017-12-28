@@ -28,13 +28,14 @@ app.addDefinitions(() => {
 
     app.fbxPlugin.loadFbxJson = function(filePath) {
         return new Promise((resolve,reject) => {
-            let outTmpPath = path.resolve("C:/Users/ferse/Desktop/test.json");
+            let outTmpPath = path.resolve(path.join(app.paths.temp,"import_fbx.json"));
             exec(`${ app.fbxPlugin.path } "${filePath}" "${outTmpPath}"`, (err,stdout,stderr) => {
                 if (err) {
                     reject(err);
                 }
                 else {
                     resolve(JSON.parse(fs.readFileSync(outTmpPath,"utf-8")));
+                    fs.unlinkSync(outTmpPath);
                 }
             });
         });
