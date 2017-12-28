@@ -286,6 +286,7 @@ app.addSource(() => {
     }
 
     app.drawableCommands.MoveToCenter = MoveToCenter;
+    app.console.registerCommand('moveToCenter','app.drawableCommands.MoveToCenter');
 
     class PutOnFloor extends app.Command {
         constructor(node) {

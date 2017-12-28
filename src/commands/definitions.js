@@ -171,3 +171,38 @@ app.addDefinitions(() => {
 
     app.CommandHandler = CommandHandler;
 });
+
+app.addDefinitions(() => {
+    let g_consoleCommands = {};
+
+    class Console {
+        registerCommand(commandName, commandClass) {
+            g_consoleCommands[commandName] = commandClass;
+        }
+
+        exec(commandText) {
+            let commandTokens = commandText.split(" ");
+            let command = commandTokens[0];
+            let params = commandTokens.length>1 ? commandTokens.slice(1,commandTokens.length) : [];
+            params = params.join(",");
+            let commandClass = g_consoleCommands[command];
+            let execString = `
+                app.CommandManager.Get().doCommand(
+                    new ${ commandClass }(${ params })
+                )
+                .then(() => app.ComposerWindowController.Get().updateView());
+            `;
+
+            try {
+                eval(execString);
+            }
+            catch(err) {
+                console.error(err.message);
+            }
+
+        }
+    }
+
+    app.console = new Console();
+
+})
