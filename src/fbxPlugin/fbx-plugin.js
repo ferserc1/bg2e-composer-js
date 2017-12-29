@@ -13,7 +13,7 @@ app.addDefinitions(() => {
         if (fs.existsSync(commandPath)) {
             app.fbxPlugin.available = true;
             app.fbxPlugin.path = path.join(commandPath,"fbx2json");
-            app.fbxPlugin.defaultScale = 0.001;
+            app.fbxPlugin.defaultScale = 0.1;
         }
     }
     else if (commandPath && /win/i.test(process.platform)) {
@@ -22,7 +22,7 @@ app.addDefinitions(() => {
         if (fs.existsSync(commandPath)) {
             app.fbxPlugin.available = true;
             app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");
-            app.fbxPlugin.defaultScale = 0.001;
+            app.fbxPlugin.defaultScale = 0.1;
         }
     }
 
@@ -51,27 +51,35 @@ app.addDefinitions(() => {
         // Only import nodes with meshes
         if (!fbxNode.meshData) return null;
 
-        let node = new bg.scene.Node(context);
+        let node = new bg.scene.Node(context,fbxNode.name);
+        let matrix = bg.Matrix4.Identity();
         if (fbxNode.transform) {
-            let matrix = new bg.Matrix4(fbxNode.transform);
-            node.addComponent(new bg.scene.Transform(matrix));
+            matrix = new bg.Matrix4(fbxNode.transform);
         }
         if (fbxNode.meshData) {
             let drw = new bg.scene.Drawable();
             node.addComponent(drw);
-            let scaleMatrix = bg.Matrix4.Scale(app.fbxPlugin.defaultScale,app.fbxPlugin.defaultScale,app.fbxPlugin.defaultScale);
-
+     
             fbxNode.meshData.forEach((plistData) => {
                 let plist = new bg.base.PolyList(context);
+                let scaleRotationMatrix = matrix.rotation;
                 for (let i = 0; i<plistData.vertex.length; i+=3) {
-                    let newVertex = scaleMatrix.multVector(new bg.Vector3(
+                    let newVertex = matrix.multVector(new bg.Vector3(
                         plistData.vertex[0 + i],
                         plistData.vertex[1 + i],
                         plistData.vertex[2 + i]
                     ));
+                    let newNormal = scaleRotationMatrix.multVector(new bg.Vector3(
+                        plistData.normal[0 + i],
+                        plistData.normal[1 + i],
+                        plistData.normal[2 + i]
+                    ));
                     plistData.vertex[0 + i] = newVertex.x;
                     plistData.vertex[1 + i] = newVertex.y;
                     plistData.vertex[2 + i] = newVertex.z;
+                    plistData.normal[0 + i] = newNormal.x;
+                    plistData.normal[1 + i] = newNormal.y;
+                    plistData.normal[2 + i] = newNormal.z;
                 }
 
                 plist.vertex = plistData.vertex || [];
