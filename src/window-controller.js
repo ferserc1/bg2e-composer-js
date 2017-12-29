@@ -150,6 +150,12 @@ app.addDefinitions(() => {
         }
     
         frame(delta) {
+            // Ensure that the orbit camera controller of the main camera is enabled
+            let ctrl = this.scene.camera && this.scene.camera.node.component("bg.manipulation.OrbitCameraController");
+            if (ctrl && !ctrl.enabled) {
+                this.scene.camera = this.scene.camera;
+            }
+
             this.renderer.frame(this.scene.root, delta);
             --this._updateFrames;
             if (this._updateFrames>=0) {
