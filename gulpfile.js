@@ -38,8 +38,8 @@ gulp.task("compile", function() {
 });
 
 gulp.task("fbxPlugin", function() {
-    if (fs.existsSync(fbxPluginPath.win64)) {
-        return gulp.src([
+   return Promise.all([
+        gulp.src([
             `${ fbxPluginPath.win64 }/concrt140.dll`,
             `${ fbxPluginPath.win64 }/libfbxsdk.dll`,
             `${ fbxPluginPath.win64 }/msvcp140.dll`,
@@ -47,15 +47,24 @@ gulp.task("fbxPlugin", function() {
             `${ fbxPluginPath.win64 }/vcruntime140.dll`,
             `${ fbxPluginPath.win64 }/fbx2json.exe`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/win64'));
-    }
-    else if (fs.existsSync(fbxPluginPath.macOS)) {
-        return gulp.src([
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/win64')),
+        
+        gulp.src([
             `${ fbxPluginPath.macOS }/libfbxsdk.dylib`,
             `${ fbxPluginPath.macOS }/fbx2json`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/macOS'));
-    }
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/win64')),
+
+        gulp.src([
+            "fbxPlugin/plugin/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/plugin')),
+
+        gulp.src([
+            "fbxPlugin/src/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/src'))
+    ])
 });
 
 gulp.task("default",["compile","fbxPlugin"]);
