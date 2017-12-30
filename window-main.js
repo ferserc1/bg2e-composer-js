@@ -69,6 +69,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     let g_plugins = [];
     let g_evtObservers = {};
     let g_copyright = [];
+    let g_pluginSettings = [];
 
     app.angular = {
         deps: [
@@ -157,6 +158,14 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
                 paragraphs:paragraphs
             }
         )
+    }
+
+    app.addPluginSettings = function(directiveName) {
+        g_pluginSettings.push(directiveName);
+    }
+
+    app.getPluginSettingsDirectives = function() {
+        return g_pluginSettings;
     }
 
     app.configureWorkspaceElement = function(element) {

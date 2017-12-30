@@ -60,7 +60,7 @@ app.addSource(() => {
             link: function(scope,element) {
                 let directive = scope.componentData.directiveName;
                 let template = `<${ directive } component="componentData"></${ directive }>`;
-                linkFn = $compile(template);
+                let linkFn = $compile(template);
                 let content = linkFn(scope);
                 element.append(content);
             },
