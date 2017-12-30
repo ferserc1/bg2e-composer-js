@@ -126,8 +126,9 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     }
 
     function requirePlugins() {
+        let angularApp = angular.module(GLOBAL_APP_NAME);
         g_plugins.forEach((filePath) => {
-            let pluginModule = require(filePath)(app,GLOBAL_APP_NAME,bg);
+            let pluginModule = require(filePath)(app,angularApp,bg);
             app.plugins.modules.push(pluginModule);
         })
     }

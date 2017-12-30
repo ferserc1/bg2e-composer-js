@@ -48,6 +48,13 @@ module.exports = {
 								click: function(item, focusedWindow) {
 									focusedWindow.webContents.send('triggerMenu', { msg:'exportSelected' })
 								}
+							},
+							{ type: 'separator' },
+							{
+								label: 'Plugin settings',
+								click: function(item,focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'showPluginSettings' })
+								}
 							}
 						]
 					},

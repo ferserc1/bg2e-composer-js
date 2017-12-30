@@ -13,7 +13,8 @@ app.addSource(() => {
                 "openScene",
                 "exportSelected",
                 "saveScene",
-                "saveSceneAs"
+                "saveSceneAs",
+                "showPluginSettings"
             ]
         }
 
@@ -36,6 +37,9 @@ app.addSource(() => {
                 break;
             case 'saveSceneAs':
                 this.saveSceneAs(params);
+                break;
+            case 'showPluginSettings':
+                this.showPluginSettings(params);
                 break;
             }
         }
@@ -206,6 +210,18 @@ app.addSource(() => {
                     });
             }
         
+        }
+
+        showPluginSettings(params) {
+            app.ui.DialogView.Show({
+                templateUrl:`templates/${ app.config.templateName }/directives/plugin-settings-view.html`,
+                title: "Plugin settings",
+                showClose: false,
+                type: 'modal',
+                onAccept: () => { return true; }
+            })
+                .then(() => {})
+                .catch((err) => { console.log(err); });
         }
     }
 

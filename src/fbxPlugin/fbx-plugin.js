@@ -13,7 +13,6 @@ app.addDefinitions(() => {
         if (fs.existsSync(commandPath)) {
             app.fbxPlugin.available = true;
             app.fbxPlugin.path = path.join(commandPath,"fbx2json");
-            app.fbxPlugin.defaultScale = 0.1;
         }
     }
     else if (commandPath && /win/i.test(process.platform)) {
@@ -22,7 +21,6 @@ app.addDefinitions(() => {
         if (fs.existsSync(commandPath)) {
             app.fbxPlugin.available = true;
             app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");
-            app.fbxPlugin.defaultScale = 0.1;
         }
     }
 
@@ -52,9 +50,9 @@ app.addDefinitions(() => {
         if (!fbxNode.meshData) return null;
 
         let node = new bg.scene.Node(context,fbxNode.name);
-        let matrix = bg.Matrix4.Identity();
+        let matrix = bg.Matrix4.Scale(app.fbxPlugin.defaultScale,app.fbxPlugin.defaultScale,app.fbxPlugin.defaultScale);
         if (fbxNode.transform) {
-            matrix = new bg.Matrix4(fbxNode.transform);
+            matrix.mult(new bg.Matrix4(fbxNode.transform));
         }
         if (fbxNode.meshData) {
             let drw = new bg.scene.Drawable();
