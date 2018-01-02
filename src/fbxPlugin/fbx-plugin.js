@@ -120,6 +120,10 @@ app.addDefinitions(() => {
                     app.fbxPlugin.loadFbxJson(url)
                         .then((fbxJsonData) => {
                             let node = parseFbxJson(context,fbxJsonData);
+                            let name = bg.utils.path.fileName(url);
+                            name = name.split(".");
+                            name.pop();
+                            node.name = name.join();
                             if (node) {
                                 resolve(node);
                             }
