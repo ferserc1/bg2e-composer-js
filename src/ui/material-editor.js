@@ -109,7 +109,7 @@ app.addSource(() => {
                 updateTexture(m,'texture',$scope.texture);
                 m.textureOffset = new bg.Vector2($scope.textureOffset);
                 m.textureScale = new bg.Vector2($scope.textureScale);
-                updateTexture(m,'lightMap',$scope.lightMap);
+                updateTexture(m,'lightmap',$scope.lightMap);
                 updateTexture(m,'normalMap',$scope.normalMap);
                 m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
                 m.normalMapScale = new bg.Vector2($scope.normalMapScale);

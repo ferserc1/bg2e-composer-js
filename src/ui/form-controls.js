@@ -202,7 +202,20 @@ app.addSource(() => {
                 increment:"=?",
                 commitChanges:"=?"
             },
-            controller: ['$scope', function($scope) {
+            controller: ['$scope','$timeout', function($scope,$timeout) {
+                $scope.x = $scope.value[0];
+                $scope.y = $scope.value[1];
+                $scope.z = $scope.value[2];
+                $scope.w = $scope.value[3];
+
+                $scope.$watch('value',() => {
+                    $scope.x = $scope.value[0];
+                    $scope.y = $scope.value[1];
+                    $scope.z = $scope.value[2];
+                    $scope.w = $scope.value[3];
+                }, true);
+
+                let timer = null;
                 $scope.increment = $scope.increment || 1;
                 $scope.keyDown = function(index,event) {
                     let inc = $scope.increment;
@@ -213,13 +226,31 @@ app.addSource(() => {
                         inc *= 0.1;
                     }
                     if (event.key=="ArrowDown") {
-                        $scope.value[index] -= inc - 0.0001;
+                        $scope[index] -= inc;
                     }
                     if (event.key=="ArrowUp") {
-                        $scope.value[index] += inc - 0.0001;
+                        $scope[index] += inc;
                     }
+
+                    if (timer) {
+                        $timeout.cancel(timer);
+                    }
+                    timer = $timeout(() => {
+                        $scope.commit();
+                        timer = null;
+                    }, 500);
                 };
+                $scope.keyUp = function(index,event) {
+                    if (event.key=="Enter") {
+                        event.target.blur();
+                        $scope.commit();
+                    }
+                }
                 $scope.commit = function() {
+                    if ($scope.value.length>=1) $scope.value[0] = $scope.x;
+                    if ($scope.value.length>=2) $scope.value[1] = $scope.y;
+                    if ($scope.value.length>=3) $scope.value[2] = $scope.z;
+                    if ($scope.value.length>=4) $scope.value[3] = $scope.w;
                     if ($scope.commitChanges) {
                         $scope.commitChanges();
                     }
