@@ -94,6 +94,18 @@ app.addSource(() => {
                 label: "Soft Shadows"
             }
         ];
+        $scope.raytracerScaleOptions = [
+            { id: 0.1, label: "10%" },
+            { id: 0.2, label: "20%" },
+            { id: 0.3, label: "30%" },
+            { id: 0.4, label: "40%" },
+            { id: 0.5, label: "50%" },
+            { id: 0.6, label: "60%" },
+            { id: 0.7, label: "70%" },
+            { id: 0.8, label: "80%" },
+            { id: 0.9, label: "90%" },
+            { id: 1, label: "100%" }
+        ];
         $scope.renderPath = $scope.renderPaths[app.ComposerWindowController.Get().renderPath];
         $scope.antialiasing = app.ComposerWindowController.Get().renderSettings.antialiasing;
         $scope.raytracerQualities.some((q) => {
@@ -102,6 +114,12 @@ app.addSource(() => {
                 return true;
             }
         });
+        $scope.raytracerScaleOptions.some((opt) => {
+            if (opt.id==app.ComposerWindowController.Get().renderSettings.raytracerScale) {
+                $scope.raytracerScale = opt;
+            }
+        })
+
         $scope.ssao = app.ComposerWindowController.Get().renderSettings.ssaoEnabled;
         $scope.ssaoQualities.some((q) => {
             if (q.id==app.ComposerWindowController.Get().renderSettings.ssaoSamples) {
@@ -149,6 +167,11 @@ app.addSource(() => {
 
         $scope.$watch("raytracerQuality",function() {
             app.ComposerWindowController.Get().renderSettings.raytracerQuality = $scope.raytracerQuality.id;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("raytracerScale",function() {
+            app.ComposerWindowController.Get().renderSettings.raytracerScale = $scope.raytracerScale.id;
             app.ComposerWindowController.Get().saveRenderSettings();
         });
 

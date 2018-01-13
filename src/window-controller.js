@@ -35,6 +35,7 @@ app.addDefinitions(() => {
             renderer.settings.raytracer.quality = bg.render.RaytracerQuality.extreme;
             break;
         }
+        renderer.settings.raytracer.scale = this.renderSettings.raytracerScale;
 
         renderer.settings.ambientOcclusion.kernelSize = this.renderSettings.ssaoSamples;
         renderer.settings.ambientOcclusion.blur = this.renderSettings.ssaoBlur;
@@ -61,6 +62,7 @@ app.addDefinitions(() => {
             // Assert that all the render settings properties are present
             assertProperty(this._renderSettings,'antialiasing',false);
             assertProperty(this._renderSettings,'raytracerQuality','extreme');
+            assertProperty(this._renderSettings,'raytracerScale',0.5);
             assertProperty(this._renderSettings,'ssaoSamples',16);
             assertProperty(this._renderSettings,'ssaoBlur',4);
             assertProperty(this._renderSettings,'ssaoEnabled',true);
@@ -98,7 +100,7 @@ app.addDefinitions(() => {
             this.updateView();
         }
 
-        updateView(updateFrames = 3) {
+        updateView(updateFrames = 4) {
             this._updateFrames = updateFrames;
             this.postRedisplay();
         }

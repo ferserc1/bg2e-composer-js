@@ -15,6 +15,10 @@
         <select ng-options="item as item.label for item in raytracerQualities track by item.id" ng-model="raytracerQuality"></select>
     </div>
     <div class="bg2-form-field">
+        <label class="bg2-width-60" for="raytracerScale">Raytracer scale:</label>
+        <select ng-options="item as item.label for item in raytracerScaleOptions track by item.id" ng-model="raytracerScale"></select>
+    </div>
+    <div class="bg2-form-field">
         <input type="checkbox" id="ssao" ng-model="ssao">
         <label for="ssao">Screen Space Ambient Occlusion</label>
     </div>
