@@ -7,8 +7,15 @@
     <p class="bg2-message-error" ng-show="error">{{ error }}</p>
     <p class="bg2-message-warning" ng-show="warning">{{ warning }}</p>
     <div class="bg2-form-field">
+        <h4>Warning: antialiasing will affect performance in up to 4 times</h4>
         <input type="checkbox" id="antialiasing" ng-model="antialiasing">
         <label for="antialiasing">Antialiasing</label>
+    </div>
+    <div class="bg2-form-field" ng-hide="antialiasing">
+        <h4>Downscale render resolution will improve dramatically the performance</h4>
+        <label class="bg2-width-60" for="viewportScale">Render scale:</label>
+        <select ng-options="item as item.label for item in scaleRenderOptions track by item.id" ng-model="renderScale"></select>
+        <div class="bg2-text-center">Scaled resolution: {{ currentResW }}x{{ currentResH }} px</div>
     </div>
     <div class="bg2-form-field">
         <label class="bg2-width-60" for="raytracerQuality">Raytracer quality:</label>

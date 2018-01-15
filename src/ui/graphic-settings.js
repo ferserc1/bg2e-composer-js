@@ -106,6 +106,16 @@ app.addSource(() => {
             { id: 0.9, label: "90%" },
             { id: 1, label: "100%" }
         ];
+        $scope.scaleRenderOptions = [
+            { id: 0.3, label: "30%" },
+            { id: 0.4, label: "40%" },
+            { id: 0.5, label: "50%" },
+            { id: 0.6, label: "60%" },
+            { id: 0.7, label: "70%" },
+            { id: 0.8, label: "80%" },
+            { id: 0.9, label: "90%" },
+            { id: 1, label: "100%" }
+        ];
         $scope.renderPath = $scope.renderPaths[app.ComposerWindowController.Get().renderPath];
         $scope.antialiasing = app.ComposerWindowController.Get().renderSettings.antialiasing;
         $scope.raytracerQualities.some((q) => {
@@ -118,7 +128,22 @@ app.addSource(() => {
             if (opt.id==app.ComposerWindowController.Get().renderSettings.raytracerScale) {
                 $scope.raytracerScale = opt;
             }
-        })
+        });
+        function updateCurrentResolution() {
+            let canvas = bg.app.MainLoop.singleton.canvas.domElement;
+            setTimeout(() => {
+                $scope.$apply(() => {
+                    $scope.currentResW = Math.round(canvas.width * $scope.renderScale.id);
+                    $scope.currentResH = Math.round(canvas.height * $scope.renderScale.id);
+                });
+            },10);
+        }
+        $scope.scaleRenderOptions.some((opt) => {
+            if (opt.id==app.ComposerWindowController.Get().renderSettings.renderScale) {
+                $scope.renderScale = opt;
+                updateCurrentResolution();
+            }
+        });
 
         $scope.ssao = app.ComposerWindowController.Get().renderSettings.ssaoEnabled;
         $scope.ssaoQualities.some((q) => {
@@ -173,6 +198,12 @@ app.addSource(() => {
         $scope.$watch("raytracerScale",function() {
             app.ComposerWindowController.Get().renderSettings.raytracerScale = $scope.raytracerScale.id;
             app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch('renderScale',function() {
+            app.ComposerWindowController.Get().renderSettings.renderScale = $scope.renderScale.id;
+            app.ComposerWindowController.Get().saveRenderSettings();
+            updateCurrentResolution();
         });
 
         $scope.$watch("ssao", function() {

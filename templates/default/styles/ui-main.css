@@ -156,6 +156,10 @@ texture-picker img {
     text-align: left !important;
 }
 
+.bg2-text-center {
+    text-align: center !important;
+}
+
 .bg2-message-info {
     color: white;
 }
