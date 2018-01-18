@@ -17,6 +17,7 @@ app.addSource(() => {
                 "toggleLightIcon",
                 "toggleTransformIcon",
                 "toggleDrawableIcon",
+                "toggleTextRectIcon",
                 "showAllIcons",
                 "hideAllIcons",
                 'toggleCamera3DGizmo',
@@ -58,6 +59,9 @@ app.addSource(() => {
                 break;
             case 'toggleDrawableIcon':
                 this.toggleIcon('bg.scene.Drawable');
+                break;
+            case 'toggleTextRectIcon':
+                this.toggleIcon('bg.scene.TextRect');
                 break;
             case 'showAllIcons':
                 this.showAllIcons();

@@ -118,7 +118,8 @@ app.addDefinitions(() => {
                 { type:'bg.scene.Camera', icon:'gizmo_icon_camera.png' },
                 { type:'bg.scene.Light', icon:'gizmo_icon_light_point.png' },
                 { type:'bg.scene.Transform', icon:'gizmo_icon_transform.png' },
-                { type:'bg.scene.Drawable', icon:'gizmo_icon_drawable.png' }
+                { type:'bg.scene.Drawable', icon:'gizmo_icon_drawable.png' },
+                { type:'bg.scene.TextRect', icon:'gizmo_icon_text_rect.png'}
             ], `templates/${ app.config.templateName }/gizmos`);
             this._gizmoManager.gizmoIconScale = 0.5;
 

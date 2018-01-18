@@ -169,6 +169,12 @@ module.exports = {
 											focusedWindow.webContents.send('triggerMenu', { msg:'toggleDrawableIcon'} );
 										}
 									},
+									{
+										label: "Text Rect",
+										click: function(item, focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleTextRectIcon'} );
+										}
+									},
 									{ type: 'separator' },
 									{
 										label: "Show all",
