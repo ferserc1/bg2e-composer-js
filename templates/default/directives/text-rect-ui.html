@@ -1,11 +1,12 @@
-<string-picker label="Text" value="text" commit-changes=""></string-picker>
-<select-picker label="Font" value="font" options="fontOptions"></select-picker>
-<number-picker label="Size" value="size"></number-picker>
-<select-picker label="Align" value="align" options="alignOptions"></select-picker>
-<string-picker label="Text color" value="textColor"></string-picker>
-<string-picker label="Background color" value="backgroundColor"></string-picker>
-<bool-picker label="Bold" value="bold"></bool-picker>
-<bool-picker label="Italic" value="italic"></bool-picker>
-<bool-picker label="Double sided" value="doubleSided"></bool-picker>
-<vector-picker label="Rectangle size" value="rectSize" increment="0.1" commit-changes=""></vector-picker>
-<vector-picker label="Texture size" value="textureSize"></vector-picker>
+<string-picker label="Text" value="text" commit-changes="updateText"></string-picker>
+<select-picker label="Font" value="font" options="fontOptions" commit-changes="updateProperties"></select-picker>
+<number-picker label="Size" value="size" commit-changes="updateProperties"></number-picker>
+<select-picker label="Align" value="align" options="alignOptions" commit-changes="updateProperties"></select-picker>
+<string-picker label="Text color" value="textColor" commit-changes="updateProperties"></string-picker>
+<string-picker label="Background color" value="backgroundColor" commit-changes="updateProperties"></string-picker>
+<bool-picker label="Bold" value="bold" commit-changes="updateProperties"></bool-picker>
+<bool-picker label="Italic" value="italic" commit-changes="updateProperties"></bool-picker>
+<bool-picker label="Unlit" value="unlit" commit-changes="updateProperties"></bool-picker>
+<bool-picker label="Double sided" value="doubleSided" commit-changes="updateProperties"></bool-picker>
+<vector-picker label="Rectangle size" value="rectSize" increment="0.1" commit-changes="updateRectangle"></vector-picker>
+<vector-picker label="Texture size" value="textureSize" commit-changes="updateTextureSize"></vector-picker>

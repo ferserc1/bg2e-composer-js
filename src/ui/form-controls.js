@@ -203,16 +203,16 @@ app.addSource(() => {
                 commitChanges:"=?"
             },
             controller: ['$scope','$timeout', function($scope,$timeout) {
-                $scope.x = $scope.value[0];
-                $scope.y = $scope.value[1];
-                $scope.z = $scope.value[2];
-                $scope.w = $scope.value[3];
+                $scope.x = Number($scope.value[0]);
+                $scope.y = Number($scope.value[1]);
+                $scope.z = Number($scope.value[2]);
+                $scope.w = Number($scope.value[3]);
 
                 $scope.$watch('value',() => {
-                    $scope.x = $scope.value[0];
-                    $scope.y = $scope.value[1];
-                    $scope.z = $scope.value[2];
-                    $scope.w = $scope.value[3];
+                    $scope.x = Number($scope.value[0]);
+                    $scope.y = Number($scope.value[1]);
+                    $scope.z = Number($scope.value[2]);
+                    $scope.w = Number($scope.value[3]);
                 }, true);
 
                 let timer = null;
@@ -247,10 +247,10 @@ app.addSource(() => {
                     }
                 }
                 $scope.commit = function() {
-                    if ($scope.value.length>=1) $scope.value[0] = $scope.x;
-                    if ($scope.value.length>=2) $scope.value[1] = $scope.y;
-                    if ($scope.value.length>=3) $scope.value[2] = $scope.z;
-                    if ($scope.value.length>=4) $scope.value[3] = $scope.w;
+                    if ($scope.value.length>=1) $scope.value[0] = Number($scope.x);
+                    if ($scope.value.length>=2) $scope.value[1] = Number($scope.y);
+                    if ($scope.value.length>=3) $scope.value[2] = Number($scope.z);
+                    if ($scope.value.length>=4) $scope.value[3] = Number($scope.w);
                     if ($scope.commitChanges) {
                         $scope.commitChanges();
                     }
