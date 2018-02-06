@@ -51,3 +51,11 @@
     background-image: url(../icons/redo_2.png);
     background-position: 0px -2px;
 }
+
+.bg2-scene-inspector {
+    background-image: url(../icons/scene_graph_2.png);
+}
+
+.bg2-plist-inspector {
+    background-image: url(../icons/plist-settings.png);
+}

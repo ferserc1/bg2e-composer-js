@@ -58,6 +58,18 @@
         },
         {
             "type":"separator"
+        },
+        {
+            "type":"button",
+            "icon":"scene-inspector",
+            "name":"Scene inspector",
+            "command":"showSceneEditor"
+        },
+        {
+            "type":"button",
+            "icon":"plist-inspector",
+            "name":"Model inspector",
+            "command":"showModelEditor"
         }
     ]
 }

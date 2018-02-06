@@ -1,0 +1,46 @@
+polylist-inspector {
+    position: fixed;
+    left: -1px;
+    top: 36px;
+    width: 250px;
+    bottom: 29px;
+    pointer-events: all;
+    overflow: auto;
+}
+
+polylist-inspector ul {
+    padding-left: 13px;
+    -webkit-margin-before: 0px;
+}
+
+polylist-inspector li {
+    list-style: none;
+}
+
+polylist-inspector h1 {
+    font-size: 13px;
+    display: block;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+polylist-inspector h2 {
+    font-size: 12px;
+    display: block;
+    margin-left: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+polylist-inspector ul.bg2-plist-items {
+    padding: 5px;
+    background-color: rgb(66, 66, 66);
+    border: 1px solid white;
+    width: 90%;
+    border-radius: 4px;
+}
