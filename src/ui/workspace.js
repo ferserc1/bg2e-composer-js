@@ -179,6 +179,14 @@ app.addSource(() => {
     }]);
 });
 
+app.addSource(() => {
+    let angularApp = angular.module(GLOBAL_APP_NAME);
+
+    angularApp.controller("ModelEditorController", ['$rootScope','$scope',function($rootScope,$scope) {
+
+    }]);
+});
+
 app.addWorkspace(() => {
     return {
         name:"Scene editor",
@@ -186,5 +194,15 @@ app.addWorkspace(() => {
         templateUrl: `templates/${ app.config.templateName }/views/scene-editor.html`,
         controller: 'SceneEditorController',
         isDefault:true
-    }
+    };
+});
+
+app.addWorkspace(() => {
+    return {
+        name:"Model editor",
+        endpoint:'/modelEditor',
+        templateUrl: `templates/${ app.config.templateName }/views/model-editor.html`,
+        controller: 'ModelEditorController',
+        isDefault: false
+    };
 });

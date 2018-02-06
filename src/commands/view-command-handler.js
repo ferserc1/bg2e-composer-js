@@ -24,7 +24,9 @@ app.addSource(() => {
                 'toggleLight3DGizmo',
                 'toggleOrbitCameraController3DGizmo',
                 'showAll3DGizmos',
-                'hideAll3DGizmos'
+                'hideAll3DGizmos',
+                'showSceneEditor',
+                'showModelEditor'
             ]
         }
 
@@ -83,6 +85,12 @@ app.addSource(() => {
                 break;
             case 'hideAll3DGizmos':
                 this.hideAll3DGizmos();
+                break;
+            case 'showSceneEditor':
+                this.showSceneEditor();
+                break;
+            case 'showModelEditor':
+                this.showModelEditor();
                 break;
             }
         }
@@ -151,6 +159,14 @@ app.addSource(() => {
                 "bg.scene.Light",
                 "bg.manipulation.OrbitCameraController"
             ]);
+        }
+
+        showSceneEditor() {
+            window.location.hash = '#!/sceneEditor';
+        }
+
+        showModelEditor() {
+            window.location.hash = '#!/modelEditor';
         }
     }
 

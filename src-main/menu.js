@@ -235,7 +235,10 @@ module.exports = {
 						role: 'window',
 						submenu: [
 							{role: 'minimize'},
-							{role: 'close'}
+							{role: 'close'},
+							{type: 'separator'},
+							{label: 'Scene editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showSceneEditor' }) }},
+							{label: 'Model editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showModelEditor' }) }}
 						]
 					},
 					{
@@ -310,7 +313,10 @@ module.exports = {
 						{role: 'minimize'},
 						{role: 'zoom'},
 						{type: 'separator'},
-						{role: 'front'}
+						{role: 'front'},
+						{type: 'separator'},
+						{label: 'Scene editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showSceneEditor' }) }},
+						{label: 'Model editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showModelEditor' }) }},
 					]
 				}
 				else {
