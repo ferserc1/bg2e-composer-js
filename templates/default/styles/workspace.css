@@ -32,3 +32,19 @@
 .bg2-tab-bar a {
     padding: 6px;
 }
+
+.bg2-header {
+    border-bottom: 1px solid white;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+
+.bg2-header h1 {
+    font-size: 17px;
+}
+
+.bg2-header i.bg2-icon {
+    float: left;
+    margin-right: 50x;
+}
