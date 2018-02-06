@@ -58,7 +58,16 @@ app.addSource(() => {
             }
         };
 
-        app.render.Scene.Get().selectionManager.selectionChanged("sceneInspector",(selectionManager) => {
+        function refresh() {
+            updateList();
+            setTimeout(() => $scope.$apply(), 10);
+        }
+
+        app.render.Scene.Get().sceneChanged("plistInspector",() => refresh());
+        app.CommandManager.Get().onUndo("plistInspector", () => refresh());
+        app.CommandManager.Get().onRedo("plistInspector", () => refresh());
+
+        app.render.Scene.Get().selectionManager.selectionChanged("plistInspector",(selectionManager) => {
             setTimeout(() => {
                 updateList();
                 $scope.$apply();

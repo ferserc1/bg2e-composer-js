@@ -1,1 +1,23 @@
-plist editor
+<h1>PolyList editor</h1>
+<div ng-show="selection.length">
+    <h2>Properties</h2>
+    <div class="bg2-widget-panel">
+        <string-picker ng-show="selection.length==1" label="Name" value="name" commit-changes="saveName"></string-picker>
+        <string-picker label="Actions" value="groupName" commit-changes="saveGroupName"></string-picker>
+        <bool-picker label="Visible" value="visible" commit-changes="saveVisibility"></bool-picker>
+    </div>
+    <h2>Actions</h2>
+    <div class="bg2-widget-panel">
+        <h3>Switch UVs</h3>
+        <div class="bg2-widget-panel">
+            <select-picker label="From UV" value="fromUV" options="uvChannels"></select-picker>
+            <select-picker label="To UV" value="toUV" options="uvChannels"></select-picker>
+            <button ng-click="switchUvs(fromUV,toUV)">Switch</button>
+        </div>
+        <button ng-click="flipFaces()">Flip faces</button>
+        <button ng-click="flipNormals()">Flip normals</button>
+    </div>
+</div>
+<div ng-hide="selection.length">
+    <h2>Nothing selected</h2>
+</div>
