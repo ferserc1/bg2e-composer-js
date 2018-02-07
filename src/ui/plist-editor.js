@@ -52,15 +52,29 @@ app.addSource(() => {
         };
 
         $scope.switchUvs = function(from,to) {
-
+            if ($scope.selection.length) {
+                executeCommand(new app.plistCommands.SwapUVs(
+                    $scope.selection,
+                    from.id,
+                    to.id
+                ));
+            }
         };
 
         $scope.flipFaces = function() {
-
+            if ($scope.selection.length) {
+                executeCommand(new app.plistCommands.FlipFaces(
+                    $scope.selection
+                ));
+            }
         };
 
         $scope.flipNormals = function() {
-
+            if ($scope.selection.length) {
+                executeCommand(new app.plistCommands.FlipNormals(
+                    $scope.selection
+                ));
+            }
         };
 
         $scope.uvChannels = [

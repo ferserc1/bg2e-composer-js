@@ -42,9 +42,11 @@
 
 .bg2-header h1 {
     font-size: 17px;
+    cursor: pointer;
 }
 
 .bg2-header i.bg2-icon {
     float: left;
     margin-right: 50x;
+    cursor: pointer;
 }

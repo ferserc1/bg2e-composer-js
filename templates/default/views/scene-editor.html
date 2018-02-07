@@ -5,13 +5,13 @@
 
     <dialog-view></dialog-view>
 
-    <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Material','Components']">
+    <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Components','Material']">
         <ul>
             <li ng-repeat="item in tabs">
                 <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
             </li>
         </ul>
     </div>
-    <material-editor ng-show="currentTab==0" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
-    <component-inspector ng-show="currentTab==1" selection="selection"></component-inspector>
+    <component-inspector ng-show="currentTab==0" selection="selection"></component-inspector>
+    <material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
 </div>
