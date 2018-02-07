@@ -146,6 +146,35 @@ app.addSource(() => {
 
     app.plistCommands.SwapUVs = SwapUVs;
 
+    function flipFaces(plist) {
+        if (plist.index.length%3!=0) {
+            console.warn(`Flip faces in polyList ${ plist.name }: the polylist doesn't appears to be composed by triangles.`);
+        }
+        else {
+            for (let i = 0; i<plist.index.length; i+=3) {
+                let a = plist.index[i];
+                let c = plist.index[i + 2];
+                plist.index[i] = c;
+                plist.index[i + 2] = a;
+            }
+            plist.build();
+        }
+    }
+
+    function flipNormals(plist) {
+        if (plist.normal.length%3!=0) {
+            console.warn(`Flip normals in polyList ${ plist.name }: malformed normal array.`);
+        }
+        else {
+            for (let i = 0; i<plist.normal.length; i+=3) {
+                plist.normal[i] *= -1;
+                plist.normal[i + 1] *= -1;
+                plist.normal[i + 2] *= -1;
+            }
+            plist.build();
+        }
+    }
+
     class FlipFaces extends app.Command {
         constructor(plistArray) {
             super();
@@ -159,6 +188,7 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve) => {
+                this._plistArray.forEach((pl) => flipFaces(pl));
                 resolve();
             });
         }
@@ -183,6 +213,7 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve) => {
+                this._plistArray.forEach((pl) => flipNormals(pl));
                 resolve();
             });
         }
