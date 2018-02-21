@@ -51,6 +51,31 @@ app.addSource(() => {
 
     app.nodeCommands.SetEnabled = SetEnabled;
 
+    class SetSteady extends app.Command {
+        constructor(node,s) {
+            super();
+            this._node = node;
+            this._steady = s;
+            this._restoreSteady = node.steady;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._node.steady = this._steady;
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._node.steady = this._restoreSteady;
+                resolve();
+            });
+        }
+    }
+
+    app.nodeCommands.SetSteady = SetSteady;
+
     function checkValidParents(newParent,node) {
         // The node shouldn't be an ancestor of the newParent node or the same node
         if (newParent.parent==null) {

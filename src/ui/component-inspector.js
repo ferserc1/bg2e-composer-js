@@ -13,23 +13,26 @@ app.addSource(() => {
             $scope.selectedNode = $scope.selection.length && $scope.selection[0];
             $scope.nodeName = $scope.selectedNode && $scope.selectedNode.name;
             $scope.nodeEnabled = $scope.selectedNode && $scope.selectedNode.enabled;
+            $scope.nodeSteady = $scope.selectedNode && $scope.selectedNode.steady;
             $scope.components = [];
             $scope.unknownComponents = [];
             $scope.visible = $scope.selection.length>0;
-            $timeout(() => {
-                if ($scope.selectedNode) {
-                    for (let identifier in $scope.selectedNode._components)  {
-                        let instance = $scope.selectedNode.component(identifier);
-                        let ui = app.components.getUIForComponent(identifier) || {};
-                        if (ui) {
-                            ui.componentInstance = instance;
-                            $scope.components.push(ui);
-                        }
-                        else {
-                            $scope.unknownComponents.push(identifier);
-                        }
+            if ($scope.selectedNode) {
+                for (let identifier in $scope.selectedNode._components)  {
+                    let instance = $scope.selectedNode.component(identifier);
+                    let ui = app.components.getUIForComponent(identifier) || {};
+                    if (ui) {
+                        ui.componentInstance = instance;
+                        $scope.components.push(ui);
+                    }
+                    else {
+                        $scope.unknownComponents.push(identifier);
                     }
                 }
+            }
+
+            setTimeout(() => {    
+                $scope.$apply();
             },10);
         }
         
@@ -92,6 +95,15 @@ app.addSource(() => {
             .then(() => {
                 app.render.Scene.Get().notifySceneChanged();
             })
+        }
+
+        $scope.setNodeSteady = function() {
+            app.CommandManager.Get().doCommand(
+                new app.nodeCommands.SetSteady($scope.selectedNode,$scope.nodeSteady)
+            )
+            .then(() => {
+                app.render.Scene.Get().notifySceneChanged();
+            });
         }
 
         app.CommandManager.Get().onUndo("commandManager",() => {
