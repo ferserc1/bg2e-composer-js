@@ -102,6 +102,44 @@ app.addSource(() => {
 
     app.plistCommands.SetVisibility = SetVisibility;
 
+    class SetShadowVisibility extends app.Command {
+        constructor(plistArray,visible) {
+            super();
+            if (!Array.isArray(plistArray)) {
+                this._plistArray = [plistArray];
+            }
+            else {
+                this._plistArray = plistArray;
+            }
+
+            this._restoreVisibility = [];
+            this._plistArray.forEach((pl) => {
+                this._restoreVisibility.push(pl.visibleToShadows);
+            });
+            this._newVisibility = visible;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._plistArray.forEach((pl) => {
+                    pl.visibleToShadows = this._newVisibility;
+                });
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._plistArray.forEach((pl,index) => {
+                    pl.visibleToShadows = this._restoreVisibility[index];
+                });
+                resolve();
+            })
+        }
+    }
+
+    app.plistCommands.SetShadowVisibility = SetShadowVisibility;
+
     function swapUVs(plist,channelA,channelB) {
         let fromUVs = plist['texCoord' + channelA];
         let toUVs = plist['texCoord' + channelB];

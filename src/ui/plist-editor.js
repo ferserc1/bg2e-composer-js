@@ -51,6 +51,15 @@ app.addSource(() => {
             }
         };
 
+        $scope.saveShadowVisibility = function() {
+            if ($scope.selection.length) {
+                executeCommand(new app.plistCommands.SetShadowVisibility(
+                    $scope.selection,
+                    $scope.visibleToShadows
+                ));
+            }
+        };
+
         $scope.switchUvs = function(from,to) {
             if ($scope.selection.length) {
                 executeCommand(new app.plistCommands.SwapUVs(
@@ -89,6 +98,7 @@ app.addSource(() => {
         $scope.name = "";
         $scope.groupName = "";
         $scope.visible = false;
+        $scope.visibleToShadows = false;
 
         $scope.selection = [];
 
@@ -105,6 +115,7 @@ app.addSource(() => {
                 $scope.name = $scope.selection[0].name;
                 $scope.groupName = $scope.selection[0].groupName;
                 $scope.visible = $scope.selection[0].visible;
+                $scope.visibleToShadows = $scope.selection[0].visibleToShadows;
             }
 
             setTimeout(() => {
