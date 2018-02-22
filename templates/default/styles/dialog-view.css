@@ -45,6 +45,17 @@ dialog-view a {
     padding-right: 20px;
 }
 
+.bg2-dialog-container.bg2-dialog-modal-full .bg2-dialog-view {
+    pointer-events: all;
+    width: 100%;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 .bg2-modal-mini .bg2-dialog-view {
     top: 100px !important;
     bottom: auto !important;

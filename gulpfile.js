@@ -8,6 +8,11 @@ let fbxPluginPath = {
     macOS: `${ __dirname }/../fbx2json/build/macOS`
 };
 
+let raytracerPluginPath = {
+    win64: `${ __dirname }/../raytracer/build/win64`,
+    macOS: `${ __dirname }/../raytracer/build/macos`
+};
+
 gulp.task("compile", function() {
     let sources = [];
 
@@ -53,7 +58,7 @@ gulp.task("fbxPlugin", function() {
             `${ fbxPluginPath.macOS }/libfbxsdk.dylib`,
             `${ fbxPluginPath.macOS }/fbx2json`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/win64')),
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/macos')),
 
         gulp.src([
             "fbxPlugin/plugin/*"
@@ -63,7 +68,27 @@ gulp.task("fbxPlugin", function() {
         gulp.src([
             "fbxPlugin/src/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/src'))
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/src')),
+
+        gulp.src([
+            `${ raytracerPluginPath.win64 }/raytracer.exe`
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/win64')),
+
+        gulp.src([
+            `${ raytracerPluginPath.macOS }/raytracer`
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/macos')),
+
+        gulp.src([
+            "raytracerPlugin/plugin/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/plugin')),
+
+        gulp.src([
+            "raytracerPlugin/src/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/src'))
     ])
 });
 

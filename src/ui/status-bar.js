@@ -132,10 +132,8 @@ app.addSource(() => {
         updateUI();
 
         app.ui.StatusBar.Get().statusChanged("statusBar",() => {
-            setTimeout(() => {
-                updateUI();
-                $scope.$apply();
-            }, 50);
+            setTimeout(() => updateUI(), 10);
+            setTimeout(() => $scope.$apply(), 30);
         });
 
         app.render.Scene.Get().sceneChanged("statusBarGrid",() => {
