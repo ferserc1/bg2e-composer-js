@@ -4,15 +4,43 @@ module.exports = function(app,angularApp,bg) {
     angularApp.directive("raytracerPluginSettings", function() {
         return {
             restrict: 'E',
-            template:
-            `
-                <h2>Raytracer</h2>
-            `,
+            templateUrl:__dirname + '/../templates/raytracer-ui-settings.html',
             controller: ['$scope',function($scope) {
-                
+               
             }]
         }
     });
+
+    angularApp.directive("raytracerUi", function() {
+        return {
+            restrict: 'E',
+            templateUrl:__dirname + '/../templates/raytracer-ui.html',
+            controller: ['$scope',function($scope) {
+                $scope.qualityOptions = [
+                    { id:0, label:'Draft' },
+                    { id:1, label:'Medium' },
+                    { id:2, label:'High' }
+                ];
+                $scope.quality = $scope.qualityOptions[0];
+                $scope.beginRender = function() {
+                    $scope.rendering = true;
+
+                    // TODO: Implement this
+                    setTimeout(() => {
+                        renderingDone();
+                    },2000);
+                };
+                $scope.cancel = function() {
+                    app.ui.DialogView.Close()
+                };
+                $scope.rendering = false;
+
+                function renderingDone() {
+                    app.ui.DialogView.Close();
+                }
+            }]
+        }
+    })
 
 
 
@@ -31,7 +59,7 @@ module.exports = function(app,angularApp,bg) {
         if (drawablesToRender.length>0) {
             // TODO: Implement the rendering process interface
             app.ui.DialogView.Show({
-                templateUrl:`templates/${ app.config.templateName }/directives/add-component-view.html`,
+                templateUrl:__dirname + '/../templates/raytracer-ui-view.html',
                 title:"Add Component",
                 showClose: false,
                 type: 'modal-full',
