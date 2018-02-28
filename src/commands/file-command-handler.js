@@ -153,63 +153,75 @@ app.addSource(() => {
             }
         }
 
-        saveScene(params) {
+        saveScene(params = {}) {
             if (!this._currentScenePath) {
-                this.saveSceneAs(params);
+                return this.saveSceneAs(params);
             }
             else {
-                let context = app.ComposerWindowController.Get().gl;
-                let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
-                app.CommandManager.Get().doCommand(cmd)
-                    .then(() => {
-                        app.CommandManager.Get().clear();
-                        if (params.followingCommand) {
-                            app.CommandHandler.Trigger(params.followingCommand,{});
-                        }
-                    })
-                    .catch((err) => {
-                        if (err) {
-                            console.error(err.message,true);
-                        }
-                        else {
-                            // command cancelled by user
-                        }
-                    });
+                return new Promise((resolve,reject) => {
+                    let context = app.ComposerWindowController.Get().gl;
+                    let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
+                    app.CommandManager.Get().doCommand(cmd)
+                        .then(() => {
+                            app.CommandManager.Get().clear();
+                            if (params.followingCommand) {
+                                app.CommandHandler.Trigger(params.followingCommand,{});
+                            }
+                            resolve(true);
+                        })
+                        .catch((err) => {
+                            if (err) {
+                                console.error(err.message,true);
+                                reject(err);
+                            }
+                            else {
+                                // command cancelled by user
+                                resolve(false);
+                            }
+                        });
+                });
             }
         }
 
-        saveSceneAs(params) {
-            let context = app.ComposerWindowController.Get().gl;
-            const {dialog} = require('electron').remote;
-            
-            let filePath = dialog.showSaveDialog({
-                filters: [
-                    { name:"bg2 engine scene", extensions:["vitscnj"]}
-                ]
+        saveSceneAs(params = {}) {
+            return new Promise((resolve,reject) => {
+                let context = app.ComposerWindowController.Get().gl;
+                const {dialog} = require('electron').remote;
+                
+                let filePath = dialog.showSaveDialog({
+                    filters: [
+                        { name:"bg2 engine scene", extensions:["vitscnj"]}
+                    ]
+                });
+                if (filePath) {
+                    filePath = app.standarizePath(filePath);
+                    let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                    app.CommandManager.Get().doCommand(cmd)
+                        .then(() => {
+                            app.CommandManager.Get().clear();
+                            this._currentScenePath = filePath;
+                            if (params.followingCommand) {
+                                setTimeout(() => {
+                                    app.CommandHandler.Trigger(params.followingCommand,{});
+                                },10);
+                            }
+                            resolve(true);
+                        })
+                        .catch((err) => {
+                            if (err) {
+                                console.error(err.message,true);
+                                resolve(err);
+                            }
+                            else {
+                                // command cancelled by user
+                                resolve(false);
+                            }
+                        });
+                }
+                else {
+                    resolve(false);
+                }
             });
-            if (filePath) {
-                filePath = app.standarizePath(filePath);
-                let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
-                app.CommandManager.Get().doCommand(cmd)
-                    .then(() => {
-                        app.CommandManager.Get().clear();
-                        this._currentScenePath = filePath;
-                        if (params.followingCommand) {
-                            setTimeout(() => {
-                                app.CommandHandler.Trigger(params.followingCommand,{});
-                            },10);
-                        }
-                    })
-                    .catch((err) => {
-                        if (err) {
-                            console.error(err.message,true);
-                        }
-                        else {
-                            // command cancelled by user
-                        }
-                    });
-            }
-        
         }
 
         showPluginSettings(params) {

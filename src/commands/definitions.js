@@ -147,9 +147,11 @@ app.addDefinitions(() => {
 
 app.addDefinitions(() => {
     let s_handlers = {};
+    let s_allHandlers = [];
 
     class CommandHandler {
         static RegisterHandler(handler) {
+            s_allHandlers.push(handler);
             handler.getMessages().forEach((msg) => {
                 s_handlers[msg] = handler;
             });
@@ -159,6 +161,17 @@ app.addDefinitions(() => {
             if (s_handlers) {
                 s_handlers[message].execute(message,params);
             }
+        }
+
+        static Get(className) {
+            let result = null;
+            s_allHandlers.some((ch) => {
+                if (ch.constructor.name==className) {
+                    result = ch;
+                }
+                return result!=null;
+            });
+            return result;
         }
 
         constructor() {

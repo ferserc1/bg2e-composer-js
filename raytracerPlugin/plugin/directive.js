@@ -43,35 +43,58 @@ module.exports = function(app,angularApp,bg) {
     })
 
 
-
-    app.raytracer.renderLightmaps = function() {
-        let sceneRoot = app.render.Scene.Get().root;
-        let findDrawables = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
-        sceneRoot.accept(findDrawables);
-
-        let drawablesToRender = [];
-        findDrawables.result.forEach((node) => {
-            if (node.steady) {
-                drawablesToRender.push(node.drawable);
+    function doRenderLightmaps() {
+        return new Promise((resolve,reject) => {
+            let sceneRoot = app.render.Scene.Get().root;
+            let findDrawables = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+            sceneRoot.accept(findDrawables);
+    
+            let drawablesToRender = [];
+            findDrawables.result.forEach((node) => {
+                if (node.steady) {
+                    drawablesToRender.push(node.drawable);
+                }
+            });
+    
+            if (drawablesToRender.length>0) {
+                // TODO: Implement the rendering process interface
+                app.ui.DialogView.Show({
+                    templateUrl:__dirname + '/../templates/raytracer-ui-view.html',
+                    title:"Add Component",
+                    showClose: false,
+                    type: 'modal-full'
+                })
+                    .then((comp) => {
+                        resolve(comp);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            }
+            else {
+                throw new Error("No steady nodes with drawable components found in the scene");
             }
         });
+    }
 
-        if (drawablesToRender.length>0) {
-            // TODO: Implement the rendering process interface
-            app.ui.DialogView.Show({
-                templateUrl:__dirname + '/../templates/raytracer-ui-view.html',
-                title:"Add Component",
-                showClose: false,
-                type: 'modal-full'
-            })
-                .then((comp) => {
-                    
+    app.raytracer.renderLightmaps = function() {
+        return new Promise((resolve,reject) => {
+            app.CommandHandler.Get('FileCommandHandler').saveScene()
+                .then((status) => {
+                    if (!status) {
+                        throw new Error("You need to save the scene to generate lightmaps.");
+                    }
+                    return doRenderLightmaps();
                 })
-                .catch((err) => console.log(err));
-        }
-        else {
-            alert("No steady nodes with drawable components found in the scene");
-        }
+    
+                .then(() => {
+                    resolve();
+                })
+    
+                .catch((err) => {
+                    alert(err.message);
+                });
+        })
      }
 
      return {
