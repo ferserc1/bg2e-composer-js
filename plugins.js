@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 let g_plugins = [];
+let g_menus = [];
 
 class Plugins {
     constructor(app) {
@@ -52,6 +53,11 @@ class Plugins {
         
                             }
                         }
+
+                        let menuPath = path.join(fullPluginPath,"menu.js");
+                        if (fs.existsSync(menuPath)) {
+                            g_menus.push(menuPath);
+                        }
                     }
                 })
             }
@@ -75,6 +81,18 @@ class Plugins {
 
     get modules() {
         return this._modules;
+    }
+
+    get menus() {
+        let fullMenu = [];
+        g_menus.forEach((menuModulePath) => {
+            let module = require(menuModulePath);
+            if (module.getMenu) {
+                let menu = module.getMenu();
+                fullMenu.push(menu);
+            }
+        });
+        return fullMenu;
     }
 
     find(pluginFolder) {

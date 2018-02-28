@@ -62,8 +62,7 @@ module.exports = function(app,angularApp,bg) {
                 templateUrl:__dirname + '/../templates/raytracer-ui-view.html',
                 title:"Add Component",
                 showClose: false,
-                type: 'modal-full',
-                onAccept:(result) => { return result; }
+                type: 'modal-full'
             })
                 .then((comp) => {
                     

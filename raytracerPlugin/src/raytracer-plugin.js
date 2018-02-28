@@ -42,12 +42,12 @@ app.addSource(() => {
 
         getMessages() {
             return [
-                "renderGlobalIlumination"
+                "renderGlobalIllumination"
             ];
         }
 
         execute(message,params) {
-            if (message=='renderGlobalIlumination') {
+            if (message=='renderGlobalIllumination') {
                 app.raytracer.renderLightmaps();
             }
         }

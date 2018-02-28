@@ -93,7 +93,12 @@ gulp.task("fbxPlugin", function() {
         gulp.src([
             "raytracerPlugin/templates/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/templates'))
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/templates')),
+        
+        gulp.src([
+            "raytracerPlugin/menu.js"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer'))
     ])
 });
 

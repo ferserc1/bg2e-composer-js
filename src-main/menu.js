@@ -343,8 +343,33 @@ module.exports = {
 						}
 					)
 				}
-				
-				const menu = Menu.buildFromTemplate(template)
+
+				const Plugins = require(__dirname + '/../plugins').Plugins;
+				let plugins = new Plugins(require(__dirname + '/../app'));
+
+				plugins.menus.forEach((pluginMenuItem) => {
+					let parentMenu = null;
+					if (!template.every((templateItem) => {
+						if (templateItem.label==pluginMenuItem.label) {
+							parentMenu = templateItem;
+						}
+						return templateItem==null;
+					})) {
+						templateItem = {
+							label:pluginMenuItem.label,
+							submenu:[]
+						};
+						template.splice(template.length - 1, 0, templateItem);
+					}
+
+					let submenu = pluginMenuItem.submenu || [];
+					submenu.forEach((pluginSubmenuItem) => {
+						templateItem.submenu.push(pluginSubmenuItem);
+					});
+
+				});
+
+				const menu = Menu.buildFromTemplate(template);
 				Menu.setApplicationMenu(menu)
 		}
 }
