@@ -25,6 +25,7 @@
   "dependencies": {
     "angular": "^1.6.6",
     "angular-route": "^1.6.6",
+    "angularjs-scroll-glue": "^2.2.0",
     "angularjs-slider": "^6.4.0",
     "bg2e-js": "git+https://bitbucket.org/ferserc1/bg2e-js.git",
     "electron-settings": "^3.1.3",

@@ -6,6 +6,8 @@ app.addSource(() => {
             this._currentScenePath = null;
         }
 
+        get currentScenePath() { return this._currentScenePath; }
+
         getMessages() {
             return [
                 "newScene",

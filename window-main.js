@@ -27,7 +27,8 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     app.angular = {
         deps: [
             "ngRoute",
-            "rzModule"
+            "rzModule",
+            "luegg.directives"
         ]
     };
     // Replace \ by / in Windows paths C:\ >>>> C:/
