@@ -14,9 +14,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
 
     let appModule = require(__dirname + '/app');
 
-    app.appPath = appModule.appPath;
-    app.paths = appModule.paths;
-    app.plugins = appModule.plugins;
+    app = appModule;
 
     let g_appDefines = [];
     let g_appSource = [];
@@ -37,90 +35,8 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         return path.replace(/\\/g,'/');
     };
 
-    app.config = require(__dirname + "/config.json");
     GLOBAL_APP_NAME = app.config.appName;
 
-    function requireHeadScript(file) {
-        let head = document.getElementsByTagName('head')[0];
-        let script = document.createElement('script');
-        script.src = file;
-        script.type = "text/javascript";
-        script.async = false;
-        head.appendChild(script);
-    }
-
-    function requireSources(folderPath) {
-        let srcDir = fs.readdirSync(folderPath);
-        srcDir.sort((a,b) => {
-            if (a<b) return -1;
-            else return 1;
-        });
-        srcDir.forEach((sourceFile) => {
-            let filePath = path.join(folderPath,sourceFile);
-            if (sourceFile.split(".").pop()=='js') {
-                requireHeadScript(filePath);
-            }
-            else if (fs.statSync(filePath).isDirectory()) {
-                requireSources(filePath);
-            }
-        });
-    }
-
-    function requireStylesheets() {
-        let templatePath = __dirname + '/templates/' + app.config.templateName + '/styles';
-        let dirContents = fs.readdirSync(templatePath);
-        let head = document.getElementsByTagName('head')[0];
-        dirContents.forEach((fileName) => {
-            let filePath = path.join(templatePath, fileName);
-            if (filePath.split('.').pop()=='css') {
-                let link = document.createElement('link');
-                link.rel = "stylesheet";
-                link.href = filePath;
-                head.appendChild(link);
-            }
-        })
-    }
-
-    function requirePlugins() {
-        const { remote } = require('electron');
-        const { Menu, MenuItem } = remote;
-
-        function findMenuItem(label) {
-            let item = null;
-            Menu.getApplicationMenu().items.some((i) => {
-                item = i.label==label ? i : null;
-                return item!=null;
-            })
-            return item;
-        }
-
-        let angularApp = angular.module(GLOBAL_APP_NAME);
-        let mainMenu = Menu.getApplicationMenu();
-        g_plugins.forEach((filePath) => {
-            let pluginModule = require(filePath)(app,angularApp,bg);
-            app.plugins.modules.push(pluginModule);
-/*
-            if (pluginModule.menu) {
-                let menu = pluginModule.menu;
-                let parentMenu = findMenuItem(menu.label);
-                if (!parentMenu) {
-                    parentMenu = new MenuItem({ label:menu.label, submenu:[] });
-                    mainMenu.insertSubMenu(mainMenu.items.length - 1, parentMenu);
-                }
-
-                if (parentMenu) {
-                    menu.menu.forEach((menuItemData) => {
-                        let menuItem = new MenuItem(menuItemData);
-                        parentMenu.submenu.append(menuItem);    
-                    });
-                }
-                //console.log('add menu');
-            }
-            */
-        })
-    }
-
-    
     app.addDefinitions = function(callback) {
         g_appDefines.push(callback);
     };
@@ -199,9 +115,9 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     
     if (BG2E_COMPOSER_DEBUG) {
         // Debug mode: require scripts
-        requireSources(__dirname + '/src');
+        app.requireSources(__dirname + '/src');
     }
-    requireStylesheets();
+    app.requireStylesheets();
 
     console.log("Plugin folders:");
     app.plugins.paths.forEach((p) => {
@@ -209,36 +125,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     });
     console.log("Data path: " + app.resourcesDir);
 
-    app.plugins.paths.forEach((pluginPath) => {
-        if (fs.existsSync(pluginPath)) {
-            fs.readdirSync(pluginPath).forEach((plugin) => {
-                let fullPluginPath = path.join(pluginPath,plugin);
-                let stat = fs.statSync(fullPluginPath);
-                if (stat.isDirectory) {
-                    let source = path.join(fullPluginPath,"src");
-                    if (fs.existsSync(source)) {
-                        stat = fs.statSync(source);
-                        if (stat.isDirectory) {
-                            requireSources(source);
-                        }
-                    }
-
-                    let pluginSources = path.join(fullPluginPath,"plugin");
-                    if (fs.existsSync(pluginSources)) {
-                        stat = fs.statSync(pluginSources);
-                        if (stat.isDirectory) {
-                            fs.readdirSync(pluginSources).forEach((pluginFile) => {
-                                if (pluginFile.split(".").pop()=="js") {
-                                    g_plugins.push(path.join(pluginSources,pluginFile));
-                                }
-                            })
-    
-                        }
-                    }
-                }
-            })
-        }
-    });
+    app.plugins.requireSources();
 
     setTimeout(() => loadApp(), 100);
 
@@ -361,7 +248,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     function loadApp() {
         let ng = angular.module(GLOBAL_APP_NAME, app.angular.deps);
 
-        requirePlugins();
+        app.plugins.requirePlugins(app,angular,bg);
         
         g_appDefines.forEach((cb) => cb());
         g_appSource.forEach((cb) => cb());

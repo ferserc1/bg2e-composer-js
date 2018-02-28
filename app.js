@@ -64,6 +64,63 @@ class AppClass {
         }
         return this._resourcesDir;
     }
+
+    get config() {
+        return require(__dirname + "/config.json");
+    }
+
+    requireHeaderScript(file) {
+        if (!this.isRenderer) {
+            throw new Error("App::requireHeaderScript() can only be called from the renderer process.");
+        }
+
+        let head = document.getElementsByTagName('head')[0];
+        let script = document.createElement('script');
+        script.src = file;
+        script.type = "text/javascript";
+        script.async = false;
+        head.appendChild(script);
+    }
+
+    requireSources(folderPath) {
+        if (!this.isRenderer) {
+            throw new Error("App::requireSources() can only be called from the renderer process.");
+        }
+
+        let srcDir = fs.readdirSync(folderPath);
+        srcDir.sort((a,b) => {
+            if (a<b) return -1;
+            else return 1;
+        });
+        srcDir.forEach((sourceFile) => {
+            let filePath = path.join(folderPath,sourceFile);
+            if (sourceFile.split(".").pop()=='js') {
+                this.requireHeaderScript(filePath);
+            }
+            else if (fs.statSync(filePath).isDirectory()) {
+                this.requireSources(filePath);
+            }
+        });
+    }
+
+    requireStylesheets() {
+        if (!this.isRenderer) {
+            throw new Error("App::requireStylesheets() can only be called from the renderer process.");
+        }
+
+        let templatePath = __dirname + '/templates/' + this.config.templateName + '/styles';
+        let dirContents = fs.readdirSync(templatePath);
+        let head = document.getElementsByTagName('head')[0];
+        dirContents.forEach((fileName) => {
+            let filePath = path.join(templatePath, fileName);
+            if (filePath.split('.').pop()=='css') {
+                let link = document.createElement('link');
+                link.rel = "stylesheet";
+                link.href = filePath;
+                head.appendChild(link);
+            }
+        })
+    }
 }
 
 
