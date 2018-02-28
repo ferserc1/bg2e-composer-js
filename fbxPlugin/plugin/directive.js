@@ -15,4 +15,6 @@ module.exports = function(app,angularApp,bg) {
             }]
         }
     });
+
+    return {};
 }

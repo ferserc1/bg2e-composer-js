@@ -11,57 +11,12 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
 
     let remote = require("electron").remote;
     let electronApp = remote.app;
-    
-    app.appPath = electronApp.getAppPath().split(path.sep);
-    app.appPath.pop();
-    app.appPath = app.appPath.join(path.sep);
-    app.appPath = path.resolve(path.join(app.appPath,'..'));
-    app.paths = {
-        home: electronApp.getPath('home'),
-        userData: electronApp.getPath('userData'),
-        temp: path.join(electronApp.getPath('temp'),'composer'),
-        desktop: electronApp.getPath('desktop'),
-        documents: electronApp.getPath('documents'),
-        downloads: electronApp.getPath('downloads')
-    };
 
-    if (!fs.existsSync(app.paths.temp)) {
-        fs.mkdir(app.paths.temp);
-    }
+    let appModule = require(__dirname + '/app');
 
-    
-    let composerPluginsPath = "";
-    if (/darwin/i.test(process.platform)) {
-        // composer-plugins folder in the same folder as Composer.app bundle
-        composerPluginsPath = path.resolve(path.join(app.appPath,"../../composer-plugins"));
-    }
-    else if (/win/i.test(process.platform)) {
-        // composer-plugins folder in the same folder as composer application directory
-        composerPluginsPath = path.resolve(path.join(app.appPath,"..\\composer-plugins"));
-    }
-
-    app.plugins = {
-        paths:[
-            path.join(app.appPath, 'plugins'),
-            composerPluginsPath,
-            path.join(__dirname, 'plugins'),
-            path.resolve(path.join(__dirname,`..${ path.sep}composer-plugins`))
-        ],
-        modules:[]
-    };
-    app.resourcesDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }data`));
-
-    app.plugins.find = function(pluginFolder) {
-        let result = null;
-        app.plugins.paths.some((item) => {
-            let fullPath = path.join(item,pluginFolder);
-            if (fs.existsSync(fullPath)) {
-                result = fullPath;
-            }
-            return result!=null;
-        });
-        return result;
-    };
+    app.appPath = appModule.appPath;
+    app.paths = appModule.paths;
+    app.plugins = appModule.plugins;
 
     let g_appDefines = [];
     let g_appSource = [];
@@ -127,10 +82,41 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     }
 
     function requirePlugins() {
+        const { remote } = require('electron');
+        const { Menu, MenuItem } = remote;
+
+        function findMenuItem(label) {
+            let item = null;
+            Menu.getApplicationMenu().items.some((i) => {
+                item = i.label==label ? i : null;
+                return item!=null;
+            })
+            return item;
+        }
+
         let angularApp = angular.module(GLOBAL_APP_NAME);
+        let mainMenu = Menu.getApplicationMenu();
         g_plugins.forEach((filePath) => {
             let pluginModule = require(filePath)(app,angularApp,bg);
             app.plugins.modules.push(pluginModule);
+/*
+            if (pluginModule.menu) {
+                let menu = pluginModule.menu;
+                let parentMenu = findMenuItem(menu.label);
+                if (!parentMenu) {
+                    parentMenu = new MenuItem({ label:menu.label, submenu:[] });
+                    mainMenu.insertSubMenu(mainMenu.items.length - 1, parentMenu);
+                }
+
+                if (parentMenu) {
+                    menu.menu.forEach((menuItemData) => {
+                        let menuItem = new MenuItem(menuItemData);
+                        parentMenu.submenu.append(menuItem);    
+                    });
+                }
+                //console.log('add menu');
+            }
+            */
         })
     }
 

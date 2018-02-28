@@ -34,6 +34,24 @@ app.addSource(() => {
             blur: 4
         };
     }
+
+    new (class LightingCommandHandler extends app.CommandHandler {
+        constructor() {
+            super();
+        }
+
+        getMessages() {
+            return [
+                "renderGlobalIlumination"
+            ];
+        }
+
+        execute(message,params) {
+            if (message=='renderGlobalIlumination') {
+                app.raytracer.renderLightmaps();
+            }
+        }
+    });
 });
 
 app.addPluginSettings('raytracerPluginSettings');

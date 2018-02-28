@@ -74,4 +74,17 @@ module.exports = function(app,angularApp,bg) {
             alert("No steady nodes with drawable components found in the scene");
         }
      }
+
+     return {
+         menu: {
+             label: 'Plugins',
+             menu: [
+                 { 
+                    label:"Render Global Ilumination", click: function(item, focusedWindow) {
+                        focusedWindow.webContents.send('triggerMenu', { msg:'renderGlobalIlumination' })
+                    }
+                }
+             ]
+         }
+     };
 }
