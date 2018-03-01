@@ -16,22 +16,22 @@ app.addSource(() => {
     app.raytracer.available = fs.existsSync(app.raytracer.commandPath);
     if (app.raytracer.available) {
         app.raytracer.draftQuality = {
-            width: 256,
-            height: 256,
-            samples: 4,
-            blur: 0
+            width: app.settings.get("raytracer.widthDraft") || 256,
+            height: app.settings.get("raytracer.heightDraft") || 256,
+            samples: app.settings.get("raytracer.samplesDraft") || 2,
+            blur: app.settings.get("raytracer.blurDraft") || 0
         };
         app.raytracer.midQuality = {
-            width: 512,
-            height: 512,
-            samples: 30,
-            blur: 2
+            width: app.settings.get("raytracer.widthMid") || 512,
+            height: app.settings.get("raytracer.heightMid") || 512,
+            samples: app.settings.get("raytracer.samplesMid") || 30,
+            blur: app.settings.get("raytracer.blurMid") || 2
         };
         app.raytracer.highQuality = {
-            width: 2048,
-            height: 2048,
-            samples: 50,
-            blur: 4
+            width: app.settings.get("raytracer.widthHigh") || 2048,
+            height: app.settings.get("raytracer.heightHigh") || 2048,
+            samples: app.settings.get("raytracer.samplesHigh") || 50,
+            blur: app.settings.get("raytracer.blurHigh") || 4
         };
     }
 
@@ -54,4 +54,4 @@ app.addSource(() => {
     });
 });
 
-app.addPluginSettings('raytracerPluginSettings');
+app.addPluginSettings('raytracer-plugin-settings');

@@ -15,7 +15,7 @@ app.addSource(() => {
                 app.getPluginSettingsDirectives().forEach((directive) => {
                     htmlCode += `
                     <div class="bg2-widget-panel">
-                        <${ directive }></${ directive }
+                        <${ directive }></${ directive }>
                     </div>
                     `
                 });

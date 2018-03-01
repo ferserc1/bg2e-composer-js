@@ -9,7 +9,53 @@ module.exports = function(app,angularApp,bg) {
             restrict: 'E',
             templateUrl:__dirname + '/../templates/raytracer-ui-settings.html',
             controller: ['$scope',function($scope) {
-               
+                $scope.commitChanges = function() {
+                    app.raytracer.draftQuality.width = $scope.sizeDraft[0];
+                    app.raytracer.draftQuality.height = $scope.sizeDraft[1];
+                    app.raytracer.draftQuality.samples = $scope.samplesDraft;
+                    app.raytracer.draftQuality.blur = $scope.blurDraft;
+
+                    app.raytracer.midQuality.width = $scope.sizeMid[0];
+                    app.raytracer.midQuality.height = $scope.sizeMid[1];
+                    app.raytracer.midQuality.samples = $scope.samplesMid;
+                    app.raytracer.midQuality.blur = $scope.blurDraft;
+
+                    app.raytracer.highQuality.width = $scope.sizeHigh[0];
+                    app.raytracer.highQuality.height = $scope.sizeHigh[1];
+                    app.raytracer.highQuality.samples = $scope.samplesHigh;
+                    app.raytracer.highQuality.blur = $scope.blurHigh;
+
+                    app.settings.set("raytracer.widthDraft",app.raytracer.draftQuality.width);
+                    app.settings.set("raytracer.heightDraft",app.raytracer.draftQuality.height);
+                    app.settings.set("raytracer.samplesDraft",app.raytracer.draftQuality.samples);
+                    app.settings.set("raytracer.blurDraft",app.raytracer.draftQuality.blurDraft);
+
+                    app.settings.set("raytracer.widthMid",app.raytracer.midQuality.width);
+                    app.settings.set("raytracer.heightMid",app.raytracer.midQuality.height);
+                    app.settings.set("raytracer.samplesMid",app.raytracer.midQuality.samples);
+                    app.settings.set("raytracer.blurMid",app.raytracer.midQuality.blurDraft);
+
+                    app.settings.set("raytracer.widthHigh",app.raytracer.highQuality.width);
+                    app.settings.set("raytracer.heightHigh",app.raytracer.highQuality.height);
+                    app.settings.set("raytracer.samplesHigh",app.raytracer.highQuality.samples);
+                    app.settings.set("raytracer.blurHigh",app.raytracer.highQuality.blurDraft);
+                };
+
+                function updateUI() {
+                    $scope.sizeDraft = [app.raytracer.draftQuality.width,app.raytracer.draftQuality.height];
+                    $scope.samplesDraft = app.raytracer.draftQuality.samples;
+                    $scope.blurDraft = app.raytracer.draftQuality.blur;
+    
+                    $scope.sizeMid = [app.raytracer.midQuality.width,app.raytracer.midQuality.height];
+                    $scope.samplesMid = app.raytracer.midQuality.samples;
+                    $scope.blurMid = app.raytracer.midQuality.blur;
+
+                    $scope.sizeHigh = [app.raytracer.highQuality.width,app.raytracer.highQuality.height];
+                    $scope.samplesHigh = app.raytracer.highQuality.samples;
+                    $scope.blurHigh = app.raytracer.highQuality.blur;
+                }
+
+                updateUI();
             }]
         }
     });

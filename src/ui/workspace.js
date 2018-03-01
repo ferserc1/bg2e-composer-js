@@ -4,7 +4,7 @@ app.addSource(() => {
     function commitMaterials(target,multi=true) {
         return new Promise((resolve,reject) => {
             if (!this.currentMaterial) {
-                reject(new Error("Current material is null"));
+                resolve(false);
             }
             else if (target.length) {
                 if (!multi) {
