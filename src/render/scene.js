@@ -83,6 +83,10 @@ app.addDefinitions(() => {
             };
         }
 
+        get ready() {
+            return this.root!=null && this.camera!=null;
+        }
+        
         get root() {
             return this._root;
         }
@@ -291,7 +295,6 @@ app.addDefinitions(() => {
             registerPlugins.apply(this);
 
             this.createDefaultScene();
-
             this.selectionController.init();
         }
     }

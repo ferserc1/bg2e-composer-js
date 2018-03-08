@@ -155,6 +155,8 @@ app.addDefinitions(() => {
         }
     
         frame(delta) {
+            if (!this.scene.ready) return;
+
             // Ensure that the orbit camera controller of the main camera is enabled
             let ctrl = this.scene.camera && this.scene.camera.node.component("bg.manipulation.OrbitCameraController");
             if (ctrl && !ctrl.enabled) {
@@ -169,6 +171,8 @@ app.addDefinitions(() => {
         }
     
         display(notifyObservers=true) {
+            if (!this.scene.ready) return;
+
             this.renderer.display(this.scene.root, this.scene.camera);
             this.scene.selectionController.drawGizmos();
 
@@ -180,6 +184,8 @@ app.addDefinitions(() => {
         }
     
         reshape(width,height) {
+            if (!this.scene.ready) return;
+
             this.scene.camera.viewport = new bg.Viewport(0,0,width,height);
             if (!this.scene.camera.projectionStrategy) {
                 this.scene.camera.projection.perspective(60,this.scene.camera.viewport.aspectRatio,0.1,1000);
@@ -190,22 +196,30 @@ app.addDefinitions(() => {
         }
     
         keyDown(evt) {
+            if (!this.scene.ready) return;
+
             this._inputVisitor.keyDown(this.scene.root, evt);
             this.updateView();
         }
 
         keyUp(evt) {
+            if (!this.scene.ready) return;
+
             this._inputVisitor.keyUp(this.scene.root, evt);
             this.updateView();
         }
 
         mouseUp(evt) {
+            if (!this.scene.ready) return;
+
             this.scene.selectionController.mouseUp(evt);
             this._inputVisitor.mouseUp(this.scene.root, evt);
             this.updateView();
         }
 
         mouseDown(evt) {
+            if (!this.scene.ready) return;
+
             if (!this.scene.selectionController.mouseDown(evt)) {
                 this._inputVisitor.mouseDown(this.scene.root, evt);
             }
@@ -213,6 +227,8 @@ app.addDefinitions(() => {
         }
 
         mouseDrag(evt) {
+            if (!this.scene.ready) return;
+
             if (!this.scene.selectionController.mouseDrag(evt)) {
                 this._inputVisitor.mouseDrag(this.scene.root, evt);
             }
@@ -220,31 +236,43 @@ app.addDefinitions(() => {
         }
 
         mouseMove(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.mouseMove(this.scene.root, evt);
         }
 
         mouseOut(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.mouseOut(this.scene.root, evt);
             this.updateView();
         }
 
         
         mouseWheel(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.mouseWheel(this.scene.root, evt);
             this.updateView();
         }
         
         touchStart(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.touchStart(this.scene.root, evt);
             this.updateView();
         }
         
         touchMove(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.touchMove(this.scene.root, evt);
             this.updateView();
         }
         
         touchEnd(evt) {
+            if (!this.scene.ready) return;
+            
             this._inputVisitor.touchEnd(this.scene.root, evt);
             this.updateView();
         }

@@ -274,6 +274,12 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
             }
         }]);
 
-        angular.bootstrap(document, [ GLOBAL_APP_NAME ]);
+        console.log("Loading bg2 engine physics extensions...");
+        bg.physics.ready("node_modules/bg2e-js-physics/dist/ammo.js")
+            .then(() => {
+                console.log("bg2 engine physics extensions loaded.");
+                angular.bootstrap(document, [ GLOBAL_APP_NAME ]);
+            });
+            
     };
 })();
