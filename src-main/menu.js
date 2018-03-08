@@ -232,6 +232,29 @@ module.exports = {
 						]
 					},
 					{
+						label: 'Physics',
+						submenu: [
+							{
+								label: 'Play',
+								click: function(item,focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'play' });
+								}
+							},
+							{
+								label: 'Pause',
+								click: function(item,focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'pause' });
+								}
+							},
+							{
+								label: 'Stop',
+								click: function(item,focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'stop' });
+								}
+							}
+						]
+					},
+					{
 						role: 'window',
 						submenu: [
 							{role: 'minimize'},
