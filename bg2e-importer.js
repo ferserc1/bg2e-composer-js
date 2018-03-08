@@ -28,10 +28,12 @@
     }
 
     let enginePath = path.resolve(path.join(__dirname,"../bg2e-js/"));
+    let physicsPath = path.resolve(path.join(__dirname,"../bg2e-js-physics/"))
 
     let engineSource = path.join(enginePath,"src");
+    let physicsSource = path.join(physicsPath,"src");
     let importFileList = [];
 
     importFolder(engineSource);
-
+    importFolder(physicsSource);
 })()
