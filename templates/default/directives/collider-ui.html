@@ -1,0 +1,9 @@
+<select-picker label="Shape" value="shape" options="shapes" commit-changes="onCommitChanges"></select-picker>
+<div class="bg2-widget-panel" ng-show="shape.id==0">
+    <number-picker label="Width" value="width" commit-changes="onCommitChanges"></number-picker>
+    <number-picker label="Height" value="height" commit-changes="onCommitChanges"></number-picker>
+    <number-picker label="Depth" value="depth" commit-changes="onCommitChanges"></number-picker>
+</div>
+<div class="bg2-widget-panel" ng-show="shape.id==1">
+    <number-picker label="Radius" value="radius" commit-changes="onCommitChanges"></number-picker>
+</div>
