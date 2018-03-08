@@ -31,6 +31,12 @@ app.addDefinitions(() => {
         }
     }
 
+    let g_lockedMessage = "You can't change the scene during physics simulation.";
+    function showLockedMessage() {
+        console.error(g_lockedMessage);
+        alert(g_lockedMessage);
+    }
+
     class CommandManager {
         static Get() {
             if (!g_commandManager) {
@@ -46,15 +52,26 @@ app.addDefinitions(() => {
             this._doObservers = {};
             this._undoObservers = {};
             this._redoObservers = {};
+
+            this._locked = false;
         }
+
+        get locked() { return this._locked; }
+
+        set locked(l) { this._locked = l; }
 
         get sceneChanged() {
             return this._undoStack.length>0;
         }
 
         clear() {
-            this._undoStack = [];
-            this._redoStack = [];
+            if (this.locked) {
+                showLockedMessage();
+            }
+            else {
+                this._undoStack = [];
+                this._redoStack = [];
+            }
         }
 
         onDoCommand(observerName,callback) {
@@ -70,6 +87,12 @@ app.addDefinitions(() => {
         }
 
         doCommand(cmd) {
+            if (this.locked) {
+                showLockedMessage();
+                
+                return Promise.reject(new Error(g_lockedMessage));
+            }
+
             return new Promise((resolve,reject) => {
                 if (this._redoStack.length) {
                     this._redoStack = [];
@@ -94,6 +117,11 @@ app.addDefinitions(() => {
         }
 
         undo() {
+            if (this.locked) {
+                showLockedMessage();
+                return Promise.reject(new Error(g_lockedMessage));
+            }
+
             return new Promise((resolve,reject) => {
                 let cmd = this._undoStack.pop();
                 if (cmd) {
@@ -117,6 +145,11 @@ app.addDefinitions(() => {
         }
 
         redo() {
+            if (this.locked) {
+                showLockedMessage();
+                return Promise.reject(new Error(g_lockedMessage));
+            }
+
             return new Promise((resolve,reject) => {
                 let cmd = this._redoStack.pop();
                 if (cmd) {

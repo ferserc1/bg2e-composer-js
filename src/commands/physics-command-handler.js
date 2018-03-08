@@ -31,12 +31,8 @@ app.addSource(() => {
             }
         }
 
-        // TODO: Lock UI: lock the user interface to prevent changes in scene during the 
-        // physics playbac.
-        // Create a "Lock" mode in CommandHandler that returns an error if a command is executed
-        // while the command handler is locked
         play() {
-            // TODO: Lock scene
+            app.CommandManager.Get().locked = true;
             bg.app.MainLoop.singleton.updateMode = bg.app.FrameUpdate.AUTO;
             executeDynamics((dyn) => dyn.play());
         }
@@ -47,7 +43,7 @@ app.addSource(() => {
         }
 
         stop() {
-            // TODO: Unlock scene
+            app.CommandManager.Get().locked = false;
             bg.app.MainLoop.singleton.updateMode = bg.app.FrameUpdate.MANUAL;
             executeDynamics((dyn) => {
                 dyn.stop();
