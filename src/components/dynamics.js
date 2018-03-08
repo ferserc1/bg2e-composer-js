@@ -6,7 +6,13 @@ app.addSource(() => {
             }
 
             createInstance() {
-                return new bg.scene.Dynamics(new bg.Vector3(0,-10,0));
+                let w = new bg.physics.World();
+                w.gravity = new bg.Vector3(0,-10,0);
+                return new bg.scene.Dynamics(w);
+            }
+
+            setGravity(gravity) {
+                return app.CommandManager.Get().doCommand(new app.physicsCommands.SetWorldGravity(this.componentInstance.world,gravity));
             }
         }
     });
@@ -31,10 +37,18 @@ app.addSource(() => {
                 }
 
                 $scope.onCommitChanges = function() {
-                    // TODO: Commit
+                    $scope.component.setGravity($scope.gravity)
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                        })
                 }
 
-                app.render.Scene.Get().selectionManager.selectionChanged("dynamicsUi", () => $scope.updateValues());
+                app.render.Scene.Get().selectionManager.selectionChanged("dynamicsUi", () => {
+                    setTimeout(() => {
+                        $scope.updateValues();
+                        $scope.$apply();
+                    },50);
+                });
 
                 $scope.updateValues();
             }]

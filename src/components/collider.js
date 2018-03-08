@@ -8,6 +8,10 @@ app.addSource(() => {
             createInstance() {
                 return new bg.scene.Collider(new bg.physics.BoxCollider(1,1,1));
             }
+
+            setColliderShape(shape) {
+               return app.CommandManager.Get().doCommand(new app.physicsCommands.SetCollider(this.componentInstance.node,shape));
+            }
         }
     });
 
@@ -26,10 +30,10 @@ app.addSource(() => {
                     { id:1, label:"Sphere collider" }
                 ];
                 $scope.shape = $scope.shapes[0];
-                $scope.width = 0;
-                $scope.height = 0;
-                $scope.depth = 0;
-                $scope.radius = 0;
+                $scope.width = 1;
+                $scope.height = 1;
+                $scope.depth = 1;
+                $scope.radius = 1;
 
                 $scope.updateValues = function() {
                     if (!$scope.component) return false;
@@ -50,7 +54,19 @@ app.addSource(() => {
                 }
 
                 $scope.onCommitChanges = function() {
-                    // TODO: Implement
+                    let shape = null;
+                    switch ($scope.shape.id) {
+                    case 0:
+                        shape = new bg.physics.BoxCollider($scope.width,$scope.height,$scope.depth);
+                        break;
+                    case 1:
+                        shape = new bg.physics.SphereCollider($scope.radius);
+                        break;
+                    }
+                    $scope.component.setColliderShape(shape)
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                        });
                 };
 
                 app.render.Scene.Get().selectionManager.selectionChanged("colliderUi", () => {

@@ -6,7 +6,13 @@ app.addSource(() => {
             }
 
             createInstance() {
-                return new bg.scene.RigidBody(1);
+                let rb = new bg.scene.RigidBody();
+                rb.body.mass = 1;
+                return rb;
+            }
+
+            setMass(mass) {
+                return app.CommandManager.Get().doCommand(new app.physicsCommands.SetRigidBodyMass(this.componentInstance.body,mass));
             }
         }
     });
@@ -26,15 +32,21 @@ app.addSource(() => {
                 $scope.updateValues = function() {
                     if (!$scope.component) return false;
                     $scope.mass = $scope.component.componentInstance.body.mass;
-
-                    setTimeout(() => $scope.$apply(),10);
                 }
 
                 $scope.onCommitChanges = function() {
-                    // TODO: Commig
+                    $scope.component.setMass($scope.mass)
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                        });
                 }
 
-                app.render.Scene.Get().selectionManager.selectionChanged("rigidBodyUi", () => $scope.updateValues());
+                app.render.Scene.Get().selectionManager.selectionChanged("rigidBodyUi", () => {
+                    setTimeout(() => {
+                        $scope.updateValues();
+                        $scope.$apply();
+                    },50);
+                });
 
                 $scope.updateValues();
 
