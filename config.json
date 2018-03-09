@@ -70,6 +70,30 @@
             "icon":"plist-inspector",
             "name":"Model inspector",
             "command":"showModelEditor"
+        },
+        {
+            "type":"separator"
+        },
+        {
+            "type":"button",
+            "icon":"play",
+            "name":"Play",
+            "command":"play",
+            "allowOnLocked":true
+        },
+        {
+            "type":"button",
+            "icon":"pause",
+            "name":"Pause",
+            "command":"pause",
+            "allowOnLocked":true
+        },
+        {
+            "type":"button",
+            "icon":"stop",
+            "name":"Stop",
+            "command":"stop",
+            "allowOnLocked":true
         }
     ]
 }

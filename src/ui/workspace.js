@@ -126,6 +126,12 @@ app.addSource(() => {
     }
     
     angularApp.controller("SceneEditorController", ['$rootScope','$scope', function($rootScope,$scope) {
+        $scope.isLocked = false;
+        app.on('commandLockChanged', 'sceneEditorController', (params) => {
+            setTimeout(() => {
+                $scope.isLocked = params.locked;
+            },50);
+        });
 
         $scope.switchWorkspace = function() {
             location.hash = "#!/modelEditor";
@@ -192,6 +198,12 @@ app.addSource(() => {
     angularApp.controller("ModelEditorController", ['$rootScope','$scope',function($rootScope,$scope) {
         // Main magerial, obtained from MaterialHandler
         $scope.currentMaterial = null;
+        $scope.isLocked = false;
+        app.on('commandLockChanged', 'sceneEditorController', (params) => {
+            setTimeout(() => {
+                $scope.isLocked = params.locked;
+            },50);
+        })
 
         $scope.switchWorkspace = function() {
             location.hash = "#!/sceneEditor";

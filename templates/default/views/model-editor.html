@@ -1,17 +1,17 @@
 <div class="bg2-workspace">
     <toolbar></toolbar>
-    <status-bar></status-bar>
-    <polylist-inspector></polylist-inspector>
+    <status-bar ng-hide="isLocked"></status-bar>
+    <polylist-inspector ng-hide="isLocked"></polylist-inspector>
 
     <dialog-view></dialog-view>
 
-    <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['PolyList']">
+    <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['PolyList']" ng-hide="isLocked">
         <ul>
             <li ng-repeat="item in tabs">
                 <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
             </li>
         </ul>
     </div>
-    <plist-editor ng-show="currentTab==0"></plist-editor>
+    <plist-editor ng-show="currentTab==0" ng-hide="isLocked"></plist-editor>
     <!--<material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>-->
 </div>

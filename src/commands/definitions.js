@@ -58,7 +58,10 @@ app.addDefinitions(() => {
 
         get locked() { return this._locked; }
 
-        set locked(l) { this._locked = l; }
+        set locked(l) {
+            this._locked = l;
+            app.trigger('commandLockChanged', { locked: l });
+        }
 
         get sceneChanged() {
             return this._undoStack.length>0;

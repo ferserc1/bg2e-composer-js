@@ -59,3 +59,15 @@
 .bg2-plist-inspector {
     background-image: url(../icons/plist-settings.png);
 }
+
+.bg2-play {
+    background-image: url(../icons/play.png);
+}
+
+.bg2-pause {
+    background-image: url(../icons/pause.png);
+}
+
+.bg2-stop {
+    background-image: url(../icons/stop.png);
+}

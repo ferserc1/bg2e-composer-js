@@ -28,10 +28,22 @@ app.addSource(() => {
 
     angularApp.controller("ToolbarController", ['$scope',function($scope) {
         $scope.toolbarItems = app.ui.Toolbar.Get().items;
+        $scope.commandLock = false;
 
         $scope.action = function(item) {
             app.CommandHandler.Trigger(item.command, {});
         }
+
+        $scope.isVisible = function(item) {
+            return item.allowOnLocked || !$scope.commandLock;
+        }
+
+        app.on('commandLockChanged', "toolbar", (params) => {
+            setTimeout(() => {
+                $scope.commandLock = params.locked;
+                $scope.$apply();
+            },50);
+        });
     }]);
 
     angularApp.directive('toolbar', () => {
