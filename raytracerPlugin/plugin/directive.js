@@ -3,6 +3,31 @@ const exec = require('child_process').exec;
 const path = require('path');
 
 module.exports = function(app,angularApp,bg) {
+
+    function assertLighmapUVs() {
+        let drawables = getSteadyDrawables(app.render.Scene.Get().root);
+        drawables.forEach((drawable) => {
+            drawable.forEach((pl) => {
+                if (pl.texCoord1.length==0) {
+                    console.log(`Drawable ${ drawable.name }, PolyList ${ pl.name }: Generating uv map for lightmap`);
+                    pl.texCoord1 = bg.tools.UVMap.atlas(pl.vertex,pl.index,0.03);
+                    pl.build();
+                }
+            });
+        });
+    }
+
+    function getSteadyDrawables(sceneRoot) {
+        let findDrawables = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+        sceneRoot.accept(findDrawables);
+        let steadyDrawables = [];
+        findDrawables.result.forEach((node) => {
+            if (node.steady) {
+                steadyDrawables.push(node.drawable);
+            }
+        });
+        return steadyDrawables;
+    }
     
     angularApp.directive("raytracerPluginSettings", function() {
         return {
@@ -133,24 +158,12 @@ module.exports = function(app,angularApp,bg) {
             this._printFn = printFn;
         }
 
-        getSteadyDrawables(sceneRoot) {
-            let findDrawables = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
-            sceneRoot.accept(findDrawables);
-            let steadyDrawables = [];
-            findDrawables.result.forEach((node) => {
-                if (node.steady) {
-                    steadyDrawables.push(node.drawable);
-                }
-            });
-            return steadyDrawables;
-        }
-
         beginRender(qualityId) {
             return new Promise((resolve,reject) => {
                 let sceneRoot = app.render.Scene.Get().root;
 
                 // Find steady drawables in the scene
-                let steadyDrawables = this.getSteadyDrawables(sceneRoot);
+                let steadyDrawables = getSteadyDrawables(sceneRoot);
                 if (steadyDrawables.length==0) {
                     reject(new Error("No steady nodes with drawable components found in the scene"));
                 }
@@ -263,6 +276,7 @@ module.exports = function(app,angularApp,bg) {
         return new Promise((resolve,reject) => {
             let fileCommandHandler = app.CommandHandler.Get('FileCommandHandler');
             let promise = null;
+            assertLighmapUVs();
             fileCommandHandler.saveScene()
                 .then((status) => {
                     if (!status) {  // Canceled by user
