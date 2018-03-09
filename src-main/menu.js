@@ -127,6 +127,12 @@ module.exports = {
 											focusedWindow.webContents.send('triggerMenu', { msg:'toggleOrbitCameraController3DGizmo' })
 										}
 									},
+									{
+										label: "Collider",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleCollider3DGizmo' })
+										}
+									},
 									{ type: 'separator' },
 									{
 										label: "Show All",

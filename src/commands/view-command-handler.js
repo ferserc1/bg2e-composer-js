@@ -23,6 +23,7 @@ app.addSource(() => {
                 'toggleCamera3DGizmo',
                 'toggleLight3DGizmo',
                 'toggleOrbitCameraController3DGizmo',
+                'toggleCollider3DGizmo',
                 'showAll3DGizmos',
                 'hideAll3DGizmos',
                 'showSceneEditor',
@@ -79,6 +80,9 @@ app.addSource(() => {
                 break;
             case 'toggleOrbitCameraController3DGizmo':
                 this.toggleOrbitCameraController3DGizmo();
+                break;
+            case 'toggleCollider3DGizmo':
+                this.toggleCollider3DGizmo();
                 break;
             case 'showAll3DGizmos':
                 this.showAll3DGizmos();
@@ -145,11 +149,16 @@ app.addSource(() => {
             sel().toggle3DIcon("bg.scene.OrbitCameraController");
         }
 
+        toggleCollider3DGizmo() {
+            sel().toggle3DIcon("bg.scene.Collider");
+        }
+
         showAll3DGizmos() {
             sel().show3DIcon([
                 "bg.scene.Camera",
                 "bg.scene.Light",
-                "bg.manipulation.OrbitCameraController"
+                "bg.manipulation.OrbitCameraController",
+                "bg.scene.Collider"
             ]);
         }
 
@@ -157,7 +166,8 @@ app.addSource(() => {
             sel().hide3DIcon([
                 "bg.scene.Camera",
                 "bg.scene.Light",
-                "bg.manipulation.OrbitCameraController"
+                "bg.manipulation.OrbitCameraController",
+                "bg.scene.Collider"
             ]);
         }
 
