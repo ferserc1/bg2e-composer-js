@@ -6,15 +6,22 @@ module.exports = function(app,angularApp,bg) {
 
     function assertLighmapUVs() {
         let drawables = getSteadyDrawables(app.render.Scene.Get().root);
+        let errors = 0;
         drawables.forEach((drawable) => {
             drawable.forEach((pl) => {
                 if (pl.texCoord1.length==0) {
-                    console.log(`Drawable ${ drawable.name }, PolyList ${ pl.name }: Generating uv map for lightmap`);
-                    pl.texCoord1 = bg.tools.UVMap.atlas(pl.vertex,pl.index,0.03);
-                    pl.build();
+                    console.error(`Drawable ${ drawable.name }, PolyList ${ pl.name }: No lightmap defined`);
+                    errors++;
                 }
             });
         });
+        if (errors) {
+            let errorMsg = "Could not generate lightmap. Missing secondary UV map channel on some elements.";
+            console.error(errorMsg);
+            alert(errorMsg);
+            return false;
+        }
+        return true;
     }
 
     function getSteadyDrawables(sceneRoot) {
@@ -105,7 +112,7 @@ module.exports = function(app,angularApp,bg) {
                         let objName = drw.name;
                         let imgName = path.join(projectDir, drw.name + "_lm.jpg");
                         imgName = imgName.replace(/\//ig,path.sep);
-                        let command = `${ cmd } ${ objName } --scene ${ scenePath } --out ${ imgName } --width ${ quality.width } --height ${ quality.height } --samples ${ quality.samples } --blur ${ quality.blur }`;
+                        let command = `${ cmd } ${ objName } --scene "${ scenePath }" --out "${ imgName }" --width ${ quality.width } --height ${ quality.height } --samples ${ quality.samples } --blur ${ quality.blur }`;
                         printFn("Render lightmap for object " + drw.name);
                         printFn("Executing command:");
                         printFn(command);
@@ -276,18 +283,22 @@ module.exports = function(app,angularApp,bg) {
         return new Promise((resolve,reject) => {
             let fileCommandHandler = app.CommandHandler.Get('FileCommandHandler');
             let promise = null;
-            assertLighmapUVs();
-            fileCommandHandler.saveScene()
-                .then((status) => {
-                    if (!status) {  // Canceled by user
-                        throw new Error("The scene must be saved before generate lightmaps.");
-                    }
-                    return showRenderLightmapDialog(fileCommandHandler.currentScenePath);
-                })
-                .then(() => resolve())
-                .catch((err) => {
-                    alert(err.message);
-                });
+            if (assertLighmapUVs()) {
+                fileCommandHandler.saveScene()
+                    .then((status) => {
+                        if (!status) {  // Canceled by user
+                            throw new Error("The scene must be saved before generate lightmaps.");
+                        }
+                        return showRenderLightmapDialog(fileCommandHandler.currentScenePath);
+                    })
+                    .then(() => resolve())
+                    .catch((err) => {
+                        alert(err.message);
+                    });
+            }
+            else {
+                reject(new Error("Missing uv maps for lightmap"));
+            }
         })
      }
 
