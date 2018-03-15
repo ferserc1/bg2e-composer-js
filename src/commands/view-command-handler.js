@@ -27,7 +27,8 @@ app.addSource(() => {
                 'showAll3DGizmos',
                 'hideAll3DGizmos',
                 'showSceneEditor',
-                'showModelEditor'
+                'showModelEditor',
+                'showLibraryEditor'
             ]
         }
 
@@ -95,6 +96,9 @@ app.addSource(() => {
                 break;
             case 'showModelEditor':
                 this.showModelEditor();
+                break;
+            case 'showLibraryEditor':
+                this.showLibraryEditor();
                 break;
             }
         }
@@ -172,11 +176,15 @@ app.addSource(() => {
         }
 
         showSceneEditor() {
-            window.location.hash = '#!/sceneEditor';
+            app.switchWorkspace('/sceneEditor');
         }
 
         showModelEditor() {
-            window.location.hash = '#!/modelEditor';
+            app.switchWorkspace('/modelEditor');
+        }
+
+        showLibraryEditor() {
+            app.switchWorkspace('/libraryEditor');
         }
     }
 

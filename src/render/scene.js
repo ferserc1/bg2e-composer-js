@@ -62,6 +62,51 @@ app.addDefinitions(() => {
         return true;
     }
 
+    app.render.SceneMode = {
+        SCENE:0,
+        LIBRARY:1
+    };
+
+    /*
+    function getSceneLightState(scene) {
+        let findVisitor = new bg.scene.FindComponentVisitor("bg.scene.Light");
+        scene.accept(findVisitor);
+        let lightState = [];
+        findVisitor.forEach((lightNode) => {
+            lightState.push({
+                light: lightNode.light.light,
+                enabled: lightNode.light.light.enabled
+            });
+        });
+        return lightState;
+    }
+
+    function disableLights(scene) {
+        let findVisitor = new bg.scene.FindComponentVisitor("bg.scene.Light");
+        scene.accept(findVisitor);
+        findVisitor.forEach((lightNode) => {
+            lightNode.light.light.enabled = false;
+        });
+        return lightState;
+    }
+
+    function restoreLights(scene,stateData) {
+        
+    }
+
+    function enableSceneLights() {
+        if (this._libraryLights) {
+            // TODO: disable library lights
+        }
+    }
+
+    function enableLibraryLights() {
+        this._sceneLightState = getSceneLightState.apply(this,[this._sceneRoot]);
+        disableLights.apply(this,[this._sceneRoot]);
+        restoreLights.apply(this,[this._libraryRoot,this._libraryLightState]);
+    }
+    */
+
     class Scene {
         static Get() {
             return g_scene;
@@ -70,9 +115,17 @@ app.addDefinitions(() => {
         constructor(gl) {
             g_scene = this;
             this.gl = gl;
-            this._root = null;
+
+            this._root = null;          // Store the current scene root, and will be one of the following nodes:
+            this._sceneRoot = null;     // Store the scene mode root
+            this._libraryRoot = null;   // Store the library mode root
+
             this._grid = null;
-            this._camera = null;
+
+            this._camera = null;        // Store the current camera, and will be one of the following nodes
+            this._sceneCamera = null;   // Store the scene mode camera
+            this._libraryCamera = null; // Store the library mode camera
+
             this._selectionManager = new app.render.SelectionManager(this);
             this._selectionController = new app.render.SelectionController(this,this._selectionManager);
 
@@ -85,6 +138,25 @@ app.addDefinitions(() => {
 
         get ready() {
             return this.root!=null && this.camera!=null;
+        }
+
+        setMode(mode) {
+            switch (mode) {
+            case app.render.SceneMode.SCENE:
+                this._root = this._sceneRoot;
+                this._camera = this._sceneCamera;
+//                this._enableSceneLights.apply(this);
+                break;
+            case app.render.SceneMode.LIBRARY:
+                this._root = this._libraryRoot;
+                this._camera = this._libraryCamera;
+  //              this._enableLibraryLights.apply(this);
+                break;
+            default:
+                console.error("Invalid scene mode");
+            }
+            app.ComposerWindowController.Get().postReshape();
+            app.ComposerWindowController.Get().postRedisplay();
         }
         
         get root() {
@@ -101,16 +173,16 @@ app.addDefinitions(() => {
 
         set camera(c) {
             if (this.belongsToScene(c.node)) {
-                let currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
+                let currentController = this._sceneCamera && this._camera.component("bg.manipulation.OrbitCameraController");
                 if (currentController) {
                     currentController.enabled = false;
                 }
-                this._camera = c;
+                this._sceneCamera = c;
                 currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
                 if (currentController) {
                     bg.manipulation.OrbitCameraController.SetUniqueEnabled(currentController,this.root);
                 }
-                bg.scene.Camera.SetAsMainCamera(this._camera,this.root);
+                bg.scene.Camera.SetAsMainCamera(this._sceneCamera,this._sceneRoot);
             }
             else {
                 throw new Error("Could not set camera as main: this camera does not belongs to the scene.");
@@ -118,7 +190,7 @@ app.addDefinitions(() => {
         }
 
         get isValid() {
-            return this._root && this._camera;
+            return this.root && this.camera;
         }
 
         get selectionManager() {
@@ -181,25 +253,25 @@ app.addDefinitions(() => {
 
         createDefaultScene() {
             // TODO: Import scene file
-            this._root = new bg.scene.Node(this.gl,"SceneRoot");
+            this._sceneRoot = new bg.scene.Node(this.gl,"SceneRoot");
 
             this._grid = new app.render.Grid();
-            this._root.addComponent(this._grid);
+            this._sceneRoot.addComponent(this._grid);
 
             this._cameraNode = new bg.scene.Node(this.gl, "Main Camera");
-            this._root.addChild(this._cameraNode);
+            this._sceneRoot.addChild(this._cameraNode);
     
-            this._camera = new bg.scene.Camera();
-            this._camera.isMain = true;
-            this._cameraNode.addComponent(this._camera);
+            this._sceneCamera = new bg.scene.Camera();
+            this._sceneCamera.isMain = true;
+            this._cameraNode.addComponent(this._sceneCamera);
             this._cameraNode.addComponent(new bg.scene.Transform());
             let ctrl = this.createCameraController();
             this._cameraNode.addComponent(ctrl);
-            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);
+            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._sceneRoot);
 
 
             let lightNode = new bg.scene.Node(this.gl, "Main Light");
-            this._root.addChild(lightNode);
+            this._sceneRoot.addChild(lightNode);
     
             lightNode.addComponent(new bg.scene.Light(new bg.base.Light(this.gl)));
             lightNode.addComponent(new bg.scene.Transform(
@@ -211,12 +283,47 @@ app.addDefinitions(() => {
             ));
 
             let floorNode = new bg.scene.Node(this.gl, "Floor");
-            this._root.addChild(floorNode);
+            this._sceneRoot.addChild(floorNode);
             floorNode.addComponent(bg.scene.PrimitiveFactory.Plane(this.gl,10));
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
 
-            this.selectionManager.initScene(this.root);
+            this.selectionManager.initScene(this._sceneRoot);
             this.notifySceneChanged();
+ //           this._sceneLightState = getSceneLightState.apply(this,[this._sceneRoot]);
+        }
+
+        createLibraryScene() {
+            this._libraryRoot = new bg.scene.Node(this.gl,"LibraryRoot");
+
+            this._libraryCameraNode = new bg.scene.Node(this.gl, "Library Camera");
+            this._libraryRoot.addChild(this._libraryCameraNode);
+
+            this._libraryCamera = new bg.scene.Camera();
+            this._sceneCamera.isMain = true;
+            this._libraryCameraNode.addComponent(this._libraryCamera);
+            this._libraryCameraNode.addComponent(new bg.scene.Transform());
+            let ctrl = this.createCameraController();
+            this._libraryCameraNode.addComponent(ctrl);
+            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._libraryRoot);
+
+            /*
+            let lightNode = new bg.scene.Node(this.gl,"Main light");
+            this._libraryRoot.addChild(lightNode);
+            lightNode.addComponent(new bg.scene.Light(new bg.base.Light(this.gl)));
+            lightNode.addComponent(new bg.scene.Transform(
+                bg.Matrix4.Identity()
+                    .translate(0,0,5)
+                    .rotate(bg.Math.degreesToRadians(15),0,1,0)
+                    .rotate(bg.Math.degreesToRadians(55),-1,0,0)
+                    .translate(0,1.4,3)
+            ));
+            */
+
+            let sphereNode = new bg.scene.Node(this.gl, "Sphere");
+            this._libraryRoot.addChild(sphereNode);
+            sphereNode.addComponent(bg.scene.PrimitiveFactory.Sphere(this.gl,5));
+            sphereNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
+  //          this._libraryLightState = getSceneLightState.apply(this,[this._libraryRoot]);
         }
 
         confirmClearScene(nextCommand) {
@@ -226,13 +333,13 @@ app.addDefinitions(() => {
         newScene() {
             return new Promise((resolve,reject) => {
                 if (saveConfirm('newScene')) {
-                    if (!sceneWillClose.apply(this,[this.root])) {
+                    if (!sceneWillClose.apply(this,[this._sceneRoot])) {
                         reject(null);
                         return;
                     }
     
                     app.CommandManager.Get().clear();                
-                    bg.scene.Node.CleanupNode(this._root);
+                    bg.scene.Node.CleanupNode(this._sceneRoot);
                 
                     this.createDefaultScene();
                     resolve();
@@ -245,43 +352,43 @@ app.addDefinitions(() => {
 
         openScene(scenePath) {
             return new Promise((resolve,reject) => {
-                if (!sceneWillClose.apply(this,[this.root])) {
+                if (!sceneWillClose.apply(this,[this._sceneRoot])) {
                     reject(null);
                     return;
                 }
                 
                 bg.base.Loader.Load(this.gl,scenePath)
                     .then((result) => {
-                        bg.scene.Node.CleanupNode(this._root);
+                        bg.scene.Node.CleanupNode(this._sceneRoot);
                         if (result.sceneRoot.children.length==1 &&
                             Object.keys(result.sceneRoot._components).length==0
                         ) {
                             result.sceneRoot = result.sceneRoot.children[0];
                         }
 
-                        sceneWillOpen.apply(this,[this.root,result.sceneRoot]);
+                        sceneWillOpen.apply(this,[this._sceneRoot,result.sceneRoot]);
 
                         app.CommandManager.Get().clear();
     
-                        this._root = result.sceneRoot;
+                        this._sceneRoot = result.sceneRoot;
                         let cameraNode = result.cameraNode;
-                        this._camera = cameraNode.camera;
+                        this._sceneCamera = cameraNode.camera;
 
                         this._grid = new app.render.Grid();
-                        this._root.addComponent(this._grid);
+                        this._sceneRoot.addComponent(this._grid);
     
                         cameraNode.addComponent(new bg.scene.Transform());
                         let ctrl = cameraNode.component("bg.manipulation.OrbitCameraController");
                         if (ctrl) {
-                            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this.root);                            
+                            bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._sceneRoot);                            
                         }
     
-                        this.selectionManager.initScene(this.root);
+                        this.selectionManager.initScene(this._sceneRoot);
                         this.notifySceneChanged();
+ //                       this._sceneLightState = getSceneLightState.apply(this,[this._sceneRoot]);
                         
                         // Post reshape (to update the camera viewport) and redisplay
-                        app.ComposerWindowController.Get().postReshape();
-                        app.ComposerWindowController.Get().postRedisplay();
+                        app.switchWorkspace(app.render.SceneMode.SCENE);
 
                         resolve();
                     })
@@ -295,6 +402,8 @@ app.addDefinitions(() => {
             registerPlugins.apply(this);
 
             this.createDefaultScene();
+            this.createLibraryScene();
+            this.setMode(app.render.SceneMode.SCENE);
             this.selectionController.init();
         }
     }

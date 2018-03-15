@@ -60,6 +60,10 @@
     background-image: url(../icons/plist-settings.png);
 }
 
+.bg2-library-inspector {
+    background-image: url(../icons/library_editor.png);   
+}
+
 .bg2-play {
     background-image: url(../icons/play.png);
 }

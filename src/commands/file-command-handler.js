@@ -16,7 +16,11 @@ app.addSource(() => {
                 "exportSelected",
                 "saveScene",
                 "saveSceneAs",
-                "showPluginSettings"
+                "showPluginSettings",
+                "newLibrary",
+                "openLibrary",
+                "saveLibrary",
+                "saveLibraryAs"
             ]
         }
 
@@ -42,6 +46,18 @@ app.addSource(() => {
                 break;
             case 'showPluginSettings':
                 this.showPluginSettings(params);
+                break;
+            case "newLibrary":
+                this.newLibrary(params);
+                break;
+            case "openLibrary":
+                this.openLibrary(params);
+                break;
+            case "saveLibrary":
+                this.saveLibrary(params);
+                break;
+            case "saveLibraryAs":
+                this.saveLibraryAs(params);
                 break;
             }
         }
@@ -236,6 +252,22 @@ app.addSource(() => {
             })
                 .then(() => {})
                 .catch((err) => { console.log(err); });
+        }
+
+        newLibrary(params) {
+            alert("Not implemented");
+        }
+
+        openLibrary(params) {
+            alert("Not implemented");
+        }
+
+        saveLibrary(params) {
+            alert("Not implemented");
+        }
+
+        saveLibraryAs(params) {
+            alert("Not implemented");
         }
     }
 

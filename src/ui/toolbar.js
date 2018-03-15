@@ -26,16 +26,17 @@ app.addDefinitions(() => {
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
-    angularApp.controller("ToolbarController", ['$scope',function($scope) {
+    angularApp.controller("ToolbarController", ['$scope','$routeParams','$route',function($scope,$routeParams,$route) {
         $scope.toolbarItems = app.ui.Toolbar.Get().items;
         $scope.commandLock = false;
+        $scope.currentWorkspace = $route.current.$$route.originalPath;
 
         $scope.action = function(item) {
             app.CommandHandler.Trigger(item.command, {});
         }
 
         $scope.isVisible = function(item) {
-            return item.allowOnLocked || !$scope.commandLock;
+            return (item.allowOnLocked || !$scope.commandLock) && (item.workspace===undefined || item.workspace.indexOf($scope.currentWorkspace)!=-1);
         }
 
         app.on('commandLockChanged', "toolbar", (params) => {

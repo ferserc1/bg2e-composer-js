@@ -19,6 +19,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     let g_appDefines = [];
     let g_appSource = [];
     let g_workspaces = [];
+    let g_workspaceData = [];
     let g_plugins = [];
     let g_evtObservers = {};
     let g_copyright = [];
@@ -61,7 +62,29 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
                 paragraphs:paragraphs
             }
         )
-    }
+    };
+
+    app.switchWorkspace = function(workspace) {
+        let result = null;
+        g_workspaceData.some((ws) => {
+            if (typeof(workspace)=='string') {
+                if (ws.endpoint==workspace) {
+                    result = ws;
+                }
+            }
+            else if (typeof(workspace)=='number') {
+                if (ws.sceneMode==workspace) {
+                    result = ws;
+                }
+            }
+            return result!=null;
+        });
+
+        if (result) {
+            window.location.hash = '#!' +  result.endpoint;
+            app.render.Scene.Get().setMode(result.sceneMode);
+        }
+    };
 
     app.addPluginSettings = function(directiveName) {
         g_pluginSettings.push(directiveName);
@@ -259,6 +282,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
             let defaultWorkspace = null;
             g_workspaces.forEach((cb) => {
                 let workspaceData = cb();
+                g_workspaceData.push(workspaceData);
                 $routeProvider.when(workspaceData.endpoint, {
                     templateUrl: workspaceData.templateUrl,
                     controller: workspaceData.controller

@@ -51,6 +51,31 @@ module.exports = {
 							},
 							{ type: 'separator' },
 							{
+								label: 'New Library',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'newLibrary' });
+								}
+							},
+							{
+								label: 'Open Library',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'openLibrary' });
+								}
+							},
+							{
+								label: 'Save Library',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'saveLibrary' });
+								}
+							},
+							{
+								label: 'Save Library As',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'saveLibraryAs' });
+								}
+							},
+							{ type: 'separator' },
+							{
 								label: 'Plugin settings',
 								click: function(item,focusedWindow) {
 									focusedWindow.webContents.send('triggerMenu', { msg:'showPluginSettings' })
@@ -267,7 +292,8 @@ module.exports = {
 							{role: 'close'},
 							{type: 'separator'},
 							{label: 'Scene editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showSceneEditor' }) }},
-							{label: 'Model editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showModelEditor' }) }}
+							{label: 'Model editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showModelEditor' }) }},
+							{label: 'Library editor', click: (item,fw) => { fw.webContents.send('triggerMenu', { msg:'showLibraryEditor' }) }}
 						]
 					},
 					{

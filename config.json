@@ -6,55 +6,107 @@
             "type":"button",
             "icon":"open-file",
             "name":"Open",
-            "command":"openScene"
+            "command":"openScene",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
-            "type":"separator"
+            "type":"button",
+            "icon":"open-file",
+            "name":"Open library",
+            "command":"openLibrary",
+            "workspace":[
+                "/libraryEditor"
+            ]
+        },
+        {
+            "type":"separator",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"undo",
             "name":"Undo",
-            "command":"undo"
+            "command":"undo",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"redo",
             "name":"Redo",
-            "command":"redo"
+            "command":"redo",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
         },
         {
-            "type":"separator"
+            "type":"separator",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"gizmo-select",
             "name":"Select",
-            "command":"gizmoSelect"
+            "command":"gizmoSelect",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"gizmo-translate",
             "name":"Translate",
-            "command":"gizmoTranslate"
+            "command":"gizmoTranslate",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"gizmo-rotate",
             "name":"Rotate",
-            "command":"gizmoRotate"
+            "command":"gizmoRotate",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"gizmo-scale",
             "name":"Scale",
-            "command":"gizmoScale"
+            "command":"gizmoScale",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"gizmo-transform",
             "name":"Transform",
-            "command":"gizmoTransform"
+            "command":"gizmoTransform",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"separator"
@@ -63,37 +115,74 @@
             "type":"button",
             "icon":"scene-inspector",
             "name":"Scene inspector",
-            "command":"showSceneEditor"
+            "command":"showSceneEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"plist-inspector",
             "name":"Model inspector",
-            "command":"showModelEditor"
+            "command":"showModelEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
         },
         {
-            "type":"separator"
+            "type":"button",
+            "icon":"library-inspector",
+            "name":"Library inspector",
+            "command":"showLibraryEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
+        },
+        {
+            "type":"separator",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"play",
             "name":"Play",
             "command":"play",
-            "allowOnLocked":true
+            "allowOnLocked":true,
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"pause",
             "name":"Pause",
             "command":"pause",
-            "allowOnLocked":true
+            "allowOnLocked":true,
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         },
         {
             "type":"button",
             "icon":"stop",
             "name":"Stop",
             "command":"stop",
-            "allowOnLocked":true
+            "allowOnLocked":true,
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor"
+            ]
         }
     ]
 }
