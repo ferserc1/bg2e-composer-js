@@ -1,0 +1,12 @@
+
+library-inspector {
+    position: fixed;
+    left: 0px;
+    bottom: 29px;
+    top: 36px;
+    width: 300px;
+}
+
+library-inspector .bg2-header h1 {
+    margin-left: 34px;
+}
