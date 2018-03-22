@@ -64,7 +64,9 @@ app.addDefinitions(() => {
 
     app.render.SceneMode = {
         SCENE:0,
-        LIBRARY:1
+        LIBRARY:1,
+
+        UNDEFINED: null
     };
 
     /*
@@ -145,11 +147,13 @@ app.addDefinitions(() => {
             case app.render.SceneMode.SCENE:
                 this._root = this._sceneRoot;
                 this._camera = this._sceneCamera;
+                this._cameraMode = mode;
 //                this._enableSceneLights.apply(this);
                 break;
             case app.render.SceneMode.LIBRARY:
                 this._root = this._libraryRoot;
                 this._camera = this._libraryCamera;
+                this._cameraMode = mode;
   //              this._enableLibraryLights.apply(this);
                 break;
             default:
@@ -157,6 +161,10 @@ app.addDefinitions(() => {
             }
             app.ComposerWindowController.Get().postReshape();
             app.ComposerWindowController.Get().postRedisplay();
+        }
+
+        get cameraMode() {
+            return this._cameraMode;
         }
         
         get root() {
@@ -173,16 +181,17 @@ app.addDefinitions(() => {
 
         set camera(c) {
             if (this.belongsToScene(c.node)) {
-                let currentController = this._sceneCamera && this._camera.component("bg.manipulation.OrbitCameraController");
+                let currentController = this._sceneCamera && this._sceneCamera.component("bg.manipulation.OrbitCameraController");
                 if (currentController) {
                     currentController.enabled = false;
                 }
                 this._sceneCamera = c;
-                currentController = this._camera && this._camera.component("bg.manipulation.OrbitCameraController");
+                currentController = this._sceneCamera && this._sceneCamera.component("bg.manipulation.OrbitCameraController");
                 if (currentController) {
                     bg.manipulation.OrbitCameraController.SetUniqueEnabled(currentController,this.root);
                 }
                 bg.scene.Camera.SetAsMainCamera(this._sceneCamera,this._sceneRoot);
+                this.setMode(this.cameraMode);
             }
             else {
                 throw new Error("Could not set camera as main: this camera does not belongs to the scene.");

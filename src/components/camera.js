@@ -145,7 +145,9 @@ app.addSource(() => {
 
                     $scope.isMainCamera = $scope.component.isMainCamera;
 
-                    setTimeout(() => updateThumb(),10);
+                    setTimeout(() => {
+                        updateThumb();
+                    },10);
 
                     return true;
                 }
@@ -204,6 +206,13 @@ app.addSource(() => {
                         app.ComposerWindowController.Get().updateView();
                     });
                 });
+
+                app.render.Scene.Get().selectionManager.selectionChanged("cameraUI", () => {
+                    setTimeout(() => {
+                        updateValues();
+                        $scope.$apply();
+                    },100);
+                })
 
                 updateValues();
             }]
