@@ -1,6 +1,6 @@
 
-app.addSource(() => {
-    let g_currentLibrary = null;
+app.addDefinitions(() => {
+    app.library = app.library || {};
 
     // Generate the "parent" attribute in the node
     // children, if the node is a group
@@ -26,35 +26,35 @@ app.addSource(() => {
         }
     }
 
-    class Library {
-        static Current() {
-            if (!g_currentLibrary) {
-                g_currentLibrary = new Library();
-            }
-            return g_currentLibrary;
-        }
+    function initializeLibrary() {
+        this._data = {
+            id:"$root$",
+            name:"$root$",
+            type:"group",
+            children:[
+                {
+                    type:"group",
+                    id:"untitled_node",
+                    name:"Untitled",
+                    icon:"",
+                    children:[]
+                }
+            ]
+        };
+        this._currentNode = this._data;
+        buildParents(this._data);
+    }
 
+    class Library {
         constructor() {
             this._filePath = "";
-            this._data = {
-                id:"$root$",
-                name:"$root$",
-                type:"group",
-                children:[
-                    {
-                        type:"group",
-                        id:"untitled_node",
-                        name:"Untitled",
-                        icon:"",
-                        children:[]
-                    }
-                ]
-            };
-            this._currentNode = this._data;
-            buildParents(this._data);
+            initializeLibrary.apply(this);
         }
 
+        get filePath() { return this._filePath; }
+
         get root() { return this._data; }
+
         get currentNode() { return this._currentNode; }
         set currentNode(node) {
             if (this.contains(node)) {
@@ -80,7 +80,30 @@ app.addSource(() => {
             }
             return result;
         }
+
+        clear() {
+            initializeLibrary.apply(this);
+        }
+
+        deserialize(libraryData) {
+            if (typeof(libraryData)=="string") {
+                libraryData = JSON.parse(libraryData);
+            }
+            if (libraryData.type!="vwgl::library" || Array.isArray(libraryData.root)) {
+                throw new Error("Malformed library");
+            }
+            this._data.children = libraryData.root;
+            this._currentNode = this._data;
+            buildParents(this._data);
+        }
+
+        serialize(tabulate = false) {
+            clearParents(this._data);
+            let result = tabulate ? JSON.stringify(this._data,"","\t") : JSON.stringify(this._data);
+            buildParents(this._data);
+            return result;
+        }
     }
 
-    app.Library = Library;
+    app.library.Library = Library;
 });
