@@ -75,3 +75,11 @@
 .bg2-stop {
     background-image: url(../icons/stop.png);
 }
+
+.bg2-navigator-separator {
+    background-image: url(../icons/navigator-separator.png);
+}
+
+.bg2-navigator-root {
+    background-image: url(../icons/new_document.png);
+}

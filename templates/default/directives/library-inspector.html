@@ -2,15 +2,17 @@
     <i class="bg2-icon bg2-library-inspector"></i>
     <h1>Library inspector</h1>
 </div>
-<ul>
-    <li ng-repeat="item in currentNode.children">
-        <h1>{{ item.name }}</h1>
-        <ul class="bg2-plist-items">
-            <!--
-            <li ng-repeat="plist in drawable.plist" ng-class="{ 'bg2-selected' : plist.selected }">
-                <h2 ng-click="toggleItem(plist)">{{ plist.name }}</h2>
-            </li>
-        -->
-        </ul>
+<div class="bg2-navigator">
+    <ul scroll-glue-right="true">
+        <li ng-repeat="item in navigator">
+            <a ng-hide="$first" ng-click="enterNode(item)">{{ item.name }}</a>
+            <a ng-show="$first" ng-click="enterNode(item)"><i class="bg2-icon bg2-navigator-root"></i></a>
+            <i class="bg2-icon bg2-navigator-separator"></i>
+        </li>
+    </ul>
+</div>
+<ul class="bg2-library-container">
+    <li ng-repeat="item in currentNode.children" ng-class="{ 'bg2-selected' : plist.selected }">
+        <h1><a ng-dblclick="enterNode(item)" ng-click="selectNode(item)">{{ item.name }}</a></h1>
     </li>
 </ul>

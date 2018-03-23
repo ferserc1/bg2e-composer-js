@@ -1,0 +1,39 @@
+.bg2-navigator {
+
+}
+
+.bg2-navigator ul {
+    padding-left: 0px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    height: 38px;
+}
+
+.bg2-navigator li {
+    flex: 0 0 auto;
+    list-style: none;
+}
+
+.bg2-navigator a {
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.bg2-navigator a:hover {
+    background-color: #383838;
+    box-shadow: 0px 0px 3px 0px white;
+    border-radius: 2px;
+}
+
+.bg2-navigator .bg2-icon {
+    height: 12px;
+    width: 12px;
+    vertical-align: middle;
+}
+
+.bg2-navigator .bg2-icon.bg2-navigator-root {
+    height: 18px;
+    width: 18px;
+    vertical-align: middle;
+}

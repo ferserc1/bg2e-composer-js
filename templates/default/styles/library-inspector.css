@@ -10,3 +10,24 @@ library-inspector {
 library-inspector .bg2-header h1 {
     margin-left: 34px;
 }
+
+library-inspector .bg2-navigator {
+    margin-left: 8px;
+}
+
+ul.bg2-library-container {
+    margin-left: 10px;
+    padding: 5px;
+    background-color: rgb(66, 66, 66);
+    border: 1px solid white;
+    width: 90%;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 0px;
+    top: 83px;
+    overflow: auto;
+}
+
+ul.bg2-library-container li {
+    list-style: none;
+}
