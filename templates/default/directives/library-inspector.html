@@ -1,6 +1,9 @@
 <div class="bg2-header">
     <i class="bg2-icon bg2-library-inspector"></i>
-    <h1>Library inspector</h1>
+    <h1 scroll-glue-right="true">
+        <span>{{ libraryName }}</span>
+        <button>Load</button>
+    </h1>
 </div>
 <div class="bg2-navigator">
     <ul scroll-glue-right="true">
@@ -12,7 +15,17 @@
     </ul>
 </div>
 <ul class="bg2-library-container">
-    <li ng-repeat="item in currentNode.children" ng-class="{ 'bg2-selected' : plist.selected }">
-        <h1><a ng-dblclick="enterNode(item)" ng-click="selectNode(item)">{{ item.name }}</a></h1>
+    <li ng-repeat="item in currentNode.children" ng-class="{ 'bg2-selected' : item.selected }">
+        <h2 ng-dblclick="enterNode(item)" ng-click="selectNode(item,$event)">
+            <i class="bg2-icon {{ getIconClass(item) }}"></i>
+            <span>{{ item.name }}</span>
+        </h2>
     </li>
 </ul>
+<div class="bg2-actions">
+    <button title="Add node"><i class="bg2-icon bg2-add"></i></button>
+    <button title="Remove node"><i class="bg2-icon bg2-remove"></i></button>
+    <button title="Copy"><i class="bg2-icon bg2-copy"></i></button>
+    <button title="Cut"><i class="bg2-icon bg2-cut"></i></button>
+    <button title="Paste"><i class="bg2-icon bg2-paste"></i></button>
+</div>

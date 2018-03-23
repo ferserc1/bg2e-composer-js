@@ -205,6 +205,14 @@ button {
     color: white;
 }
 
+button:hover {
+    background-color: #222222;
+}
+
+button:active {
+    background-color: #888888;
+}
+
 h1 {
     font-size: 16px;
     margin-top: 10px;

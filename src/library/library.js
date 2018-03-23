@@ -1224,25 +1224,25 @@ app.addDefinitions(() => {
                     icon:"",
                     children:[
                         {
-                            type: "gropu",
+                            type: "group",
                             id: "sg1",
                             name: "subgroup 1",
                             metadata: {},
                             children: [
                                 {
-                                    type: "gropu",
+                                    type: "group",
                                     id: "sg2",
                                     name: "subgroup 2",
                                     metadata: {},
                                     children: [
                                         {
-                                            type: "gropu",
+                                            type: "group",
                                             id: "sg3",
                                             name: "subgroup 3",
                                             metadata: {},
                                             children: [
                                                 {
-                                                    type: "gropu",
+                                                    type: "group",
                                                     id: "sg4",
                                                     name: "subgroup 4",
                                                     metadata: {},
@@ -1269,6 +1269,7 @@ app.addDefinitions(() => {
         constructor() {
             this._filePath = "";
             initializeLibrary.apply(this);
+            this._selection = [];
         }
 
         get filePath() { return this._filePath; }
@@ -1297,7 +1298,34 @@ app.addDefinitions(() => {
             return result;
         }
 
+        selectNode(node) {
+            if (this._selection.indexOf(node)==-1) {
+                this._selection.push(node);
+            }
+            node.selected = true;
+        }
+
+        deselectNode(node) {
+            let index = this._selection.indexOf(node);
+            if (index!=-1) {
+                this._selection.splice(index,1);
+            }
+            node.selected = false;
+        }
+
+        toggleSelect(node) {
+            node.selected ? this.deselectNode(node) : this.selectNode(node);
+        }
+
+        deselectAll() {
+            this._selection.forEach((node) => {
+                node.selected = false;
+            });
+            this._selection = [];
+        }
+
         // TODO: manipulation functions: add, delete and sort nodes
+        // TODO: Remember to clear the selection when the library structure change
 
         contains(node,parent=null) {
             let result = false;

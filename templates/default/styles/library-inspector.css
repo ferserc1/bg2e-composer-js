@@ -15,6 +15,21 @@ library-inspector .bg2-navigator {
     margin-left: 8px;
 }
 
+library-inspector .bg2-header h1 {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+library-inspector .bg2-header span,button {
+    flex: 0 0 auto;
+    margin-left: 3px;
+}
+
+library-inspector .bg2-header button:focus {
+    outline: none;
+}
+
 ul.bg2-library-container {
     margin-left: 10px;
     padding: 5px;
@@ -23,11 +38,59 @@ ul.bg2-library-container {
     width: 90%;
     border-radius: 4px;
     position: absolute;
-    bottom: 0px;
+    bottom: 20px;
     top: 83px;
     overflow: auto;
 }
 
 ul.bg2-library-container li {
     list-style: none;
+}
+
+ul.bg2-library-container li:hover {
+    background-color: #2d2d2d;
+}
+
+ul.bg2-library-container li.bg2-selected {
+    background-color: rgb(255, 166, 0);
+}
+
+ul.bg2-library-container li.bg2-selected:hover {
+    color: white;
+    background-color: rgb(215, 140, 0);
+}
+
+ul.bg2-library-container li h2 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+ul.bg2-library-container li h2 i {
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+}
+
+ul.bg2-library-container li h2 span {
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+library-inspector .bg2-actions {
+    position: fixed;
+    bottom: 31px;
+    left: 11px;
+}
+
+library-inspector .bg2-actions button i.bg2-icon {
+    width: 20px;
+    height: 20px;
+}
+
+library-inspector .bg2-actions button {
+    padding: 2px;
+}
+
+library-inspector .bg2-actions button:focus {
+    outline: none;
 }

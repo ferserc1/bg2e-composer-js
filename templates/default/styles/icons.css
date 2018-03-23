@@ -83,3 +83,35 @@
 .bg2-navigator-root {
     background-image: url(../icons/new_document.png);
 }
+
+.bg2-add {
+    background-image: url(../icons/add.png);
+}
+
+.bg2-remove {
+    background-image: url(../icons/remove.png);
+}
+
+.bg2-cut {
+    background-image: url(../icons/cut.png);
+}
+
+.bg2-copy {
+    background-image: url(../icons/copy.png);
+}
+
+.bg2-paste {
+    background-image: url(../icons/paste.png);
+}
+
+.bg2-library-item-group {
+    background-image: url(../icons/folder-open.png);
+}
+
+.bg2-library-item-material {
+    background-image: url(../icons/material.png);
+}
+
+.bg2-library-item-model {
+    background-image: url(../icons/object.png);
+}

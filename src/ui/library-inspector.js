@@ -5,6 +5,7 @@ app.addSource(() => {
         let libMgr = app.library.Manager.Get();
         function update(library) {
             setTimeout(() => {
+                $scope.libraryName = library.filePath || "(Library not saved)";
                 $scope.currentNode = library.currentNode;
                 $scope.navigator = library.navigator;
                 $scope.$apply();
@@ -18,13 +19,27 @@ app.addSource(() => {
         update(libMgr.current);
 
         $scope.enterNode = function(node) {
+            libMgr.current.deselectAll();
             libMgr.current.currentNode = node;
             libMgr.notifyLibraryChanged();
         };
 
-        $scope.selectNode = function(node) {
-            
+        $scope.selectNode = function(node,event) {
+            if (!event.shiftKey) {
+                libMgr.current.deselectAll();
+            }
+            libMgr.current.toggleSelect(node);
+            update(libMgr.current);
         };
+
+        $scope.addToSelection = function(node) {
+            libMgr.current.toggleSelect(node);
+            update(libMgr.current);
+        };
+
+        $scope.getIconClass = function(node) {
+            return "bg2-library-item-" + node.type;
+        }
     }]);
 
     angularApp.directive("libraryInspector", function() {
