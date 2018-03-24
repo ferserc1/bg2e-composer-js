@@ -41,9 +41,15 @@ app.addSource(() => {
             return "bg2-library-item-" + node.type;
         }
 
-        $scope.addNode = function() {
-            libMgr.current.addNode(app.library.NodeType.GROUP);
-            libMgr.notifyLibraryChanged();
+        $scope.addNode = function(event) {
+            app.ui.contextMenu.show(event.clientX,event.clientY,[
+                { label:"Group", type:app.library.NodeType.GROUP },
+                { label:"Material", type:app.library.NodeType.MATERIAL },
+                { label:"Model", type:app.library.NodeType.MODEL }
+            ],(sel) => {
+                libMgr.current.addNode(sel.type);
+                libMgr.notifyLibraryChanged();
+            });
         };
 
         $scope.removeNode = function() {

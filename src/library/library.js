@@ -1288,7 +1288,7 @@ app.addDefinitions(() => {
     app.library.NodeType = {
         GROUP: "group",
         MODEL: "model",
-        material: "material"
+        MATERIAL: "material"
     };
 
     class Library {
@@ -1306,7 +1306,7 @@ app.addDefinitions(() => {
         set currentNode(node) {
             assertCurrentNodeIntegrity.apply(this);
             assertCurrentNodeIntegrity.apply(this,[node]);
-            if (this.contains(node)) {
+            if (this.contains(node) && node.type=="group") {
                 this._currentNode = node;
             }
         }
