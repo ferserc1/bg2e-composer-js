@@ -42,18 +42,41 @@ app.addSource(() => {
         }
 
         $scope.addNode = function(event) {
-            app.ui.contextMenu.show(event.clientX,event.clientY,[
-                { label:"Group", type:app.library.NodeType.GROUP },
-                { label:"Material", type:app.library.NodeType.MATERIAL },
-                { label:"Model", type:app.library.NodeType.MODEL }
-            ],(sel) => {
-                libMgr.current.addNode(sel.type);
-                libMgr.notifyLibraryChanged();
-            });
+            app.ui.contextMenu.show(
+                event,[
+                    { label:"Group", type:app.library.NodeType.GROUP },
+                    { label:"Material", type:app.library.NodeType.MATERIAL },
+                    { label:"Model", type:app.library.NodeType.MODEL }
+                ],(sel) => {
+                    libMgr.current.addNode(sel.type);
+                    libMgr.notifyLibraryChanged();
+                });
         };
 
-        $scope.removeNode = function() {
-
+        $scope.removeNode = function(event) {
+            if (libMgr.current.selection.length>0) {
+                app.ui.contextMenu.show(
+                    event,[
+                        { label:"Remove selected nodes", remove:true },
+                        { label:"Cancel", remove:false }
+                    ],(sel) => {
+                        let errors = 0;
+                        if (sel.remove) {
+                            libMgr.current.selectionCopy.forEach((item) => {
+                                if (!libMgr.current.removeNode(item)) {
+                                    errors++;
+                                }
+                            });
+                        }
+                        if (errors>1 ) {
+                            alert("Some elements could not be deleted because there are groups and are not empty.");
+                        }
+                        if (errors==1) {
+                            alert("An element could not be deleted because it's a group and it is not empty.");
+                        }
+                    }
+                );
+            }
         };
 
         $scope.copySelection = function() {

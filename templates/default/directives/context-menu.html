@@ -1,7 +1,7 @@
 
 
 <div class="bg2-block-container" ng-show="visible" ng-click="hideMenu()">
-    <ul style="{{ getStylePosition() }}">
+    <ul ng-style="getStylePosition()">
         <li ng-repeat="option in options" ng-click="selectOption(option)">{{ option.label }}</li>
     </ul>
 

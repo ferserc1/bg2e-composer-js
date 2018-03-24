@@ -1326,6 +1326,16 @@ app.addDefinitions(() => {
             return result;
         }
 
+        get selection() { return this._selection; }
+
+        // Returns a copy of the selection array. Use this function if you want to iterate
+        // and, at the same time, modify the selection array
+        get selectionCopy() {
+            let result = [];
+            this.selection.forEach((item) => result.push(item));
+            return result;
+        }
+
         selectNode(node) {
             if (this._selection.indexOf(node)==-1) {
                 this._selection.push(node);
@@ -1352,8 +1362,6 @@ app.addDefinitions(() => {
             this._selection = [];
         }
 
-        // TODO: manipulation functions: add, delete and sort nodes
-        // TODO: Remember to clear the selection when the library structure change
         addNode(type=app.library.NodeType.GROUP) {
             assertCurrentNodeIntegrity.apply(this);
             this.deselectAll();
@@ -1406,11 +1414,14 @@ app.addDefinitions(() => {
                     textureScaleX:1,
                     textureScaleY:1,
 
-                    lightmap:"",
-                    lightmapOffsetX:0,
-                    lightmapOffsetY:0,
-                    lightmapScaleX:1,
-                    lightmapScaleY:1,
+                    // The lightmap is defined for each object, so it is not a good idea to
+                    // modify it in almost any case. For that reason, the material modifiers
+                    // should not include the lightmap parameters
+                    // lightmap:"",
+                    // lightmapOffsetX:0,
+                    // lightmapOffsetY:0,
+                    // lightmapScaleX:1,
+                    // lightmapScaleY:1,
 
                     normalMap:"",
                     normalMapOffsetX:0,
@@ -1442,6 +1453,27 @@ app.addDefinitions(() => {
             buildParents(this._data);
             return nodeData;
         }
+
+        removeNode(node) {
+            assertCurrentNodeIntegrity.apply(this);
+            this.deselectAll();
+            let index = this.currentNode.children.indexOf(node);
+            if (index!=-1 && (node.type!=app.library.NodeType.GROUP || node.children.length==0)) {
+                this.currentNode.children.splice(index,1);
+                return true;
+            }
+            else if (index!=-1) {
+                console.warn("Could not delete a group node if it is not empty");
+                return false;
+            }
+            else {
+                console.warn(`No such node: { id:"${ node.id }", name:"${ node.name }" }`);
+                return true;
+            }
+        }
+
+        // TODO: manipulation functions: add, delete and sort nodes
+        // TODO: Remember to clear the selection when the library structure change
 
         contains(node,parent=null) {
             let result = false;
