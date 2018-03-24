@@ -2,30 +2,6 @@
 app.addDefinitions(() => {
     app.library = app.library || {};
 
-    // Generate the "parent" attribute in the node
-    // children, if the node is a group
-    function buildParents(node) {
-        if (node.children) {
-            node.children.forEach((child) => {
-                child.parent = node;
-                buildParents(child);
-            });
-        }
-    }
-
-    // Clear the node "parent" attribute in the node children
-    // if the node is a group.
-    // Call this function before serialize the data using
-    // JSON.stringify to prevent circular references
-    function clearParents(node) {
-        if (node.children) {
-            node.children.forEach((child) => {
-                delete child.parent;
-                clearParents(child);
-            });
-        }
-    }
-
     function initializeLibrary() {
         this._data = {
             id:"$root$",
@@ -1265,6 +1241,56 @@ app.addDefinitions(() => {
         buildParents(this._data);
     }
 
+    // Generate the "parent" attribute in the node
+    // children, if the node is a group
+    function buildParents(node) {
+        if (node.children) {
+            node.children.forEach((child) => {
+                child.parent = node;
+                buildParents(child);
+            });
+        }
+    }
+
+    // Clear the node "parent" attribute in the node children
+    // if the node is a group.
+    // Call this function before serialize the data using
+    // JSON.stringify to prevent circular references
+    function clearParents(node) {
+        if (node.children) {
+            node.children.forEach((child) => {
+                delete child.parent;
+                clearParents(child);
+            });
+        }
+    }
+
+    function assertCurrentNodeIntegrity(node=null) {
+        node = node || this._currentNode;
+        if (this._currentNode.type!=app.library.NodeType.GROUP) {
+            throw new Error("Invalid current node in library manager: the current node is not a group");
+        }
+        else if (!this._currentNode.children) {
+            this._currentNode.children = [];
+        }
+    }
+
+    function findName() {
+        let ch = this.currentNode.children;
+        let name = "New node";
+        let index = 0;
+        let buildName = () => { return `${ name } ${ index }`; }
+
+        while(ch.some((child) => child.name==buildName())) ++index;
+        return buildName();
+    }
+
+    app.library.NodeType = {
+        GROUP: "group",
+        MODEL: "model",
+        material: "material"
+    };
+
     class Library {
         constructor() {
             this._filePath = "";
@@ -1278,6 +1304,8 @@ app.addDefinitions(() => {
 
         get currentNode() { return this._currentNode; }
         set currentNode(node) {
+            assertCurrentNodeIntegrity.apply(this);
+            assertCurrentNodeIntegrity.apply(this,[node]);
             if (this.contains(node)) {
                 this._currentNode = node;
             }
@@ -1326,6 +1354,94 @@ app.addDefinitions(() => {
 
         // TODO: manipulation functions: add, delete and sort nodes
         // TODO: Remember to clear the selection when the library structure change
+        addNode(type=app.library.NodeType.GROUP) {
+            assertCurrentNodeIntegrity.apply(this);
+            this.deselectAll();
+
+            let nodeData = {
+                type:type,
+                id:bg.utils.generateUUID(),
+                name:findName.apply(this),
+                icon:"",
+                metadata:{}
+            };
+
+            switch (type) {
+            case app.library.NodeType.GROUP:
+                nodeData.children = [];
+                break;
+            case app.library.NodeType.MODEL:
+                nodeData.file = "",
+                nodeData.folderName = "";
+                break;
+            case app.library.NodeType.MATERIAL:
+                nodeData.materialModifier = {
+                    diffuseR:0.9,
+                    diffuseG:0.9,
+                    diffuseB:0.9,
+                    diffuseA:0.9,
+                    specularR:1,
+                    specularG:1,
+                    specularB:1,
+                    specularA:1,
+
+                    shininess:0,
+                    shininessMask:"",
+                    shininessMaskChannel:0,
+                    invertShininessMask:false,
+
+                    alphaCutoff:0.5,
+
+                    lightEmission:0,
+                    lightEmissionMask:"",
+                    lightEmissionMaskChannel:0,
+                    invertLightEmissionMask:false,
+                    
+                    refractionAmount:0,
+                    reflectionAmount:0,
+                    
+                    texture:"",
+                    textureOffsetX:0,
+                    textureOffsetY:0,
+                    textureScaleX:1,
+                    textureScaleY:1,
+
+                    lightmap:"",
+                    lightmapOffsetX:0,
+                    lightmapOffsetY:0,
+                    lightmapScaleX:1,
+                    lightmapScaleY:1,
+
+                    normalMap:"",
+                    normalMapOffsetX:0,
+                    normalMapOffsetY:0,
+                    normalMapScaleX:1,
+                    normalMapScaleY:1,
+                    
+                    castShadows:true,
+                    receiveShadows:true,
+
+                    reflectionMask:0,
+                    reflectionMaskChannel:"",
+                    invertReflectionMask:0,
+                    reflectionMaskInvert:false,
+    
+                    roughness:0,
+                    roughnessMask:"",
+                    roughnessMaskChannel:0,
+                    invertRoughnessMask:false,
+    
+                    unlit:false,
+                }
+                break;
+            default:
+                throw new Error(`Error creating node: invalid node type ${ type }`);
+            }
+
+            this.currentNode.children.push(nodeData);
+            buildParents(this._data);
+            return nodeData;
+        }
 
         contains(node,parent=null) {
             let result = false;

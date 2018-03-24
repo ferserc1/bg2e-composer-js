@@ -40,6 +40,27 @@ app.addSource(() => {
         $scope.getIconClass = function(node) {
             return "bg2-library-item-" + node.type;
         }
+
+        $scope.addNode = function() {
+            libMgr.current.addNode(app.library.NodeType.GROUP);
+            libMgr.notifyLibraryChanged();
+        };
+
+        $scope.removeNode = function() {
+
+        };
+
+        $scope.copySelection = function() {
+
+        };
+
+        $scope.cutSelection = function() {
+
+        };
+
+        $scope.paste = function() {
+
+        };
     }]);
 
     angularApp.directive("libraryInspector", function() {
