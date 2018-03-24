@@ -1285,6 +1285,31 @@ app.addDefinitions(() => {
         return buildName();
     }
 
+    function resolveDuplicatedValues() {
+        let ch = this.currentNode.children;
+
+        function haveDuplicatedKey(item,key) {
+            let otherNode = null;
+            ch.some((other) => {
+                if (other!=item && other[key]==item[key]) {
+                    otherNode = other;
+                    return true;
+                }
+            });
+            return otherNode;
+        }
+
+        ch.forEach((item) => {
+            let other = null;
+            while(other = haveDuplicatedKey(item,'id')) {
+                other.id = bg.utils.generateUUID();
+            }
+            while(other = haveDuplicatedKey(item,'name')) {
+                other.name = other.name + " copy";
+            }
+        })
+    }
+
     app.library.NodeType = {
         GROUP: "group",
         MODEL: "model",
@@ -1296,6 +1321,7 @@ app.addDefinitions(() => {
             this._filePath = "";
             initializeLibrary.apply(this);
             this._selection = [];
+            this._clipboard = [];
         }
 
         get filePath() { return this._filePath; }
@@ -1360,6 +1386,69 @@ app.addDefinitions(() => {
                 node.selected = false;
             });
             this._selection = [];
+        }
+
+        copySelection() {
+            assertCurrentNodeIntegrity.apply(this);
+            if (this.selection.length) {
+                clearParents(this._data);
+                this._clipboard = [];
+                this.selection.forEach((item) => {
+                    let itemCopy = JSON.parse(JSON.stringify(item));
+                    itemCopy.selected = false;
+                    this._clipboard.push(itemCopy);
+                })
+                buildParents(this._data);
+                this.deselectAll();
+            }
+        }
+
+        cutSelection() {
+            assertCurrentNodeIntegrity.apply(this);
+            if (this.selection.length) {
+                this._clipboard = [];
+                let items = [];
+                this.selection.forEach((item) => {
+                    let parent = item.parent;
+                    let index = parent ? parent.children.indexOf(item) : -1;
+                    if (index!=-1) {
+                        items.push({
+                            parent: parent,
+                            index: index,
+                            item: item
+                        });
+                    }
+                });
+                clearParents(this._data);
+                items.forEach((itemData) => {
+                    itemData.parent.children.splice(itemData.index,1);
+                    let itemCopy = JSON.parse(JSON.stringify(itemData.item));
+                    itemCopy.selected = false;
+                    this._clipboard.push(itemCopy);
+                });
+                buildParents(this._data);
+                this.deselectAll();
+            }
+        }
+
+        paste() {
+            this.deselectAll();
+            assertCurrentNodeIntegrity.apply(this);
+            if (this._clipboard.length) {
+                clearParents(this._data);
+                this._clipboard.forEach((item) => {
+                    this.currentNode.children.push(JSON.parse(JSON.stringify(item)));
+                });
+                buildParents(this._data);
+            }
+        }
+
+        get clipboardContent() {
+            return this._clipboard;
+        }
+
+        clearClipboard() {
+            this._clipboard = [];
         }
 
         addNode(type=app.library.NodeType.GROUP) {
@@ -1454,11 +1543,11 @@ app.addDefinitions(() => {
             return nodeData;
         }
 
-        removeNode(node) {
+        removeNode(node,forceDelete=false) {
             assertCurrentNodeIntegrity.apply(this);
             this.deselectAll();
             let index = this.currentNode.children.indexOf(node);
-            if (index!=-1 && (node.type!=app.library.NodeType.GROUP || node.children.length==0)) {
+            if (index!=-1 && (node.type!=app.library.NodeType.GROUP || node.children.length==0 || forceDelete)) {
                 this.currentNode.children.splice(index,1);
                 return true;
             }
@@ -1516,6 +1605,14 @@ app.addDefinitions(() => {
             let result = tabulate ? JSON.stringify(this._data,"","\t") : JSON.stringify(this._data);
             buildParents(this._data);
             return result;
+        }
+
+        clearParents() {
+            clearParents(this._data);
+        }
+
+        buildParents() {
+            buildParents(this._data);
         }
     }
 

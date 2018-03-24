@@ -27,5 +27,6 @@
     <button title="Remove node" ng-click="removeNode($event)"><i class="bg2-icon bg2-remove"></i></button>
     <button title="Copy" ng-click="copySelection()"><i class="bg2-icon bg2-copy"></i></button>
     <button title="Cut" ng-click="cutSelection()"><i class="bg2-icon bg2-cut"></i></button>
-    <button title="Paste" ng-click="pasteSelection()"><i class="bg2-icon bg2-paste"></i></button>
+    <button title="Paste" ng-click="paste()"><i class="bg2-icon bg2-paste"></i><span class="bg2-item-counter" ng-show="clipboardContent>0">{{ clipboardContent }}</span></button>
+    
 </div>

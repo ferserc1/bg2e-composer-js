@@ -3,11 +3,20 @@ app.addSource(() => {
 
     angularApp.controller("LibraryInspectorController",['$scope',function($scope) {
         let libMgr = app.library.Manager.Get();
+        function clearHash(node) {
+            delete node.$$hashKey;
+            if (node.children) {
+                node.children.forEach((ch) => clearHash(ch));
+            }
+        }
+
         function update(library) {
             setTimeout(() => {
+                clearHash(libMgr.current.root);
                 $scope.libraryName = library.filePath || "(Library not saved)";
                 $scope.currentNode = library.currentNode;
                 $scope.navigator = library.navigator;
+                $scope.clipboardContent = library.clipboardContent.length;
                 $scope.$apply();
             },50);
         }
@@ -80,15 +89,30 @@ app.addSource(() => {
         };
 
         $scope.copySelection = function() {
-
+            clearHash(libMgr.current.root);
+            if (libMgr.current.selection.length) {
+                libMgr.current.copySelection();
+                update(libMgr.current);
+            }
         };
 
         $scope.cutSelection = function() {
-
+            clearHash(libMgr.current.root);
+            if (libMgr.current.selection.length) {
+                libMgr.current.cutSelection();
+                update(libMgr.current);
+            }
         };
 
         $scope.paste = function() {
-
+            clearHash(libMgr.current.root);
+            if (libMgr.current.clipboardContent.length) {
+                // setTimeout to prevent angular convert a cicrulcar structure json
+                setTimeout(() => {
+                    libMgr.current.paste();
+                    update(libMgr.current);
+                },50);
+            }
         };
     }]);
 

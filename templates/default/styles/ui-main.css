@@ -178,6 +178,17 @@ texture-picker img {
     float: right;
 }
 
+.bg2-item-counter {
+    position: absolute;
+    bottom: 2px;
+    background-color: red;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 9px;
+    border-radius: 4px;
+    right: 2px;
+}
+
 label.bg2-input-xs, label.bg2-input-sm, label.bg2-input-md, label.bg2-input-lg, label.bg2-input-xl {
     text-align: right;
     padding-left: 4px;
