@@ -114,6 +114,27 @@ app.addSource(() => {
                 },50);
             }
         };
+
+        $scope.onDrag = function(fromNodeHash,toNodeHash) {
+            let fromNode = null;
+            let toNode = null;
+            libMgr.current.currentNode.children.some((child) => {
+                if (fromNodeHash==child.$$hashKey) {
+                    fromNode = child;
+                }
+                if (toNodeHash==child.$$hashKey) {
+                    toNode = child;
+                }
+                return fromNode && toNode;
+            });
+            libMgr.current.moveNode(fromNode,toNode);
+            setTimeout(() => {
+                $scope.$apply();
+            },50);
+        };
+
+        $scope.onDragStart = function() {
+        }
     }]);
 
     angularApp.directive("libraryInspector", function() {
@@ -124,6 +145,43 @@ app.addSource(() => {
             scope: {
             },
             controller: 'LibraryInspectorController'
+        }
+    });
+
+    angularApp.directive("dragDrop",function() {
+        return {
+            link: function(scope,element) {
+                element.on('dragover', function(event) {
+                    event.preventDefault();
+                    element[0].className = element[0].className.replace(/\s*bg2-drag-over/,"") + " bg2-drag-over";
+                });
+
+                element.on('dragleave', function(event) {
+                    element[0].className = element[0].className.replace(/\s*bg2-drag-over/,"");
+                });
+
+                element.on('dragstart', function(event) {
+                    event.dataTransfer.setData("Text",scope.dragItem.$$hashKey);
+                    event.dataTransfer.effectAllowed = "move";
+                    if (scope.onDragStart) {
+                        scope.onDragStart();
+                    }
+                });
+
+                element.on('drop', function(event) {
+                    event.preventDefault();
+                    if (scope.onDrag) {
+                        scope.onDrag(event.dataTransfer.getData("Text"),scope.dragItem.$$hashKey);
+                    }
+                    element[0].className = element[0].className.replace(/\s*bg2-drag-over/,"");
+                })
+            },
+            scope: {
+                dragItem:"=",
+                onDrag:"=",
+                onDragStart:"="
+            }
+
         }
     })
 });

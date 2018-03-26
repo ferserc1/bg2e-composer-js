@@ -51,6 +51,10 @@ ul.bg2-library-container li:hover {
     background-color: #2d2d2d;
 }
 
+.bg2-drag-over {
+    border: 2px solid rgb(205, 205, 205);
+}
+
 ul.bg2-library-container li.bg2-selected {
     background-color: rgb(255, 166, 0);
 }

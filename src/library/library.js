@@ -1561,6 +1561,17 @@ app.addDefinitions(() => {
             }
         }
 
+        // Move "node" to the position previous to "nextNode"
+        moveNode(node,nextNode) {
+            if (this.contains(node) && this.contains(nextNode)) {
+                let toIndex = nextNode.parent.children.indexOf(nextNode);
+                let fromIndex = node.parent.children.indexOf(node);
+                node.parent.children.splice(fromIndex,1);
+                nextNode.parent.children.splice(toIndex,0,node);
+                buildParents(this._data);
+            }
+        }
+
         // TODO: manipulation functions: add, delete and sort nodes
         // TODO: Remember to clear the selection when the library structure change
 
