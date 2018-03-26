@@ -115,22 +115,9 @@ app.addSource(() => {
             }
         };
 
-        $scope.onDrag = function(fromNodeHash,toNodeHash) {
-            let fromNode = null;
-            let toNode = null;
-            libMgr.current.currentNode.children.some((child) => {
-                if (fromNodeHash==child.$$hashKey) {
-                    fromNode = child;
-                }
-                if (toNodeHash==child.$$hashKey) {
-                    toNode = child;
-                }
-                return fromNode && toNode;
-            });
+        $scope.onDrag = function(fromNode,toNode) {
             libMgr.current.moveNode(fromNode,toNode);
-            setTimeout(() => {
-                $scope.$apply();
-            },50);
+            $scope.$apply();
         };
 
         $scope.onDragStart = function() {
@@ -149,8 +136,12 @@ app.addSource(() => {
     });
 
     angularApp.directive("dragDrop",function() {
+        let dragIdCounter = 0;
+        let g_objectData = {};
         return {
             link: function(scope,element) {
+                scope.dragId = dragIdCounter++;
+                g_objectData[scope.dragId] = scope.dragItem;
                 element.on('dragover', function(event) {
                     event.preventDefault();
                     element[0].className = element[0].className.replace(/\s*bg2-drag-over/,"") + " bg2-drag-over";
@@ -161,7 +152,7 @@ app.addSource(() => {
                 });
 
                 element.on('dragstart', function(event) {
-                    event.dataTransfer.setData("Text",scope.dragItem.$$hashKey);
+                    event.dataTransfer.setData("Text",scope.dragId);
                     event.dataTransfer.effectAllowed = "move";
                     if (scope.onDragStart) {
                         scope.onDragStart();
@@ -171,7 +162,8 @@ app.addSource(() => {
                 element.on('drop', function(event) {
                     event.preventDefault();
                     if (scope.onDrag) {
-                        scope.onDrag(event.dataTransfer.getData("Text"),scope.dragItem.$$hashKey);
+                        let toObject = g_objectData[event.dataTransfer.getData("Text")];
+                        scope.onDrag(toObject,scope.dragItem);
                     }
                     element[0].className = element[0].className.replace(/\s*bg2-drag-over/,"");
                 })
