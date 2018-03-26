@@ -14,7 +14,7 @@
         </li>
     </ul>
 </div>
-<ul class="bg2-library-container">
+<ul class="bg2-library-container" ng-click="deselectAll()">
     <li ng-repeat="item in currentNode.children" ng-class="{ 'bg2-selected' : item.selected }" drag-drop drag-item="item" on-drag="onDrag" on-drag-start="onDragStart" draggable="true">
         <h2 ng-dblclick="enterNode(item)" ng-click="selectNode(item,$event)">
             <i class="bg2-icon {{ getIconClass(item) }}"></i>

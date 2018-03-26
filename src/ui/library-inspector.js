@@ -39,10 +39,16 @@ app.addSource(() => {
             }
             libMgr.current.toggleSelect(node);
             update(libMgr.current);
+            event.stopPropagation();
         };
 
         $scope.addToSelection = function(node) {
             libMgr.current.toggleSelect(node);
+            update(libMgr.current);
+        };
+
+        $scope.deselectAll = function() {
+            libMgr.current.deselectAll();
             update(libMgr.current);
         };
 
