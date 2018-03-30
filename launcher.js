@@ -26,6 +26,7 @@ function launch(indexFile,debug) {
             y: mainWindowState.y,
             icon: path.join(__dirname, "data/bg2e-composer-512.png")
         });
+        win.setMinimumSize(800,600);
         if (mainWindowState.maximized) {
             win.maximize();
         }

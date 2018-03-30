@@ -17,8 +17,16 @@ app.addSource(() => {
                 mainLoop.canvas = canvas;
                 mainLoop.run(ctrl);
             },
-            controller: ['$scope', function($scope) {
-                
+            controller: ['$scope','$route', function($scope,$route) {
+                $scope.subclass = $route.current.$$route.originalPath.replace("/","");
+
+                $scope.$on('$routeChangeSuccess', function($event, next, current) { 
+                    $scope.subclass = $route.current.$$route.originalPath.replace("/","");
+                    setTimeout(() => {
+                        app.ComposerWindowController.Get().postReshape();
+                        app.ComposerWindowController.Get().postRedisplay(); 
+                    },10);
+                });
             }]
         }
     })

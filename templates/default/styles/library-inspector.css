@@ -4,7 +4,14 @@ library-inspector {
     left: 0px;
     bottom: 29px;
     top: 36px;
-    width: 300px;
+    width: 21%;
+    overflow: hidden;
+}
+
+/* Resize canvas */
+canvas.bg2-workspace-libraryEditor {
+    width: 79%;
+    left: 21%;
 }
 
 library-inspector .bg2-header h1 {
@@ -31,11 +38,11 @@ library-inspector .bg2-header button:focus {
 }
 
 ul.bg2-library-container {
-    margin-left: 10px;
+    left: 7px;
+    right: 7px;
     padding: 5px;
     background-color: rgb(66, 66, 66);
     border: 1px solid white;
-    width: 90%;
     border-radius: 4px;
     position: absolute;
     bottom: 20px;
@@ -81,9 +88,10 @@ ul.bg2-library-container li h2 span {
 }
 
 library-inspector .bg2-actions {
-    position: fixed;
-    bottom: 31px;
-    left: 11px;
+    position: absolute;
+    bottom: 2px;
+    left: 7px;
+    display: flex;
 }
 
 library-inspector .bg2-actions button i.bg2-icon {
