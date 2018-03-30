@@ -2,7 +2,7 @@
 app.addSource(() => {
     app.library = app.library || {};
     let g_manager = null;
-    const path = requrie('path');
+    const path = require('path');
 
 
     class Manager {

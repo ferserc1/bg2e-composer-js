@@ -64,6 +64,7 @@ app.addSource(() => {
                     { label:"Model", type:app.library.NodeType.MODEL }
                 ],(sel) => {
                     libMgr.current.addNode(sel.type);
+                    libMgr.current.save();
                     libMgr.notifyLibraryChanged();
                 });
         };
@@ -89,6 +90,7 @@ app.addSource(() => {
                         if (errors==1) {
                             alert("An element could not be deleted because it's a group and it is not empty.");
                         }
+                        libMgr.current.save();
                     }
                 );
             }
@@ -116,6 +118,7 @@ app.addSource(() => {
                 // setTimeout to prevent angular convert a cicrulcar structure json
                 setTimeout(() => {
                     libMgr.current.paste();
+                    libMgr.current.save();
                     update(libMgr.current);
                 },50);
             }
@@ -123,6 +126,7 @@ app.addSource(() => {
 
         $scope.onDrag = function(fromNode,toNode) {
             libMgr.current.moveNode(fromNode,toNode);
+            libMgr.current.save();
             $scope.$apply();
         };
 

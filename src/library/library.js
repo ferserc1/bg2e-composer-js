@@ -4,6 +4,7 @@ app.addDefinitions(() => {
 
     const path = require("path");
     const fs = require("fs");
+    const mkdirp = require("mkdirp");
 
     function initializeLibrary() {
         this._data = {
@@ -85,6 +86,20 @@ app.addDefinitions(() => {
         })
     }
 
+    function initializePath() {
+        let libraryPath = path.parse(this.filePath);
+        let location = libraryPath.dir;
+        this._repoPath = path.join(location,libraryPath.name);
+
+        if (fs.existsSync(this.repoPath) && !fs.statSync(this.repoPath).isDirectory()) {
+            throw new Error(`Error creating library at ${location}. The repository path exists, but is a file instead of a directory. `);
+        }
+
+        if (!fs.existsSync(this.repoPath)) {
+            mkdirp.sync(this.repoPath);
+        }
+    }
+
     app.library.NodeType = {
         GROUP: "group",
         MODEL: "model",
@@ -96,17 +111,51 @@ app.addDefinitions(() => {
             if (!filePath) {
                 throw new Error("Invalid library path specified creating library");
             }
+            this._filePath = filePath;
             
             initializeLibrary.apply(this);
-            if (!fs.existsSync(filePath)) {
-                fs.writeFileSync(filePath,JSON.stringify(this._data),{ encoding:'utf8' });
+            if (!this.reload()) {
+                this.save();
             }
-            this._filePath = filePath;
+
             this._selection = [];
             this._clipboard = [];
         }
 
+        save() {
+            initializePath.apply(this);
+
+            let libraryData = {
+                fileType: "vwgl::library",
+                version: "1.1",
+                root: []
+            }
+
+            this.root.children.forEach((item) => {
+                libraryData.root.push(item);
+            })
+
+            clearParents(this._data);
+            fs.writeFileSync(this.filePath, JSON.stringify(libraryData,"","  "), { encoding: 'utf8' });
+            buildParents(this._data);
+        }
+
+        reload() {
+            if (fs.existsSync(this.filePath)) {
+                let data = fs.readFileSync(this.filePath, { encoding:'utf8' });
+                initializeLibrary.apply(this);
+                data = JSON.parse(data);
+                this._data.children = data.root;
+                buildParents(this._data);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
         get filePath() { return this._filePath; }
+        get repoPath() { return this._repoPath; }
 
         get root() { return this._data; }
 

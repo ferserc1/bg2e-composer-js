@@ -33,6 +33,7 @@
     "electron-window-state-manager": "^0.3.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
+    "mkdirp": "^0.5.1",
     "traceur": "0.0.111"
   }
 }
