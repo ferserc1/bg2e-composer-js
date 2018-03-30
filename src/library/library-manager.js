@@ -2,6 +2,8 @@
 app.addSource(() => {
     app.library = app.library || {};
     let g_manager = null;
+    const path = requrie('path');
+
 
     class Manager {
         static Get() {
@@ -12,13 +14,15 @@ app.addSource(() => {
         }
 
         constructor() {
-            this._currentLibrary = new app.library.Library();
+            this._currentLibrary = new app.library.Library(this.defaultLibraryPath);
             this._observers = {};
         }
 
         get current() { return this._currentLibrary; }
 
-        newLibrary() {
+        get defaultLibraryPath() { return path.join(app.paths.documents,"composer/library.json"); }
+
+        newLibrary(path) {
 
         }
 
