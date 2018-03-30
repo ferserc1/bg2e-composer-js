@@ -1,0 +1,8 @@
+library-node-editor {
+    position: fixed;
+    left: 21%;
+    width: 29%;
+    top: 36px;
+    bottom: 29px;
+    overflow: auto;
+}

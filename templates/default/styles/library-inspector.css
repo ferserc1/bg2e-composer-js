@@ -10,8 +10,8 @@ library-inspector {
 
 /* Resize canvas */
 canvas.bg2-workspace-libraryEditor {
-    width: 79%;
-    left: 21%;
+    width: 50%;
+    left: 50%;
 }
 
 library-inspector .bg2-header h1 {
