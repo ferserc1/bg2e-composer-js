@@ -120,6 +120,7 @@ app.addDefinitions(() => {
 
             this._selection = [];
             this._clipboard = [];
+            this._selectionObservers = [];
         }
 
         save() {
@@ -198,6 +199,7 @@ app.addDefinitions(() => {
                 this._selection.push(node);
             }
             node.selected = true;
+            this.notifySelectionChanged();
         }
 
         deselectNode(node) {
@@ -206,10 +208,12 @@ app.addDefinitions(() => {
                 this._selection.splice(index,1);
             }
             node.selected = false;
+            this.notifySelectionChanged();
         }
 
         toggleSelect(node) {
             node.selected ? this.deselectNode(node) : this.selectNode(node);
+            this.notifySelectionChanged();
         }
 
         deselectAll() {
@@ -217,6 +221,17 @@ app.addDefinitions(() => {
                 node.selected = false;
             });
             this._selection = [];
+            this.notifySelectionChanged();
+        }
+
+        selectionChanged(observerId,cb) {
+            this._selectionObservers[observerId] = cb;
+        }
+
+        notifySelectionChanged() {
+            for (let key in this._selectionObservers) {
+                this._selectionObservers[key](this._selection);
+            }
         }
 
         copySelection() {

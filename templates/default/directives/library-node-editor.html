@@ -1,3 +1,9 @@
-<h1 scroll-glue-right="true">
-    Library node editor {{ test }}
-</h1>
+<div ng-show="node">
+    <h1 scroll-glue-right="true">
+        Library node editor {{ node.name }}
+    </h1>
+
+</div>
+<div ng-hide="node">
+    <h1>Nothing selected</h1>
+</div>
