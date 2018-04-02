@@ -2,7 +2,20 @@
     <h1 scroll-glue-right="true">
         Library node editor {{ node.name }}
     </h1>
-
+    <div class="bg2-widget-panel">
+        <string-picker label="Identifier" value="id" commit-changes="saveChanges"></string-picker>
+        <string-picker label="Name" value="name" commit-changes="saveChanges"></string-picker>
+        <texture-picker label="Icon" value="icon" commit-changes="saveChanges"></texture-picker>
+    </div>
+    <div ng-show="node.type=='material'">
+        Material
+    </div>
+    <div ng-show="node.type=='model'">
+        Model
+    </div>
+    <div ng-show="node.type=='group'">
+        Group
+    </div>
 </div>
 <div ng-hide="node">
     <h1>Nothing selected</h1>

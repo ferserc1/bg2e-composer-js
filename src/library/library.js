@@ -89,6 +89,7 @@ app.addDefinitions(() => {
     function initializePath() {
         let libraryPath = path.parse(this.filePath);
         let location = libraryPath.dir;
+        this._repoFolderName = libraryPath.name;
         this._repoPath = path.join(location,libraryPath.name);
 
         if (fs.existsSync(this.repoPath) && !fs.statSync(this.repoPath).isDirectory()) {
@@ -97,6 +98,13 @@ app.addDefinitions(() => {
 
         if (!fs.existsSync(this.repoPath)) {
             mkdirp.sync(this.repoPath);
+        }
+    }
+
+    function cleanupNode(node) {
+        delete node.selected;
+        if (node.children) {
+            node.children.forEach((child) => cleanupNode(child));
         }
     }
 
@@ -143,10 +151,12 @@ app.addDefinitions(() => {
 
         reload() {
             if (fs.existsSync(this.filePath)) {
+                initializePath.apply(this);
                 let data = fs.readFileSync(this.filePath, { encoding:'utf8' });
                 initializeLibrary.apply(this);
                 data = JSON.parse(data);
                 this._data.children = data.root;
+                cleanupNode(this._data);
                 buildParents(this._data);
                 return true;
             }
@@ -157,6 +167,36 @@ app.addDefinitions(() => {
 
         get filePath() { return this._filePath; }
         get repoPath() { return this._repoPath; }
+        get repoFolderName() { return this._repoFolderName; }
+        getResourceAbsolutePath(resourcePath) {
+            return resourcePath ? path.join(this.repoPath,resourcePath) : "";
+        }
+
+        // Get the relative path of a resource included in the repository. If the
+        // resource is outside the repository path, it is copied first, and in this
+        // case, it is placed inside copySubpath subfolder
+        getResourceLocalPath(absolutePath,copySubpath="") {
+            let reString = this.repoPath.replace(/\//,'\\\/');
+            reString = this.repoPath.replace(/\\/,'\\\\');
+            reString = '^' + reString.replace(/\:/,'\:') + '[\\\/]{0,1}(.*)';
+            let re = new RegExp(reString,'i');
+            if (!re.test(absolutePath)) {
+                // Copy resource to library repository path
+                let parsedPath = path.parse(absolutePath);
+                let dstPath = path.join(this.repoPath,copySubpath);
+                let dstFile = path.join(dstPath,parsedPath.base);
+                mkdirp(dstPath);
+                bg.base.Writer.CopyFile(absolutePath,dstFile);
+                absolutePath = dstFile;
+            }
+            let execResult = re.exec(absolutePath);
+            if (execResult) {
+                return execResult[1];
+            }
+            else {
+                return "";
+            }
+        }
 
         get root() { return this._data; }
 

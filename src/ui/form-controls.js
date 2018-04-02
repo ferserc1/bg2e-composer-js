@@ -61,7 +61,7 @@ app.addSource(() => {
                         filePath = app.standarizePath(filePath[0]);
                         $scope.value = filePath;
                         if ($scope.commitChanges) {
-                            $scope.commitChanges();
+                            setTimeout(() => $scope.commitChanges(),50);
                         }
                     }
                 };
