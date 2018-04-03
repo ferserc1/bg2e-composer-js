@@ -13,6 +13,13 @@ app.addSource(() => {
                     $scope.icon = libMgr.current.getResourceAbsolutePath($scope.node.icon);
                 }
 
+                if ($scope.node && $scope.node.type=="material") {
+                    $scope.material = new bg.base.Material();
+                    console.log("Apply material modifier");
+                }
+                else {
+                    $scope.material = null;
+                }
                 $scope.$apply();
             },50);
         }
@@ -30,6 +37,20 @@ app.addSource(() => {
                 libMgr.current.save();
             }
         }
+
+        $scope.onApplyToAll = function() {
+
+        }
+
+        $scope.commitChanges = function() {
+
+        }
+
+        $scope.onMaterialChanged = function() {
+
+        }
+
+
     }]);
 
     angularApp.directive("libraryNodeEditor", function() {

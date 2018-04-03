@@ -5,4 +5,19 @@ library-node-editor {
     top: 36px;
     bottom: 29px;
     overflow: auto;
+    padding: 10px;
+}
+
+library-node-editor material-editor {
+    position: static;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+library-node-editor material-editor .bg2-apply-to-all-panel {
+    display: none;
+}
+
+library-node-editor material-editor .bg2-title {
+    display: none;
 }

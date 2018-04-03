@@ -1,14 +1,11 @@
 <div ng-show="node">
-    <h1 scroll-glue-right="true">
-        Library node editor {{ node.name }}
-    </h1>
     <div class="bg2-widget-panel">
         <string-picker label="Identifier" value="id" commit-changes="saveChanges"></string-picker>
         <string-picker label="Name" value="name" commit-changes="saveChanges"></string-picker>
         <texture-picker label="Icon" value="icon" commit-changes="saveChanges"></texture-picker>
     </div>
     <div ng-show="node.type=='material'">
-        Material
+        <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
     </div>
     <div ng-show="node.type=='model'">
         Model
