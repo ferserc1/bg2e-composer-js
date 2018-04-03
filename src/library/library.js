@@ -362,7 +362,7 @@ app.addDefinitions(() => {
                     diffuseR:0.9,
                     diffuseG:0.9,
                     diffuseB:0.9,
-                    diffuseA:0.9,
+                    diffuseA:1.0,
                     specularR:1,
                     specularG:1,
                     specularB:1,

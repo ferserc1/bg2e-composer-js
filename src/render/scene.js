@@ -163,6 +163,8 @@ app.addDefinitions(() => {
             app.ComposerWindowController.Get().postRedisplay();
         }
 
+        get materialNode() { return this._materialNode; }
+
         get cameraMode() {
             return this._cameraMode;
         }
@@ -256,8 +258,16 @@ app.addDefinitions(() => {
             cameraController.maxDistance = Number.MAX_VALUE;
             cameraController.rotation.x = 22.5;
             cameraController.rotation.y = 30;
-            cameraController.distance = 15;
+            cameraController.distance = 2.5;
             return cameraController;
+        }
+
+        resetLibraryCamera() {
+            let ctrl = this._libraryCamera.component("bg.manipulation.OrbitCameraController");
+            ctrl.rotation.x = 22.5;
+            ctrl.rotation.y = 30;
+            ctrl.distance = 2.5;
+            ctrl.center = new bg.Vector3();
         }
 
         createDefaultScene() {
@@ -275,6 +285,7 @@ app.addDefinitions(() => {
             this._cameraNode.addComponent(this._sceneCamera);
             this._cameraNode.addComponent(new bg.scene.Transform());
             let ctrl = this.createCameraController();
+            ctrl.distance = 15;
             this._cameraNode.addComponent(ctrl);
             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._sceneRoot);
 
@@ -315,24 +326,19 @@ app.addDefinitions(() => {
             this._libraryCameraNode.addComponent(ctrl);
             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._libraryRoot);
 
-            /*
-            let lightNode = new bg.scene.Node(this.gl,"Main light");
-            this._libraryRoot.addChild(lightNode);
-            lightNode.addComponent(new bg.scene.Light(new bg.base.Light(this.gl)));
-            lightNode.addComponent(new bg.scene.Transform(
-                bg.Matrix4.Identity()
-                    .translate(0,0,5)
-                    .rotate(bg.Math.degreesToRadians(15),0,1,0)
-                    .rotate(bg.Math.degreesToRadians(55),-1,0,0)
-                    .translate(0,1.4,3)
-            ));
-            */
+            let modelNode = new bg.scene.Node(this.gl, "Model node");
+            this._libraryRoot.addChild(modelNode);
 
-            let sphereNode = new bg.scene.Node(this.gl, "Sphere");
-            this._libraryRoot.addChild(sphereNode);
-            sphereNode.addComponent(bg.scene.PrimitiveFactory.Sphere(this.gl,5));
-            sphereNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
-  //          this._libraryLightState = getSceneLightState.apply(this,[this._libraryRoot]);
+            bg.base.Loader.Load(this.gl, `templates/${ app.config.templateName }/models/material.bg2`)
+            .then((result) => {
+                result.name = "Material node";
+                result.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-0.5,0)));
+                this._libraryRoot.addChild(result);
+                this._materialNode = result;
+                this._materialNode.enabled = false;
+            });
+
+            //this._libraryLightState = getSceneLightState.apply(this,[this._libraryRoot]);
         }
 
         confirmClearScene(nextCommand) {
