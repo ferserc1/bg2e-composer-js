@@ -63,7 +63,8 @@ app.addSource(() => {
         }
 
         $scope.onMaterialChanged = function() {
-
+            updateMaterialNode();
+            app.ComposerWindowController.Get().updateView();
         }
 
 

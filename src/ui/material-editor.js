@@ -3,20 +3,25 @@ app.addSource(() => {
 
     function updateTexture(material,field,newValue) {
         if (material[field] && material[field].fileName==newValue) {
-            return;
+            return Promise.resolve();
         }
         if (!newValue) {
             material[field] = null;
+            return Promise.resolve();
         }
         else {
-            let context = app.ComposerWindowController.Get().gl;
-            bg.base.Loader.Load(context,newValue)
-                .then((texture) => {
-                    material[field] = texture;
-                })
-                .catch((err) => {
-                    console.error(err,true);
-                });
+            return new Promise((resolve,reject) => {
+                let context = app.ComposerWindowController.Get().gl;
+                bg.base.Loader.Load(context,newValue)
+                    .then((texture) => {
+                        material[field] = texture;
+                        resolve();
+                    })
+                    .catch((err) => {
+                        console.error(err,true);
+                        reject();
+                    });
+            })
         }
     }
 
@@ -91,43 +96,44 @@ app.addSource(() => {
         function updateMaterial() {
             if ($scope.material) {
                 let m = $scope.material;
+                let promises = [];
 
                 m.diffuse = new bg.Vector4($scope.diffuse);
                 m.specular = new bg.Vector4($scope.specular);
                 m.alphaCutoff = $scope.alphaCutoff;
 
                 m.shininess = $scope.shininess;
-                updateTexture(m,'shininessMask',$scope.shininessMask);
+                promises.push(updateTexture(m,'shininessMask',$scope.shininessMask));
                 m.shininessMaskChannel = $scope.shininessMaskChannel.id;
                 m.shininessMaskInvert = $scope.shininessMaskInvert;
 
                 m.lightEmission = $scope.lightEmission;
-                updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask);
+                promises.push(updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask));
                 m.lightEmissionMaskChannel = $scope.lightEmissionMaskChannel.id;
                 m.lightEmissionMaskInvert = $scope.lightEmissionMaskInvert;
 
-                updateTexture(m,'texture',$scope.texture);
+                promises.push(updateTexture(m,'texture',$scope.texture));
                 m.textureOffset = new bg.Vector2($scope.textureOffset);
                 m.textureScale = new bg.Vector2($scope.textureScale);
-                updateTexture(m,'lightmap',$scope.lightMap);
-                updateTexture(m,'normalMap',$scope.normalMap);
+                promises.push(updateTexture(m,'lightmap',$scope.lightMap));
+                promises.push(updateTexture(m,'normalMap',$scope.normalMap));
                 m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
                 m.normalMapScale = new bg.Vector2($scope.normalMapScale);
                 m.reflectionAmount = $scope.reflection;
-                updateTexture(m,'reflectionMask',$scope.reflectionMask);
+                promises.push(updateTexture(m,'reflectionMask',$scope.reflectionMask));
                 m.reflectionMaskChannel = $scope.reflectionMaskChannel.id;
                 m.reflectionMaskInvert = $scope.reflectionMaskInvert;
                 m.castShadows = $scope.castShadows;
                 m.receiveShadows = $scope.receiveShadows;
                 m.cullFace = $scope.cullFace;
                 m.roughness = $scope.roughness;
-                updateTexture(m,'roughnessMask',$scope.roughnessMask);
+                promises.push(updateTexture(m,'roughnessMask',$scope.roughnessMask));
                 m.roughnessMaskChannel = $scope.roughnessMaskChannel.id;
                 m.roughnessMaskInvert = $scope.roughnessMaskInvert;
                 m.unlit = $scope.unlit;
 
                 if ($scope.materialChanged) {
-                    $scope.materialChanged($scope.material);
+                    Promise.all(promises).then(() => $scope.materialChanged($scope.material));
                 }
             }
         }
