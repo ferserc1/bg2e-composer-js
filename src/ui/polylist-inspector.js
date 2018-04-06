@@ -48,8 +48,16 @@ app.addSource(() => {
             });
         }
 
-        $scope.toggleItem = function(plist) {
+        $scope.toggleItem = function(plist,event) {
             let sm = app.render.Scene.Get().selectionManager;
+            if (!event.shiftKey) {
+                $scope.elements.forEach((elem) => {
+                    elem.plist.forEach((pl) => {
+                        sm.deselectItem(pl.node,pl.plist,pl.material)
+                    })
+                });
+            }
+
             if (isSelected(plist.plist)) {
                 sm.deselectItem(plist.node,plist.plist,plist.material);
             }
