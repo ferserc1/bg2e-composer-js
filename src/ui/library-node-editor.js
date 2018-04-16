@@ -59,15 +59,19 @@ app.addSource(() => {
         }
 
         $scope.commitChanges = function() {
+            let mod = $scope.material.getModifierWithMask(~0 & ~bg.base.MaterialFlag.LIGHT_MAP);
+            $scope.node.materialModifier = mod.serialize();
 
+            // TODO: Fix relative paths
+
+
+            libMgr.current.save();
         }
 
         $scope.onMaterialChanged = function() {
             updateMaterialNode();
             app.ComposerWindowController.Get().updateView();
         }
-
-
     }]);
 
     angularApp.directive("libraryNodeEditor", function() {
