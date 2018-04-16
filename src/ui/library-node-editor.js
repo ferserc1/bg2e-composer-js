@@ -59,11 +59,21 @@ app.addSource(() => {
         }
 
         $scope.commitChanges = function() {
+            let fixRelative = (path) => {
+                // TODO: Copy to library path
+                return libMgr.current.getResourceLocalPath(path);
+            };
             let mod = $scope.material.getModifierWithMask(~0 & ~bg.base.MaterialFlag.LIGHT_MAP);
             $scope.node.materialModifier = mod.serialize();
 
-            // TODO: Fix relative paths
+            mod = $scope.node.materialModifier;
 
+            mod.shininessMask = fixRelative(mod.shininessMask);
+            mod.lightEmissionMask = fixRelative(mod.lightEmissionMask);
+			mod.texture = fixRelative(mod.texture);
+            mod.normalMap = fixRelative(mod.normalMap);
+            mod.reflectionMask = fixRelative(mod.reflectionMask);
+			mod.roughnessMask = fixRelative(mod.roughnessMask);
 
             libMgr.current.save();
         }
