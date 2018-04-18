@@ -9,6 +9,7 @@ app.addSource(() => {
 
             createInstance() {
                 let cubemap = new bg.scene.Cubemap();
+                cubemap.setImageUrl(bg.scene.CubemapImage.POSITIVE_X,path.resolve(app.resourcesDir + '/cubemap_posx.jpg'));
                 cubemap.setImageUrl(bg.scene.CubemapImage.NEGATIVE_X,path.resolve(app.resourcesDir + '/cubemap_negx.jpg'));
                 cubemap.setImageUrl(bg.scene.CubemapImage.POSITIVE_Y,path.resolve(app.resourcesDir + '/cubemap_posy.jpg'));
                 cubemap.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Y,path.resolve(app.resourcesDir + '/cubemap_negy.jpg'));

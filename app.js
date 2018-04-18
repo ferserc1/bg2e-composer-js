@@ -60,7 +60,12 @@ class AppClass {
 
     get resourcesDir() {
         if (!this._resourcesDir) {
-            this._resourcesDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }data`));
+            if (BG2E_COMPOSER_DEBUG) {
+                this._resourcesDir = path.join(__dirname,"data");
+            }
+            else {
+                this._resourcesDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }data`));
+            }
         }
         return this._resourcesDir;
     }
