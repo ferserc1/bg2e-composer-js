@@ -23,11 +23,15 @@ app.addSource(() => {
         get defaultLibraryPath() { return path.join(app.paths.documents,"composer/library.json"); }
 
         newLibrary(path) {
-            return Promise.reject(new Error("Not implemented"));
+            this._currentLibrary = new app.library.Library(path);
+            this.notifyLibraryChanged();
+            return Promise.resolve(true);
         }
 
         open(path) {
-            return Promise.reject(new Error("Not implemented"));
+            this._currentLibrary = new app.library.Library(path);
+            this.notifyLibraryChanged();
+            return Promise.resolve(true);
         }
 
         libraryChanged(observerId,callback) {

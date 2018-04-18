@@ -28,7 +28,7 @@ app.addSource(() => {
         update(libMgr.current);
 
         $scope.loadLibrary = function() {
-
+            app.CommandHandler.Get("FileCommandHandler").openLibrary();
         };
 
         $scope.revealLibrary = function() {

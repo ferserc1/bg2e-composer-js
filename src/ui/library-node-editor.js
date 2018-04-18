@@ -41,8 +41,17 @@ app.addSource(() => {
             },50);
         }
 
-        libMgr.current.selectionChanged("libraryNodeEditor", (selection) => {
+        function registerSelectionObserver() {
+            libMgr.current.selectionChanged("libraryNodeEditor", (selection) => {
+                updateSelection();
+            });
+        }
+
+        registerSelectionObserver();
+
+        libMgr.libraryChanged("libraryNodeEditor", () => {
             updateSelection();
+            registerSelectionObserver();
         });
 
         $scope.saveChanges = function() {

@@ -281,25 +281,27 @@ app.addSource(() => {
         }
 
         openLibrary(params) {
-            let context = app.ComposerWindowController.Get().gl;
-            const {dialog} = require('electron').remote;
-            
-            let filePath = dialog.showOpenDialog({
-                properties:['openFile'],
-                filters: [
-                    { name:"Library file", extensions:["json","vitlib"]}
-                ]
-            });
-            if (filePath && filePath.length>0) {
-                filePath = app.standarizePath(filePath[0]);
-                app.library.Manager.Get().open(filePath)
-                    .then(() => {
-                        resolve();
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            }
+            return new Promise((resolve,reject) => {
+                let context = app.ComposerWindowController.Get().gl;
+                const {dialog} = require('electron').remote;
+                
+                let filePath = dialog.showOpenDialog({
+                    properties:['openFile'],
+                    filters: [
+                        { name:"Library file", extensions:["json","vitlib"]}
+                    ]
+                });
+                if (filePath && filePath.length>0) {
+                    filePath = app.standarizePath(filePath[0]);
+                    app.library.Manager.Get().open(filePath)
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                }
+            })
         }
     }
 
