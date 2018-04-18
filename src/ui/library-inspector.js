@@ -27,6 +27,15 @@ app.addSource(() => {
         
         update(libMgr.current);
 
+        $scope.loadLibrary = function() {
+
+        };
+
+        $scope.revealLibrary = function() {
+            const { shell } = require('electron').remote;
+            shell.showItemInFolder(libMgr.current.filePath);
+        };
+
         $scope.enterNode = function(node) {
             libMgr.current.deselectAll();
             libMgr.current.currentNode = node;

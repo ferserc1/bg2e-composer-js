@@ -255,19 +255,51 @@ app.addSource(() => {
         }
 
         newLibrary(params) {
-            alert("Not implemented");
+            return new Promise((resolve,reject) => {
+                let context = app.ComposerWindowController.Get().gl;
+                const {dialog} = require('electron').remote;
+                
+                let filePath = dialog.showSaveDialog({
+                    filters: [
+                        { name:"Create new library", extensions:["json","vitlib"] }
+                    ]
+                });
+                if (filePath) {
+                    filePath = app.standarizePath(filePath);
+                    app.library.Manager.Get().newLibrary(filePath)
+                        .then(() => {
+                            resolve(true);
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                }
+                else {
+                    resolve(false);
+                }
+            });
         }
 
         openLibrary(params) {
-            alert("Not implemented");
-        }
-
-        saveLibrary(params) {
-            alert("Not implemented");
-        }
-
-        saveLibraryAs(params) {
-            alert("Not implemented");
+            let context = app.ComposerWindowController.Get().gl;
+            const {dialog} = require('electron').remote;
+            
+            let filePath = dialog.showOpenDialog({
+                properties:['openFile'],
+                filters: [
+                    { name:"Library file", extensions:["json","vitlib"]}
+                ]
+            });
+            if (filePath && filePath.length>0) {
+                filePath = app.standarizePath(filePath[0]);
+                app.library.Manager.Get().open(filePath)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            }
         }
     }
 

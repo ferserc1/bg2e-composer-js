@@ -62,18 +62,6 @@ module.exports = {
 									focusedWindow.webContents.send('triggerMenu', { msg:'openLibrary' });
 								}
 							},
-							{
-								label: 'Save Library',
-								click: function(item, focusedWindow) {
-									focusedWindow.webContents.send('triggerMenu', { msg:'saveLibrary' });
-								}
-							},
-							{
-								label: 'Save Library As',
-								click: function(item, focusedWindow) {
-									focusedWindow.webContents.send('triggerMenu', { msg:'saveLibraryAs' });
-								}
-							},
 							{ type: 'separator' },
 							{
 								label: 'Plugin settings',
