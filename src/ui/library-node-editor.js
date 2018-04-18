@@ -1,5 +1,6 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
+    const path = require("path");
 
     angularApp.controller("LibraryNodeEditorController",["$scope",function($scope) {
         let libMgr = app.library.Manager.Get();
@@ -59,9 +60,14 @@ app.addSource(() => {
         }
 
         $scope.commitChanges = function() {
-            let fixRelative = (path) => {
-                // TODO: Copy to library path
-                return libMgr.current.getResourceLocalPath(path);
+            let promises = [];
+            let fixRelative = (filePath) => {
+                if (!filePath) return "";
+
+                let pathParsed = path.parse(filePath);
+                let dstPath = path.join(libMgr.current.repoPath,pathParsed.base);
+                promises.push(bg.base.Writer.CopyFile(filePath,dstPath));
+                return pathParsed.base;
             };
             let mod = $scope.material.getModifierWithMask(~0 & ~bg.base.MaterialFlag.LIGHT_MAP);
             $scope.node.materialModifier = mod.serialize();
@@ -75,7 +81,9 @@ app.addSource(() => {
             mod.reflectionMask = fixRelative(mod.reflectionMask);
 			mod.roughnessMask = fixRelative(mod.roughnessMask);
 
-            libMgr.current.save();
+            Promise.all(promises).then(() => {
+                libMgr.current.save();
+            });
         }
 
         $scope.onMaterialChanged = function() {
