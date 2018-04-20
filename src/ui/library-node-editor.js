@@ -8,9 +8,10 @@ app.addSource(() => {
         function updateMaterialNode() {
             let node = app.render.Scene.Get().materialNode;
             let drw = node.drawable;
-            let mat = drw && drw.getMaterial(0);
-            if (mat) {
-                mat.assign($scope.material);
+            if (drw) {
+                drw.forEach((plist,mat) => {
+                    mat.assign($scope.material);
+                });
             }
         }
 
@@ -38,7 +39,7 @@ app.addSource(() => {
                 }
 
                 if ($scope.node && $scope.node.type=="model") {
-                    
+
                 }
                 $scope.$apply();
                 app.ComposerWindowController.Get().updateView();
