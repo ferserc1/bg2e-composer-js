@@ -5,6 +5,9 @@ app.addSource(() => {
     angularApp.controller("LibraryNodeEditorController",["$scope",function($scope) {
         let libMgr = app.library.Manager.Get();
 
+        $scope.fileFilters = [ { name:"bg2 engine models", extensions:["bg2","vwglb"]} ];
+        $scope.modelFile = "";
+
         function updateMaterialNode() {
             let node = app.render.Scene.Get().materialNode;
             let drw = node.drawable;
@@ -58,6 +61,16 @@ app.addSource(() => {
             updateSelection();
             registerSelectionObserver();
         });
+
+        $scope.selectModel = function() {
+            libMgr.current.addModel($scope.node,$scope.modelFile)
+                .then(() => {
+                    console.log("Model updated");
+                })
+                .catch((err) => {
+                    console.error(err.message);
+                })
+        };
 
         $scope.saveChanges = function() {
             if ($scope.node) {

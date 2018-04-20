@@ -337,6 +337,28 @@ app.addDefinitions(() => {
             this._clipboard = [];
         }
 
+        addModel(node,modelFile) {
+            return new Promise((resolve,reject) => {
+                if (!node) {
+                    reject(new Error("Invalid node."));
+                }
+                else if (node.type!="model") {
+                    reject(new Error("The model must be of type 'model'"));
+                }
+
+                let gl = app.ComposerWindowController.Get().gl;
+                bg.base.Loader.Load(gl,modelFile)
+                    .then((node) => {
+                        node.drawable.destroy();
+                        // Copy to library folder
+                        reject(new Error("Not implemented"));
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            })
+        }
+
         addNode(type=app.library.NodeType.GROUP) {
             assertCurrentNodeIntegrity.apply(this);
             this.deselectAll();

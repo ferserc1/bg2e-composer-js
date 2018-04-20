@@ -8,7 +8,7 @@
         <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
     </div>
     <div ng-show="node.type=='model'">
-        Model
+        <file-picker label="File" value="modelFile" filters="fileFilters" commit-changes="selectModel"></file-picker>
     </div>
     <div ng-show="node.type=='group'">
         Group
