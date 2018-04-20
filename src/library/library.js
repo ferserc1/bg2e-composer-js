@@ -348,10 +348,31 @@ app.addDefinitions(() => {
 
                 let gl = app.ComposerWindowController.Get().gl;
                 bg.base.Loader.Load(gl,modelFile)
-                    .then((node) => {
-                        node.drawable.destroy();
-                        // Copy to library folder
-                        reject(new Error("Not implemented"));
+                    .then((sceneNode) => {
+                        let modelParsedPath = path.parse(modelFile);
+                        let modelDataPath = path.join(this.repoPath,modelParsedPath.name);
+
+                        let resources = [modelFile];
+                        let promises = [];
+                        sceneNode.drawable.getExternalResources(resources);
+
+                        if (!fs.existsSync(modelDataPath)) {
+                            mkdirp.sync(modelDataPath);
+                        }
+                        resources.forEach((res) => {
+                            let dstPathParsed = path.parse(res);
+                            let dstFile = path.join(modelDataPath,dstPathParsed.base);
+                            promises.push(bg.base.Writer.CopyFile(res,dstFile));
+                        });
+
+                        sceneNode.drawable.destroy();
+
+                        node.file = `${ modelParsedPath.name }/${ modelParsedPath.base }`;
+                        node.folderName = modelParsedPath.name;
+                        
+                        Promise.all(promises).then(() => {
+                            resolve();
+                        }).catch((err) => reject(err));
                     })
                     .catch((err) => {
                         reject(err);

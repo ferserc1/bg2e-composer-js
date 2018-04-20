@@ -1,6 +1,7 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
     const path = require("path");
+    const fs = require("fs");
 
     angularApp.controller("LibraryNodeEditorController",["$scope",function($scope) {
         let libMgr = app.library.Manager.Get();
@@ -9,7 +10,7 @@ app.addSource(() => {
         $scope.modelFile = "";
 
         function updateMaterialNode() {
-            let node = app.render.Scene.Get().materialNode;
+            let node = app.render.Scene.Get().materialPreviewModel;
             let drw = node.drawable;
             if (drw) {
                 drw.forEach((plist,mat) => {
@@ -29,21 +30,38 @@ app.addSource(() => {
                 }
 
                 if ($scope.node && $scope.node.type=="material") {
-                    app.render.Scene.Get().materialNode.enabled = true;
+                    app.render.Scene.Get().drawablePreviewModel = null;
+                    app.render.Scene.Get().previewNode.enabled = true;
                     app.render.Scene.Get().resetLibraryCamera();
                     $scope.material = new bg.base.Material();
                     let modifier = new bg.base.MaterialModifier($scope.node.materialModifier);
                     $scope.material.applyModifier(gl, modifier, libMgr.current.repoPath);
                     updateMaterialNode();
                 }
+                else if ($scope.node && $scope.node.type=="model") {
+                    let modelPath = path.resolve(path.join(libMgr.current.repoPath,$scope.node.file));
+                    modelPath = app.standarizePath(modelPath);
+                    if (fs.existsSync(modelPath)) {
+                        bg.base.Loader.Load(gl,modelPath)
+                            .then((node) => {
+                                app.render.Scene.Get().drawablePreviewModel = node.drawable;
+                                app.render.Scene.Get().previewNode.enabled = true;
+                                app.ComposerWindowController.Get().updateView();
+                            });
+                        $scope.modelFile = modelPath;
+                    }
+                    else {
+                        app.render.Scene.Get().drawablePreviewModel = null;
+                        app.render.Scene.Get().previewNode.enabled = false;
+                    }
+                }
                 else {
                     $scope.material = null;
-                    app.render.Scene.Get().materialNode.enabled = false;
+                    app.render.Scene.Get().previewNode.enabled = false;
+                    app.render.Scene.Get().drawablePreviewModel = null;
+                    app.render.Scene.Get().previewNode.enabled = false;
                 }
 
-                if ($scope.node && $scope.node.type=="model") {
-
-                }
                 $scope.$apply();
                 app.ComposerWindowController.Get().updateView();
             },50);
@@ -65,7 +83,7 @@ app.addSource(() => {
         $scope.selectModel = function() {
             libMgr.current.addModel($scope.node,$scope.modelFile)
                 .then(() => {
-                    console.log("Model updated");
+                    libMgr.current.save();
                 })
                 .catch((err) => {
                     console.error(err.message);

@@ -168,17 +168,30 @@ app.addDefinitions(() => {
             if (this._root==this._sceneRoot) {
                 if (model) {
                     this._materialPreviewModel = model.clone();
-                    this._materialNode.addComponent(this._materialPreviewModel);
+                    this._previewNode.addComponent(this._materialPreviewModel);
                 }
                 else {
                     if (this._materialPreviewModel) this._materialPreviewModel.destroy();
                     this._materialPreviewModel = null;
-                    this._materialNode.addComponent(this._defaultMaterialDrawable);
+                    this._previewNode.addComponent(this._defaultMaterialDrawable);
                 }
             }
         }
 
-        get materialNode() { return this._materialNode; }
+        get previewNode() { return this._previewNode; }
+        get materialPreviewModel() { return this._materialPreviewModel || this._defaultMaterialDrawable; }
+
+        set drawablePreviewModel(model) {
+            if (model) {
+                this._drawablePreviewModel = model;
+                this._previewNode.addComponent(this._drawablePreviewModel);
+            }
+            else {
+                if (this._drawablePreviewModel) this._drawablePreviewModel.destroy();
+                this._drawablePreviewModel = null;
+                this._previewNode.addComponent(this._materialPreviewModel || this._defaultMaterialDrawable);
+            }
+        }
 
         get cameraMode() {
             return this._cameraMode;
@@ -349,9 +362,9 @@ app.addDefinitions(() => {
                 result.name = "Material node";
                 result.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-0.5,0)));
                 this._libraryRoot.addChild(result);
-                this._materialNode = result;
-                this._materialNode.enabled = false;
-                this._defaultMaterialDrawable = this._materialNode.drawable;
+                this._previewNode = result;
+                this._previewNode.enabled = false;
+                this._defaultMaterialDrawable = this._previewNode.drawable;
             });
 
             //this._libraryLightState = getSceneLightState.apply(this,[this._libraryRoot]);
