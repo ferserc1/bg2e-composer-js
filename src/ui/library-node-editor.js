@@ -36,6 +36,10 @@ app.addSource(() => {
                     $scope.material = null;
                     app.render.Scene.Get().materialNode.enabled = false;
                 }
+
+                if ($scope.node && $scope.node.type=="model") {
+                    
+                }
                 $scope.$apply();
                 app.ComposerWindowController.Get().updateView();
             },50);

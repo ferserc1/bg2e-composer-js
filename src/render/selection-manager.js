@@ -87,6 +87,12 @@ app.addDefinitions(() => {
         }
         
         selectItem(node,plist,material,notify=true) {
+            // Configure the material editor model, used in library manager
+            // to show the material preview
+            if (node.drawable) {
+                this._scene.materialPreviewModel = node.drawable;
+            }
+
             if (material && !material.selectMode) {
                 material.selectMode = true;
                 this._selectionItems.push(new SelectionItem(node,plist,material));
@@ -142,6 +148,10 @@ app.addDefinitions(() => {
         }
 
         deselectItem(node,plist,material,notify=true) {
+            // Clear the material editor model, used in library manager
+            // to show the material preview
+            this._scene.materialPreviewModel = null;
+
             if (material) material.selectMode = false;
             let deselectItemIndex = -1;
             this._selectionItems.some((item,i) => {
@@ -154,10 +164,14 @@ app.addDefinitions(() => {
                 this._selectionItems.splice(deselectItemIndex,1);
             }
             checkSelected.apply(this,[node]);
+
             if (notify) notifySelectionChanged.apply(this);
         }
 
         clear(notify = true) {
+            // Clear the material editor model, used in library manager
+            // to show the material preview
+            this._scene.materialPreviewModel = null;
             this._selectionItems.forEach((item) => {
                 if (item.material) item.material.selectMode = false;
                 item.node.selected = false;

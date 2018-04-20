@@ -163,6 +163,21 @@ app.addDefinitions(() => {
             app.ComposerWindowController.Get().postRedisplay();
         }
 
+        set materialPreviewModel(model) {
+            // The material preview model can only be changed in SCENE mode
+            if (this._root==this._sceneRoot) {
+                if (model) {
+                    this._materialPreviewModel = model.clone();
+                    this._materialNode.addComponent(this._materialPreviewModel);
+                }
+                else {
+                    if (this._materialPreviewModel) this._materialPreviewModel.destroy();
+                    this._materialPreviewModel = null;
+                    this._materialNode.addComponent(this._defaultMaterialDrawable);
+                }
+            }
+        }
+
         get materialNode() { return this._materialNode; }
 
         get cameraMode() {
@@ -336,6 +351,7 @@ app.addDefinitions(() => {
                 this._libraryRoot.addChild(result);
                 this._materialNode = result;
                 this._materialNode.enabled = false;
+                this._defaultMaterialDrawable = this._materialNode.drawable;
             });
 
             //this._libraryLightState = getSceneLightState.apply(this,[this._libraryRoot]);
