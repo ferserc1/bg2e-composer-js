@@ -143,9 +143,14 @@ app.addSource(() => {
         exportSelected() {
             let context = app.ComposerWindowController.Get().gl;
             const {dialog} = require('electron').remote;
-            let selection = app.render.Scene.Get().selectionManager.selection;
+            let exportNodes = [];
+            app.render.Scene.Get().selectionManager.selection.forEach((sel) => {
+                if (sel.node && sel.node.drawable) {
+                    exportNodes.push(sel.node);
+                }
+            })
 
-            if (selection.length==1 && selection[0].node && selection[0].node.drawable) {
+            if (exportNodes.length==1) {
                 let filePath = dialog.showSaveDialog({
                     filters: [
                         { name:"bg2 object file", extensions:["bg2"]}
@@ -153,7 +158,7 @@ app.addSource(() => {
                 });
                 if (filePath) {
                     filePath = app.standarizePath(filePath);
-                    let cmd = new app.fileCommands.ExportObject(context,filePath,selection[0].node);
+                    let cmd = new app.fileCommands.ExportObject(context,filePath,exportNodes[0]);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {})
                         .catch((err) => {
@@ -166,8 +171,45 @@ app.addSource(() => {
                         });
                 }
             }
-            else if (selection.length>1) {
-                // TODO: Export multiple items
+            else if (exportNodes.length>1) {
+                const path = require("path");
+                const mkdirp = require("mkdirp");
+                let getName = (node) => { return (node.drawable.name || node.name || "").replace(/\s+/,"_") };
+                if (exportNodes.some((node) => getName(node)=="" )) {
+                    console.error("Could not export multiple models: some untitled elements found.",true);
+                    return;
+                }
+                else if (exportNodes.some((n1,i1) => {
+                    return exportNodes.some((n2,i2) => {
+                        return getName(n1)==getName(n2) && i1!=i2;
+                    })
+                })) {
+                    console.error("Could not export multiple models: some objects have the same name.",true);
+                    return;
+                }
+                let folderPath = dialog.showOpenDialog({
+                    properties: ["openDirectory"]
+                });
+                if (folderPath) {
+                    folderPath = folderPath[0];
+                    exportNodes.forEach((node) => {
+                        let folderName = getName(node);
+                        let filePath = path.join(folderPath,folderName);
+                        mkdirp(filePath);
+                        filePath = app.standarizePath(path.join(filePath,`${folderName}.bg2`));
+                        let cmd = new app.fileCommands.ExportObject(context,filePath,node);
+                        app.CommandManager.Get().doCommand(cmd)
+                            .then(() => {})
+                            .catch((err) => {
+                                if (err) {
+                                    console.error(error.message,true);
+                                }
+                                else {
+                                    // command cancelled by user
+                                }
+                            });
+                    });
+                }
             }
         }
 

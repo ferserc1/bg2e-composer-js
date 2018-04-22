@@ -115,6 +115,12 @@ app.addSource(() => {
                     }
                 };
 
+                app.render.Scene.Get().selectionManager.selectionChanged("drawableComponentUI", () => {
+                    setTimeout(() => {
+                        $scope.name = $scope.component.componentInstance.name;
+                        $scope.$apply()
+                    }, 10);
+                });
 
                 $scope.$watch('creationTool', () => {
 
@@ -124,6 +130,7 @@ app.addSource(() => {
                     $scope.component.setName($scope.name);
                 };
 
+                app.render.Scene.Get().selection
                 $scope.createDrawable = function() {
                     switch ($scope.creationTool.id) {
                     case 0:
