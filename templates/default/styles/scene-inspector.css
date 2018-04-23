@@ -33,3 +33,15 @@ scene-inspector h1 {
     margin-right: 4px;
     margin-bottom: -2px;
 }
+
+.bg2-scene-editor-rightbar library-inspector {
+    left: auto;
+    right: 0px;
+    width: 350px;
+    top: 65px;
+}
+
+.bg2-library-mode-read .bg2-library-container {
+    bottom: 0px;
+    top: 33px;
+}

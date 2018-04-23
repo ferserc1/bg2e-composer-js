@@ -189,5 +189,28 @@ app.addSource(() => {
         app.render.Scene.Get().sceneWillOpen("sceneEditorController", (oldScene,newScene) => {
             console.log("Open new scene");
         });
+
+        $scope.libraryNodeSelected = function(node,resPath) {
+            if (node.type=="model") {
+
+            }
+            else if (node.type=="material") {
+                let selection = app.render.Scene.Get().selectionManager.selection;
+                let target = [];
+                selection.forEach((selItem) => {
+                    if (selItem.material) {
+                        target.push(selItem.material);
+                    }
+                });
+                if (target.length) {
+                    let cmd = new app.materialCommands.ApplyModifier(node.materialModifier,resPath,target);
+                    app.CommandManager.Get().doCommand(cmd)
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                            app.ComposerWindowController.Get().updateView();
+                        })
+                }
+            }
+        }
     }]);
 });

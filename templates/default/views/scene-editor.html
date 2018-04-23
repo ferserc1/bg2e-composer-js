@@ -6,8 +6,8 @@
     <dialog-view></dialog-view>
     <context-menu></context-menu>
 
-    <div ng-hide="isLocked">
-        <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Components','Material']">
+    <div ng-hide="isLocked" class="bg2-scene-editor-rightbar">
+        <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Components','Material','Library']">
             <ul>
                 <li ng-repeat="item in tabs">
                     <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
@@ -16,5 +16,6 @@
         </div>
         <component-inspector ng-show="currentTab==0" selection="selection"></component-inspector>
         <material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
+        <library-inspector ng-show="currentTab==2" mode="read" on-insert-node="libraryNodeSelected"></library-inspector>
     </div>
 </div>

@@ -2,6 +2,8 @@ app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
     angularApp.controller("LibraryInspectorController",['$scope',function($scope) {
+        $scope.mode = $scope.mode || 'edit';
+        $scope.onInsertNode = $scope.onInsertNode || null;
         let libMgr = app.library.Manager.Get();
         function clearHash(node) {
             delete node.$$hashKey;
@@ -37,12 +39,20 @@ app.addSource(() => {
         };
 
         $scope.enterNode = function(node) {
-            libMgr.current.deselectAll();
-            libMgr.current.currentNode = node;
-            libMgr.notifyLibraryChanged();
+            if ($scope.mode=='read' && node.type!='group') {
+                if ($scope.onInsertNode) {
+                    $scope.onInsertNode(node,libMgr.current.repoPath);
+                }
+            }
+            else {
+                libMgr.current.deselectAll();
+                libMgr.current.currentNode = node;
+                libMgr.notifyLibraryChanged();
+            }
         };
 
         $scope.selectNode = function(node,event) {
+            if ($scope.mode!='edit') return;
             if (!event.shiftKey) {
                 libMgr.current.deselectAll();
             }
@@ -66,6 +76,7 @@ app.addSource(() => {
         }
 
         $scope.addNode = function(event) {
+            if ($scope.mode!='edit') return;
             app.ui.contextMenu.show(
                 event,[
                     { label:"Group", type:app.library.NodeType.GROUP },
@@ -79,6 +90,7 @@ app.addSource(() => {
         };
 
         $scope.removeNode = function(event) {
+            if ($scope.mode!='edit') return;
             if (libMgr.current.selection.length>0) {
                 app.ui.contextMenu.show(
                     event,[
@@ -106,6 +118,7 @@ app.addSource(() => {
         };
 
         $scope.copySelection = function() {
+            if ($scope.mode!='edit') return;
             clearHash(libMgr.current.root);
             if (libMgr.current.selection.length) {
                 libMgr.current.copySelection();
@@ -114,6 +127,7 @@ app.addSource(() => {
         };
 
         $scope.cutSelection = function() {
+            if ($scope.mode!='edit') return;
             clearHash(libMgr.current.root);
             if (libMgr.current.selection.length) {
                 libMgr.current.cutSelection();
@@ -122,6 +136,7 @@ app.addSource(() => {
         };
 
         $scope.paste = function() {
+            if ($scope.mode!='edit') return;
             clearHash(libMgr.current.root);
             if (libMgr.current.clipboardContent.length) {
                 // setTimeout to prevent angular convert a cicrulcar structure json
@@ -134,6 +149,7 @@ app.addSource(() => {
         };
 
         $scope.onDrag = function(fromNode,toNode) {
+            if ($scope.mode!='edit') return;
             libMgr.current.moveNode(fromNode,toNode);
             libMgr.current.save();
             $scope.$apply();
@@ -149,6 +165,8 @@ app.addSource(() => {
             templateUrl: `templates/${ app.config.templateName }/directives/library-inspector.html`,
             compile: app.workspaceElementCompile(),
             scope: {
+                mode:"@",
+                onInsertNode:"=?"
             },
             controller: 'LibraryInspectorController'
         }
