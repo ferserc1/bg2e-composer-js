@@ -7,6 +7,15 @@ app.addSource(() => {
 
     angularApp.controller('PolyListInspectorController', ['$scope',function($scope) {
         $scope.elements = [];
+        $scope.searchText = "";
+        $scope.ignoreCase = true;
+        $scope.visibilityOptions = [
+            { id:1, label:"Any" },
+            { id:2, label:"Visible" },
+            { id:3, label:"Hidden" },
+        ];
+        $scope.visibility = $scope.visibilityOptions[0];
+        $scope.searchByName = true;
 
         function isSelected(plist) {
             let selectionManager = app.render.Scene.Get().selectionManager;
@@ -46,6 +55,31 @@ app.addSource(() => {
                     });
                 }
             });
+        }
+
+        $scope.searchPlist = function() {
+            console.log("Search plist " + $scope.searchText);
+            let re = new RegExp($scope.searchText,$scope.ignoreCase ? "i":"");
+            let result = [];
+            let findDrawable = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+            let selection = app.render.Scene.Get().selectionManager;
+            selection.clear();
+            app.render.Scene.Get().root.accept(findDrawable);
+            findDrawable.result.forEach((node) => {
+                node.drawable.forEach((plist,mat) => {
+                    if ($scope.visibility.id==1 ||
+                        ($scope.visibility.id==2 && plist.visible==true) ||
+                        ($scope.visibility.id==3 && plist.visible==false)
+                    ) {
+                        if (($scope.searchByName && re.test(plist.name)) || !$scope.searchByName ) {
+                            result.push({ node:node, plist:plist, mat:mat});
+                            selection.selectItem(node, plist, mat, false);
+                        }
+                    }
+                })
+            });
+
+            selection.notifySelectionChanged();
         }
 
         $scope.toggleItem = function(plist,event) {

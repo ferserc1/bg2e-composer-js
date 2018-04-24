@@ -2,6 +2,14 @@
     <i class="bg2-icon bg2-plist-inspector"></i>
     <h1>PolyLists inspector</h1>
 </div>
+<div class="bg2-widget-panel">
+    <h3>Search and select</h3>
+    <bool-picker label="Search by name" value="searchByName"></bool-picker>
+    <string-picker label="Name" value="searchText" ng-show="searchByName"></string-picker>
+    <bool-picker label="Ignore case" value="ignoreCase" ng-show="searchByName"></bool-picker>
+    <select-picker label="Visibility" value="visibility" options="visibilityOptions"></select-picker>
+    <button ng-click="searchPlist()">Search</button>
+</div>
 <ul>
     <li ng-repeat="drawable in elements">
         <h1>{{ drawable.name }}</h1>

@@ -36,17 +36,17 @@ app.addDefinitions(() => {
         });
     }
 
-    function notifySelectionChanged() {
-        for (let key in this._observers) {
-            this._observers[key](this);
-        }
-    }
-
     class SelectionManager {
         constructor(scene) {
             this._scene = scene;
             this._selectionItems = [];
             this._observers = {};
+        }
+
+        notifySelectionChanged() {
+            for (let key in this._observers) {
+                this._observers[key](this);
+            }
         }
 
         selectionChanged(observerId,callback) {
@@ -97,7 +97,7 @@ app.addDefinitions(() => {
                 material.selectMode = true;
                 this._selectionItems.push(new SelectionItem(node,plist,material));
                 checkSelected.apply(this,[node]);
-                if (notify) notifySelectionChanged.apply(this);
+                if (notify) this.notifySelectionChanged();
                 return true;
             }
             else if (material) {
@@ -107,7 +107,7 @@ app.addDefinitions(() => {
             else if (!material && !node.selected) {
                 this._selectionItems.push(new SelectionItem(node,null,null));
                 checkSelected.apply(this,[node]);
-                if (notify) notifySelectionChanged.apply(this);
+                if (notify) this.notifySelectionChanged();
                 return true;
             }
             else if (!material && node.selected) {
@@ -131,7 +131,7 @@ app.addDefinitions(() => {
                 this.selectItem(node,null,null,false);
             }
             checkSelected.apply(this,[node]);
-            notifySelectionChanged.apply(this);
+            this.notifySelectionChanged();
         }
 
         deselectNode(node) {
@@ -144,7 +144,7 @@ app.addDefinitions(() => {
                 this.deselectItem(node,null,null,false);
             }
             checkSelected.apply(this,[node]);
-            notifySelectionChanged.apply(this);
+            this.notifySelectionChanged();
         }
 
         deselectItem(node,plist,material,notify=true) {
@@ -165,7 +165,7 @@ app.addDefinitions(() => {
             }
             checkSelected.apply(this,[node]);
 
-            if (notify) notifySelectionChanged.apply(this);
+            if (notify) this.notifySelectionChanged();
         }
 
         clear(notify = true) {
@@ -177,7 +177,7 @@ app.addDefinitions(() => {
                 item.node.selected = false;
             });
             this._selectionItems = [];
-            if (notify) notifySelectionChanged.apply(this);
+            if (notify) this.notifySelectionChanged();
         }
     }
 
