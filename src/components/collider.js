@@ -27,13 +27,15 @@ app.addSource(() => {
             controller: ['$scope', function($scope) {
                 $scope.shapes = [
                     { id:0, label:"Box collider" },
-                    { id:1, label:"Sphere collider" }
+                    { id:1, label:"Sphere collider" },
+                    { id:2, label:"Hull collider" }
                 ];
                 $scope.shape = $scope.shapes[0];
                 $scope.width = 1;
                 $scope.height = 1;
                 $scope.depth = 1;
                 $scope.radius = 1;
+                $scope.margin = 0.01;
 
                 $scope.updateValues = function() {
                     if (!$scope.component) return false;
@@ -50,6 +52,10 @@ app.addSource(() => {
                         $scope.shape = $scope.shapes[1];
                         $scope.radius = shape.radius;
                         break;
+                    case shape instanceof bg.physics.ConvexHullCollider:
+                        $scope.shape = $scope.shapes[2];
+                        $scope.margin = shape.margin;
+                        break;
                     }
                 }
 
@@ -61,6 +67,9 @@ app.addSource(() => {
                         break;
                     case 1:
                         shape = new bg.physics.SphereCollider($scope.radius);
+                        break;
+                    case 2:
+                        shape = new bg.physics.ConvexHullCollider($scope.margin);
                         break;
                     }
                     $scope.component.setColliderShape(shape)
