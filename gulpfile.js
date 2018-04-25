@@ -4,13 +4,13 @@ const fs = require("fs");
 const path = require("path");
 
 let fbxPluginPath = {
-    win64: `${ __dirname }/../fbx2json/build/win64/release`,
-    macOS: `${ __dirname }/../fbx2json/build/macOS`
+    win64: `${ __dirname }/../fbx2json-dist/win64`,
+    macOS: `${ __dirname }/../fbx2json-dist/osx`
 };
 
 let raytracerPluginPath = {
-    win64: `${ __dirname }/../raytracer/build/win64`,
-    macOS: `${ __dirname }/../raytracer/build/macos`
+    win64: `${ __dirname }/../bg2e-raytracer-dist/win64`,
+    macOS: `${ __dirname }/../bg2e-raytracer-dist/osx`
 };
 
 gulp.task("compile", function() {
@@ -71,7 +71,11 @@ gulp.task("fbxPlugin", function() {
             .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/src')),
 
         gulp.src([
-            `${ raytracerPluginPath.win64 }/raytracer.exe`
+            `${ raytracerPluginPath.win64 }/raytracer.exe`,
+            `${ raytracerPluginPath.win64 }/concrt140.dll`,
+            `${ raytracerPluginPath.win64 }/msvcp140.dll`,
+            `${ raytracerPluginPath.win64 }/vccorlib140.dll`,
+            `${ raytracerPluginPath.win64 }/vcruntime140.dll`
         ])
             .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/win64')),
 
