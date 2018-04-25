@@ -100,11 +100,17 @@ module.exports = function(app,angularApp,bg) {
         let projectDir = scenePath.split('/');
         projectDir.pop();
         projectDir = projectDir.join('/');
+        let cancel = false;
 
         steadyDrawables.forEach((drawable) => {
             callbacks.push((function(drw) {
                 return (printFn) => {
                     return new Promise((resolve,reject) => {
+                        if (cancel) {
+                            reject(new Error("Cancelled by user"));
+                            return;
+                        }
+
                         let cmd = app.raytracer.commandPath;
                         if (!drw.name) {
                             drw.name = bg.utils.generateUUID();
@@ -127,7 +133,14 @@ module.exports = function(app,angularApp,bg) {
                             printFn("ERROR: " + data);
                         });
 
+                        app.on('app:cancel_render','raytracerPlugin',() => {
+                            cancel = true;
+                            raytracerCmd.kill();
+                            reject(new Error("Cancelled by user"));
+                        });
+
                         raytracerCmd.on('exit', function(code) {
+                            if (cancel) return;
                             printFn("Object " + drw.name + ": lightmap render done.");
                             let gl = app.ComposerWindowController.Get().gl;
                             let cache = bg.base.TextureCache.Get(gl);
@@ -250,7 +263,8 @@ module.exports = function(app,angularApp,bg) {
                         });
                 };
                 $scope.cancel = function() {
-                    app.ui.DialogView.Close()
+                    app.trigger("app:cancel_render");
+                    app.ui.DialogView.Close();
                 };
                 $scope.rendering = false;
                 $scope.renderingDone = false;
