@@ -47,7 +47,9 @@ function launch(indexFile,debug) {
                 }, function (response) {
                     if (response === 0) { // Runs the following if 'Yes' is clicked
                         app.showExitPrompt = false;
-                        win.close();
+                        setTimeout(() => {
+                            win.close();
+                        },100);
                     }
                 });
             }
