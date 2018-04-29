@@ -87,17 +87,25 @@ app.addDefinitions(() => {
     }
 
     function initializePath() {
-        let libraryPath = path.parse(this.filePath);
-        let location = libraryPath.dir;
-        this._repoFolderName = libraryPath.name;
-        this._repoPath = path.join(location,libraryPath.name);
-
-        if (fs.existsSync(this.repoPath) && !fs.statSync(this.repoPath).isDirectory()) {
-            throw new Error(`Error creating library at ${location}. The repository path exists, but is a file instead of a directory. `);
+        try {
+            let libraryPath = path.parse(this.filePath);
+            let location = libraryPath.dir;
+            this._repoFolderName = libraryPath.name;
+            this._repoPath = path.join(location,libraryPath.name);
+    
+            if (fs.existsSync(this.repoPath) && !fs.statSync(this.repoPath).isDirectory()) {
+                fs.unlinkSync(this.repoPath);
+            }
+    
+            if (!fs.existsSync(this.repoPath)) {
+                mkdirp.sync(this.repoPath);
+            }
         }
-
-        if (!fs.existsSync(this.repoPath)) {
-            mkdirp.sync(this.repoPath);
+        catch (err) {
+            // In Windows 10, with OneDrive enabled, the fs.exystsSync returns false, but the directory exists
+            if (err.code!='EEXIST') {
+                throw(err);
+            }
         }
     }
 
@@ -185,7 +193,13 @@ app.addDefinitions(() => {
                 let parsedPath = path.parse(absolutePath);
                 let dstPath = path.join(this.repoPath,copySubpath);
                 let dstFile = path.join(dstPath,parsedPath.base);
-                mkdirp(dstPath);
+
+                if (fs.existsSync(dstPath) && !fs.statSync(dstPath).isDirectory()) {
+                    fs.unlinkSync(dstPath);
+                }
+                if (!fs.existsSync(dstPath)) {
+                    mkdirp(dstPath);
+                }
                 bg.base.Writer.CopyFile(absolutePath,dstFile);
                 absolutePath = dstFile;
             }

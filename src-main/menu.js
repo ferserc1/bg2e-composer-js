@@ -341,6 +341,9 @@ module.exports = {
 							}
 						},
 						{type: 'separator'},
+						{ role: 'copy' },
+						{ role: 'paste' },
+						{type: 'separator'},
 						{
 							label: 'Remove Node',
 							accelerator: 'Backspace',
@@ -363,6 +366,8 @@ module.exports = {
 					]
 				}
 				else {
+					template[0].submenu.push({role: 'quit'});
+
 					template[1].submenu.push(
 						{
 							label: 'Undo',
@@ -376,6 +381,9 @@ module.exports = {
 								focusedWindow.webContents.send('triggerMenu', { msg:'redo' });
 							}
 						},
+						{type: 'separator'},
+						{ role: 'copy' },
+						{ role: 'paste' },
 						{type: 'separator'},
 						{
 							label: 'Remove Node',

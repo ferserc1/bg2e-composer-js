@@ -44,6 +44,12 @@ class AppClass {
                 downloads: this.electronApp.getPath('downloads')
             }
 
+            // There are problems in Windows platform, when the user have OneDrive configured
+            // as the document folder, so in Windows, the documents folder is userData folder
+            if (process.platform=='win32') {
+                this._paths.documents = this.electronApp.getPath('userData');
+            }
+
             if (!fs.existsSync(this._paths.temp)) {
                 fs.mkdir(this._paths.temp);
             }
