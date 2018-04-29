@@ -294,6 +294,11 @@ module.exports = {
 							{
 								label: 'About Electron.js',
 								click () { require('electron').shell.openExternal('https://electron.atom.io') }
+							},
+							{type:'separator'},
+							{
+								label: 'Online help',
+								click() { require('electron').shell.openExternal('https://bitbucket.org/ferserc1/bg2e-composer-js/wiki/Home') }
 							}
 						]
 					}
