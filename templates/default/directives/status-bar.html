@@ -12,7 +12,7 @@
     <button class="bg2-button-mid" ng-click="openLog()" ng-hide="logWindowVisible">Open Log</button>
     <button class="bg2-button-mid" ng-click="closeLog()" ng-show="logWindowVisible">Close Log</button>
 </div>
-<div class="bg2-width-30 bg2-pull-right bg2-info bg2-text-right bg2-message-{{ lastMessageType }}" ng-click="openLog()">
+<div class="bg2-width-30 bg2-pull-right bg2-info bg2-text-right bg2-message-{{ lastMessageType }}" style="overflow: hidden;height: 15px;" ng-click="openLog()">
     {{ lastMessage }}
 </div>
 

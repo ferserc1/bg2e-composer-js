@@ -136,7 +136,9 @@ app.addSource(() => {
             let imageName = bg.utils.generateUUID() + '.jpg';
             if ($scope.node.icon) {
                 let fullPath = path.join(libMgr.current.repoPath,$scope.node.icon);
-                fs.unlinkSync(fullPath);
+                if (fs.existsSync(fullPath)) {
+                    fs.unlinkSync(fullPath);
+                }
             }
             app.ComposerWindowController.Get().screenshot(format,256,256).then((screenshot) => {
                 let re = new RegExp(`^data:${ format };base64,`);

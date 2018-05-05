@@ -42,7 +42,6 @@ app.addSource(() => {
                     top: (event.clientY - 50) + 'px',
                     left: event.clientX + 'px'
                 }
-                console.log(event);
             }
             else {
                 $scope.iconPreviewUrl = null;
