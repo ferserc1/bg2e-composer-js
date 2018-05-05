@@ -54,7 +54,7 @@ app.addSource(() => {
             })
                 .then((comp) => {
                     if (comp && $scope.selectedNode) {
-                        let instance = comp.createInstance();
+                        let instance = comp.createInstance($scope.selectedNode);
                         app.CommandManager.Get().doCommand(
                             new app.nodeCommands.AddComponent($scope.selectedNode,instance)
                         )
