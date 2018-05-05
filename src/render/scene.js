@@ -167,11 +167,14 @@ app.addDefinitions(() => {
             // The material preview model can only be changed in SCENE mode
             if (this._root==this._sceneRoot) {
                 if (model) {
-                    this._materialPreviewModel = model.clone();
+                    this._materialPreviewModel = model.instance("materialPreview");
+                    this._materialPreviewModel.forEach((plist,mat) => {
+                        mat.copyMaterialSettings(new bg.base.Material(),0xFFFFFFFF);
+                    })
                     this._previewNode.addComponent(this._materialPreviewModel);
                 }
                 else {
-                    if (this._materialPreviewModel) this._materialPreviewModel.destroy();
+                    //if (this._materialPreviewModel) this._materialPreviewModel.destroy();
                     this._materialPreviewModel = null;
                     this._previewNode.addComponent(this._defaultMaterialDrawable);
                 }

@@ -182,6 +182,7 @@ app.addDefinitions(() => {
                     (result.type==bg.manipulation.SelectableType.PLIST || result.type==bg.manipulation.SelectableType.GIZMO_ICON))
                 {
                     let selected = this._selectionManager.selectItem(result.node,result.plist,result.material);
+
                     let selectedItem = this._selectionManager.selectedItem;
                     if (!selected && selectedItem) {
                         this._gizmoNode = selectedItem.node;

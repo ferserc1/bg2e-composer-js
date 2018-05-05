@@ -50,19 +50,21 @@ app.addDefinitions(() => {
                     let node = s.selection[0].node;
                     let drawable = node && node.drawable;
                     let transform = node && node.transform && node.transform.matrix;
-                    if (drawable) {
-                        let bbox = new bg.tools.BoundingBox(drawable,transform);
-                        let x = Math.round(bbox.size.x * 1000) / 1000;
-                        let y = Math.round(bbox.size.y * 1000) / 1000;
-                        let z = Math.round(bbox.size.z * 1000) / 1000;
-                        this._selection += `, width:${ x }, height:${ y }, depth:${ z }`;
-                    }
-                    else {
-                        this._selection += " (select a drawable node to view size)";
-                    }   
+                    // TODO: too slow on medium-high polygon objects
+                    // Implement printSelection using web workers
+//                    if (drawable) {
+//                        let bbox = new bg.tools.BoundingBox(drawable,transform);
+//                        let x = Math.round(bbox.size.x * 1000) / 1000;
+//                        let y = Math.round(bbox.size.y * 1000) / 1000;
+//                        let z = Math.round(bbox.size.z * 1000) / 1000;
+//                        this._selection += `, width:${ x }, height:${ y }, depth:${ z }`;
+//                    }
+//                    else {
+//                        this._selection += " (select a drawable node to view size)";
+//                    }   
                 }
                 else {
-                    this._selection = s.selection.length + " items selected (select single node to view size)";
+//                    this._selection = s.selection.length + " items selected (select single node to view size)";
                 }
                 let count = selectedTriangles(s);
                 if (count) {
