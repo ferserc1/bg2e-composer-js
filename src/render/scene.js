@@ -344,6 +344,7 @@ app.addDefinitions(() => {
         }
 
         createLibraryScene() {
+            const path = require('path');
             this._libraryRoot = new bg.scene.Node(this.gl,"LibraryRoot");
 
             this._libraryCameraNode = new bg.scene.Node(this.gl, "Library Camera");
@@ -356,6 +357,18 @@ app.addDefinitions(() => {
             let ctrl = this.createCameraController();
             this._libraryCameraNode.addComponent(ctrl);
             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._libraryRoot);
+
+            this._libraryEnvironment = new bg.scene.Node(this.gl);
+            this._libraryRoot.addChild(this._libraryEnvironment);
+            let skyboxComp = new bg.scene.Skybox();
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.POSITIVE_X,app.standarizePath(path.join(app.resourcesDir,"library-env-posx.jpg")));
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.NEGATIVE_X,app.standarizePath(path.join(app.resourcesDir,"library-env-negx.jpg")));
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.POSITIVE_Y,app.standarizePath(path.join(app.resourcesDir,"library-env-posy.jpg")));
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Y,app.standarizePath(path.join(app.resourcesDir,"library-env-negy.jpg")));
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.POSITIVE_Z,app.standarizePath(path.join(app.resourcesDir,"library-env-posz.jpg")));
+            skyboxComp.setImageUrl(bg.scene.CubemapImage.NEGATIVE_Z,app.standarizePath(path.join(app.resourcesDir,"library-env-negz.jpg")));
+            this._libraryEnvironment.addComponent(skyboxComp);
+            skyboxComp.loadSkybox(this.gl);
 
             let modelNode = new bg.scene.Node(this.gl, "Model node");
             this._libraryRoot.addChild(modelNode);
