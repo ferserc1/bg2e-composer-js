@@ -98,16 +98,8 @@ html {
     box-sizing: border-box;
 }
 
-vector-picker input::-webkit-outer-spin-button,
-vector-picker input::-webkit-inner-spin-button,
-number-picker input::-webkit-outer-spin-button,
-number-picker input::-webkit-inner-spin-button,
-rotate-picker input::-webkit-outer-spin-button,
-rotate-picker input::-webkit-inner-spin-button,
-translate-picker input::-webkit-outer-spin-button,
-translate-picker input::-webkit-inner-spin-button,
-scale-picker input::-webkit-outer-spin-button,
-scale-picker input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
