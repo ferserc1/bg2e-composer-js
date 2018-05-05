@@ -80,6 +80,19 @@ app.addDefinitions(() => {
             this._observers = {};
         }
 
+        screenshot(format,width,height) {
+            return new Promise((resolve) => {
+                this._takingScreenshot = true;
+                this.updateView();
+                setTimeout(() => {
+                    let data = bg.app.MainLoop.singleton.canvas.screenshot(format,width,height);
+                    this._takingScreenshot = false;
+                    resolve(data);
+                    this.updateView();
+                },200);
+            })
+        }
+
         onViewUpdated(observer, callback) {
             this._observers[observer] = callback;
         }
@@ -174,7 +187,9 @@ app.addDefinitions(() => {
             if (!this.scene.ready) return;
 
             this.renderer.display(this.scene.root, this.scene.camera);
-            this.scene.selectionController.drawGizmos();
+            if (!this._takingScreenshot) {
+                this.scene.selectionController.drawGizmos();
+            }
 
             if (notifyObservers) {
                 for (let key in this._observers) {

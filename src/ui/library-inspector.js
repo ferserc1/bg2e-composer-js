@@ -1,5 +1,6 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
+    const path = require('path');
 
     angularApp.controller("LibraryInspectorController",['$scope',function($scope) {
         $scope.mode = $scope.mode || 'edit';
@@ -28,6 +29,29 @@ app.addSource(() => {
         });
         
         update(libMgr.current);
+
+        $scope.iconPreviewUrl = null;
+        $scope.iconPreviewStyle = null;
+
+        $scope.onItemEnter = function(node,event) {
+            if (node.icon) {
+                $scope.iconPreviewUrl = path.join(libMgr.current.repoPath,node.icon);
+                $scope.iconPreviewStyle = {
+                    position: 'fixed',
+                    "z-index": 10000000,
+                    top: (event.clientY - 50) + 'px',
+                    left: event.clientX + 'px'
+                }
+                console.log(event);
+            }
+            else {
+                $scope.iconPreviewUrl = null;
+            }
+        };
+
+        $scope.onItemExit = function(event) {
+            $scope.iconPreviewUrl = null;
+        };
 
         $scope.loadLibrary = function() {
             app.CommandHandler.Get("FileCommandHandler").openLibrary();

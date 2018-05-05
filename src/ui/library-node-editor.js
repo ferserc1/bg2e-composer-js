@@ -131,6 +131,31 @@ app.addSource(() => {
             });
         }
 
+        $scope.screenshot = function() {
+            let format = "image/jpeg";
+            let imageName = bg.utils.generateUUID() + '.jpg';
+            if ($scope.node.icon) {
+                let fullPath = path.join(libMgr.current.repoPath,$scope.node.icon);
+                fs.unlinkSync(fullPath);
+            }
+            app.ComposerWindowController.Get().screenshot(format,256,256).then((screenshot) => {
+                let re = new RegExp(`^data:${ format };base64,`);
+                var base64Data = screenshot.replace(re, "");
+                let dstPath = path.join(libMgr.current.repoPath,imageName);
+
+                fs.writeFile(dstPath, base64Data, 'base64', function(err) {
+                    if (!err) {
+                        $scope.node.icon = imageName;
+                        libMgr.current.save();
+                        updateSelection();
+                    }
+                    else {
+                        console.error(err.message,true);
+                    }
+                });
+            })
+        }
+
         $scope.onMaterialChanged = function() {
             updateMaterialNode();
             app.ComposerWindowController.Get().updateView();

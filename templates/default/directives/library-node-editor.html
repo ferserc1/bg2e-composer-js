@@ -3,6 +3,7 @@
         <string-picker label="Identifier" value="id" commit-changes="saveChanges"></string-picker>
         <string-picker label="Name" value="name" commit-changes="saveChanges"></string-picker>
         <texture-picker label="Icon" value="icon" commit-changes="saveChanges"></texture-picker>
+        <button ng-click="screenshot()" ng-show="node.type=='material' || node.type=='model'">Take Screenshot</button>
     </div>
     <div ng-show="node.type=='material'">
         <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
