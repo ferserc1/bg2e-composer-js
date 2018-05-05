@@ -6,6 +6,12 @@
     background-size: 100% 100%;
 }
 
+.bg2-icon-button .bg2-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
 .bg2-open-file {
     background-image: url(../icons/folder-open.png);
 }
@@ -114,4 +120,8 @@
 
 .bg2-library-item-model {
     background-image: url(../icons/object.png);
+}
+
+.bg2-ok {
+    background-image: url(../icons/apply.png);
 }
