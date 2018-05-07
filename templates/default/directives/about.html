@@ -14,7 +14,7 @@
     <h3>This software also contains or uses some libraries or resources that have other license terms that you must accept:</h3>
     <div ng-repeat="copyright in otherCopyrightNotices">
         <h4>{{ copyright.title }}</h4>
-        <a ng-click="openLink('https://www.autodesk.com/products/fbx/overview')">https://www.autodesk.com/products/fbx/overview</a>
+        <a ng-click="openLink(copyright.link)">{{ copyright.link }}</a>
         <p ng-repeat="paragraph in copyright.paragraphs">{{ paragraph }}</p>
     </div>
 </div>
