@@ -10,6 +10,11 @@ app.addSource(() => {
                 window.reload();
             }
         }
+
+        $scope.showDevTools = function() {
+            let { remote } = require('electron');
+            remote.getCurrentWindow().toggleDevTools();
+        }
     }]);
 
     angularApp.directive("pluginSettings", ['$compile', function($compile) {
