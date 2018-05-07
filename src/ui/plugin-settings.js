@@ -4,6 +4,12 @@ app.addSource(() => {
     angularApp.controller("PluginSettingsController",['$scope', function($scope) {
         let directives = app.getPluginSettingsDirectives();
 
+        $scope.reloadApp = function() {
+            if (confirm("All the unsaved changes will be lost, Do you want to continue?")) {
+                window.location.href = "";
+                window.reload();
+            }
+        }
     }]);
 
     angularApp.directive("pluginSettings", ['$compile', function($compile) {
