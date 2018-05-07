@@ -10,7 +10,7 @@ class Plugins {
         this._app = app;
         let composerPluginsPath = "";
         if (/darwin/i.test(process.platform)) {
-            composerPluginsPath = path.resolve(path.join(app.appPath,"../../composer-plugins"));
+            composerPluginsPath = path.resolve(path.join(app.appPath,"../../../composer-plugins"));
         }
         else if (/win/i.test(process.platform)) {
             composerPluginsPath = path.resolve(path.join(app.appPath,"..\\composer-plugins"));

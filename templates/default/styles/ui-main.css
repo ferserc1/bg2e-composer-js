@@ -38,6 +38,13 @@ html {
     background-color: orange;
 }
 
+.bg2-alert {
+    background-color: #8f0808;
+    color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+    padding: 5px;
+}
 .bg2-width-10,.bg2-width-20,.bg2-width-30,.bg2-width-40,.bg2-width-50,
 .bg2-width-60,.bg2-width-70,.bg2-width-80,.bg2-width-90,.bg2-width-100 {
     box-sizing: border-box;
