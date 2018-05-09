@@ -42,6 +42,7 @@ app.addSource(() => {
                     bg.base.Loader.Load(this.gl,this._path)
                         .then((node) => {
                             this._loadedNode = node;
+                            this._loadedNode.addComponent(new bg.scene.Transform());
                             app.render.Scene.Get().selectionManager.prepareNode(node);
                             node.addComponent(new bg.scene.Transform());
                             this._parentNode.addChild(node);
@@ -105,11 +106,26 @@ app.addSource(() => {
         }
     }
 
+    function fixDrawableNames(node,names) {
+        if (node.drawable && names.indexOf(node.drawable.name)!=-1) {
+            node.drawable.name = bg.utils.generateUUID();
+        }
+        else if (node.drawable) {
+            names.push(node.drawable.name);
+        }
+
+        node.children.forEach((child) => {
+            fixDrawableNames(child,names);
+        });
+    }
+
     class SaveScene extends app.ContextCommand {
         constructor(context,path,node) {
             super(context);
             this._path = path;
             this._node = node;
+            let names = [];
+            fixDrawableNames(node,names);
             
             this._undoable = false;
         }

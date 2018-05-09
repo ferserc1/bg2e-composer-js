@@ -31,6 +31,10 @@ app.addSource(() => {
                 return this.camera.projectionStrategy && this.camera.projectionStrategy.frameSize;
             }
 
+            get viewWidth() {
+                return this.camera.projectionStrategy && this.camera.projectionStrategy.viewWidth;
+            }
+
             get projectionType() {
                 if (!this.camera.projectionStrategy) {
                     return 0;
@@ -40,6 +44,9 @@ app.addSource(() => {
                 }
                 else if (this.camera.projectionStrategy instanceof bg.scene.OpticalProjectionStrategy) {
                     return 2;
+                }
+                else if (this.camera.projectionStrategy instanceof bg.scene.OrthographicProjectionStrategy) {
+                    return 3;
                 }
             }
 
@@ -53,6 +60,9 @@ app.addSource(() => {
                     break;
                 case 2:
                     strategy = new bg.scene.OpticalProjectionStrategy();
+                    break;
+                case 3:
+                    strategy = new bg.scene.OrthographicProjectionStrategy();
                     break;
                 }
                 let cmd = new app.cameraCommands.SetProjectionStrategy(this.camera,strategy);
@@ -111,6 +121,7 @@ app.addSource(() => {
                     { id: 0, label:"Auto" },
                     { id: 1, label:"Perspective Projection" },
                     { id: 2, label:"Lens Projection" },
+                    { id: 3, label:"Orthographic" }
                 ]
 
                 app.ComposerWindowController.Get().onViewUpdated("cameraUI", () => {

@@ -5,7 +5,8 @@ app.addSource(() => {
                 return [
                     "undo",
                     "redo",
-                    "removeNode"
+                    "removeNode",
+                    "groupNodes"
                 ]
             }
     
@@ -19,6 +20,10 @@ app.addSource(() => {
                     break;
                 case 'removeNode':
                     this.removeNode();
+                    break;
+                case 'groupNodes':
+                    this.groupNodes();
+                    break;
                 }
             }
 
@@ -42,6 +47,34 @@ app.addSource(() => {
                     .catch((err) => {
 
                     });
+                }
+            }
+
+            groupNodes() {
+                let selection = app.render.Scene.Get().selectionManager.selection;
+                let nodes = [];
+                selection.forEach((item) => {
+                    if (item.node && nodes.indexOf(item.node)==-1 && item.node.parent) {
+                        nodes.push(item.node);
+                    }
+                });
+
+                if (nodes.length>1) {
+                    app.CommandManager.Get().doCommand(
+                        new app.nodeCommands.Group(nodes)
+                    )
+                        .then(() => {
+                            app.render.Scene.Get().selectionManager.clear();
+                            app.render.Scene.Get().notifySceneChanged();
+                            app.ComposerWindowController.Get().updateView();
+                        })
+
+                        .catch((err) => {
+                            console.error(err.message);
+                        })
+                }
+                else {
+                    console.warn("No nodes selected");
                 }
             }
         }

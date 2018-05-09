@@ -5,14 +5,50 @@
         <texture-picker label="Icon" value="icon" commit-changes="saveChanges"></texture-picker>
         <button ng-click="screenshot()" ng-show="node.type=='material' || node.type=='model'">Take Screenshot</button>
     </div>
-    <div ng-show="node.type=='material'">
-        <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
-    </div>
-    <div ng-show="node.type=='model'">
-        <file-picker label="File" value="modelFile" filters="fileFilters" commit-changes="selectModel"></file-picker>
-    </div>
-    <div ng-show="node.type=='group'">
-        Group
+    <div class="bg2-widget bg2-library-node-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Settings','Metadata']">
+        <ul>
+            <li ng-repeat="item in tabs">
+                <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
+            </li>
+        </ul>
+        <div ng-show="currentTab==0" class="bg2-tab-content">
+            <div ng-show="node.type=='material'">
+                <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
+            </div>
+            <div ng-show="node.type=='model'">
+                <file-picker label="File" value="modelFile" filters="fileFilters" commit-changes="selectModel"></file-picker>
+            </div>
+            <div ng-show="node.type=='group'">
+            </div>
+        </div>
+        <div ng-show="currentTab==1" class="bg2-tab-content">
+            <table class="bg2-metadata-editor">
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th></th>
+                  </tr>
+                  <tr ng-repeat="(key,value) in node.metadata">
+                    <td ng-click="beginEdit(key)">
+                        <span ng-show="editField!=key">{{ key }}</span>
+                        <input ng-hide="editField!=key" type="text" value="{{ key }}" ng-keyup="setKeyString($event,key)">
+                    </td>
+                    <td ng-click="beginEdit(key)">
+                        <span ng-show="editField!=key">{{ value }}</span>
+                        <input ng-hide="editField!=key" type="text" value="{{ value }}" ng-keyup="setValueString($event,key)">
+                    </td> 
+                    <td>
+                        <button class="bg2-icon-button" ng-click="removeKey(key)" ng-show="editField!=key"><i class="bg2-icon bg2-cancel"></i></button>
+                        <button class="bg2-icon-button" ng-click="commitMetadataChanged(key)" ng-hide="editField!=key"><i class="bg2-icon bg2-ok"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                      <td><button ng-click="addMetadataItem()" class="bg2-icon-button"><i class="bg2-icon bg2-add"></i></button></td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                  </tr>
+            </table>
+        </div>
     </div>
 </div>
 <div ng-hide="node">

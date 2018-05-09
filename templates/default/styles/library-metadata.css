@@ -1,0 +1,16 @@
+
+.bg2-metadata-editor input {
+    width: 100%;
+}
+
+.bg2-metadata-editor td {
+    cursor: pointer;
+}
+
+.bg2-metadata-editor span {
+    cursor: pointer;
+}
+
+.bg2-metadata-editor tr:last-of-type td {
+    cursor: default;
+}

@@ -162,6 +162,53 @@ app.addSource(() => {
             updateMaterialNode();
             app.ComposerWindowController.Get().updateView();
         }
+
+        $scope.editField = "";
+
+        $scope.removeKey = function(key) {
+            delete $scope.node.metadata[key];
+            libMgr.current.save();
+        }
+
+        $scope.setKeyString = function(evt,key) {
+            $scope.metaKey = evt.target.value;
+            if (evt.code=='Enter') {
+                $scope.commitMetadataChanged(key);
+            }
+        }
+
+        $scope.setValueString = function(evt,key) {
+            $scope.metaValue = evt.target.value;
+            if (evt.code=='Enter') {
+                $scope.commitMetadataChanged(key);
+            }
+        }
+
+        $scope.beginEdit = function(key) {
+            $scope.editField = key;
+            $scope.metaKey = key;
+            $scope.metaValue = $scope.node.metadata[key];
+        }
+
+        $scope.commitMetadataChanged = function(key) {
+            $scope.editField = "";
+            delete $scope.node.metadata[key];
+            if ($scope.metaKey!="") {
+                $scope.node.metadata[$scope.metaKey] = $scope.metaValue;
+            }
+            libMgr.current.save();
+        }
+
+        $scope.addMetadataItem = function() {
+            let newKey = "key";
+            let index = 1;
+            while (Object.keys($scope.node.metadata).indexOf(newKey)!=-1) {
+                newKey = "key_" + ++index;
+            }
+
+            $scope.node.metadata[newKey] = "";
+            $scope.beginEdit(newKey);
+        }
     }]);
 
     angularApp.directive("libraryNodeEditor", function() {

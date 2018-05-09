@@ -350,6 +350,13 @@ module.exports = {
 						{ role: 'paste' },
 						{type: 'separator'},
 						{
+							label: 'Group Nodes',
+							accelerator: 'CmdOrCtrl+G',
+							click: function(item,focusedWindow) {
+								focusedWindow.webContents.send('triggerMenu', { msg:'groupNodes' })
+							}
+						},
+						{
 							label: 'Remove Node',
 							accelerator: 'Backspace',
 							click: function(item, focusedWindow) {
@@ -390,6 +397,13 @@ module.exports = {
 						{ role: 'copy' },
 						{ role: 'paste' },
 						{type: 'separator'},
+						{
+							label: 'Group Nodes',
+							accelerator: 'CmdOrCtrl+G',
+							click: function(item,focusedWindow) {
+								focusedWindow.webContents.send('triggerMenu', { msg:'groupNodes' })
+							}
+						},
 						{
 							label: 'Remove Node',
 							accelerator: 'Backspace',

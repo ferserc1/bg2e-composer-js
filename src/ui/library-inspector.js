@@ -24,6 +24,30 @@ app.addSource(() => {
             },50);
         }
 
+        function addNodeFromScene() {
+            let sel = app.render.Scene.Get().selectionManager.selection;
+            let nodes = [];
+            sel.forEach((selItem) => {
+                if (selItem.node && selItem.node.drawable && nodes.indexOf(selItem.node)==-1) {
+                    nodes.push(selItem.node);
+                }
+            });
+
+            if (nodes.length) {
+                libMgr.current.addNodeFromSceneNodes(nodes)
+                    .then(() => {
+                        libMgr.current.save();
+                        libMgr.notifyLibraryChanged();
+                    })
+                    .catch((err) => {
+                        console.log(err.message,true);
+                    })
+            }
+            else {
+                alert("Select at least one node in scene that contains a Drawable component.")
+            }
+        }
+
         libMgr.libraryChanged("libraryInspector",(library) => {
             update(library);
         });
@@ -104,11 +128,17 @@ app.addSource(() => {
                 event,[
                     { label:"Group", type:app.library.NodeType.GROUP },
                     { label:"Material", type:app.library.NodeType.MATERIAL },
-                    { label:"Model", type:app.library.NodeType.MODEL }
+                    { label:"Model", type:app.library.NodeType.MODEL },
+                    { label:"From Scene", type:-1 }
                 ],(sel) => {
-                    libMgr.current.addNode(sel.type);
-                    libMgr.current.save();
-                    libMgr.notifyLibraryChanged();
+                    if (sel.type==-1) {
+                        addNodeFromScene();
+                    }
+                    else {
+                        libMgr.current.addNode(sel.type);
+                        libMgr.current.save();
+                        libMgr.notifyLibraryChanged();
+                    }
                 });
         };
 

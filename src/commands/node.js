@@ -129,6 +129,50 @@ app.addSource(() => {
 
     app.nodeCommands.SetParent = SetParent;
 
+    class Group extends app.Command {
+        constructor(nodeList) {
+            super();
+            this._newParent = nodeList.length && nodeList[0].parent;
+            this._nodeList = nodeList;
+            this._prevParents = [];
+            this._nodeList.forEach((node) => {
+                this._prevParents.push(node.parent);
+            });
+            this._newNode = new bg.scene.Node(app.ComposerWindowController.Get().gl,"Group");
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._nodeList.length<2) {
+                    reject(new Error("Could not group a single element"));
+                }
+                else if (this._nodeList.some((node) => node.parent==null)) {
+                    reject(new Error("Could not group items: the node " + node.name + " is not in the scene"));
+                }
+                else {
+                    app.render.Scene.Get().selectionManager.prepareNode(this._newNode);
+                    this._nodeList.forEach((node) => {
+                        this._newNode.addChild(node);
+                    })
+                    this._newParent.addChild(this._newNode);
+                    resolve();
+                }
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._nodeList.forEach((node,index) => {
+                    this._prevParents[index].addChild(node);
+                });
+                this._newParent.removeChild(this._newNode);
+                resolve();
+            })
+        }
+    }
+
+    app.nodeCommands.Group = Group;
+
     class RemoveNode extends app.Command {
         constructor(nodeList) {
             super();

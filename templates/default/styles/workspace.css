@@ -50,3 +50,33 @@
     margin-right: 50x;
     cursor: pointer;
 }
+
+.bg2-library-node-tabs {
+    /*
+    position: fixed;
+    right: 0px;
+    top: 36px;
+    width: 350px;
+    height: 30px;
+    */
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 10px;
+}
+
+.bg2-tab-content {
+    border-top: 1px solid #868686;
+}
+
+.bg2-library-node-tabs ul {
+    padding-left: 0px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.bg2-library-node-tabs li {
+    display: inline;
+    list-style: none;
+    padding-left: 3px;
+    padding-right: 3px;
+}
