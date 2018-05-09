@@ -125,3 +125,15 @@
 .bg2-ok {
     background-image: url(../icons/apply.png);
 }
+
+.bg2-cancel {
+    background-image: url(../icons/cancel.png);
+}
+
+.bg2-unlock {
+    background-image: url(../icons/unlock.png);
+}
+
+.bg2-edit {
+    background-image: url(../icons/unlock.png);
+}
