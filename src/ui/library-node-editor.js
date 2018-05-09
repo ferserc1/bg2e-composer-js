@@ -201,7 +201,13 @@ app.addSource(() => {
 
         $scope.addMetadataItem = function() {
             let newKey = "key";
-            // TODO: Implement this
+            let index = 1;
+            while (Object.keys($scope.node.metadata).indexOf(newKey)!=-1) {
+                newKey = "key_" + ++index;
+            }
+
+            $scope.node.metadata[newKey] = "";
+            $scope.beginEdit(newKey);
         }
     }]);
 

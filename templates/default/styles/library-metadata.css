@@ -1,28 +1,16 @@
-table {
-    border-collapse: collapse;
+
+.bg2-metadata-editor input {
     width: 100%;
 }
 
-td, th {
-    border: 1px solid #999999;
-    text-align: left;
-    padding: 8px;
+.bg2-metadata-editor td {
+    cursor: pointer;
 }
 
-tr:nth-child(even) {
-    background-color: #444444;
+.bg2-metadata-editor span {
+    cursor: pointer;
 }
 
-table .bg2-icon-button {
-    background-color: transparent;
-    color: transparent;
-    outline: none;
-    padding: 1px;
-}
-
-table .bg2-icon-button:hover {
-    background-color: transparent;
-    color: transparent;
-    outline: none;
-    padding: 0px;
+.bg2-metadata-editor tr:last-of-type td {
+    cursor: default;
 }

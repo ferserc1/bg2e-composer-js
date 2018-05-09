@@ -22,24 +22,23 @@
             </div>
         </div>
         <div ng-show="currentTab==1" class="bg2-tab-content">
-            <table>
+            <table class="bg2-metadata-editor">
                 <tr>
                     <th>Key</th>
                     <th>Value</th>
                     <th></th>
                   </tr>
                   <tr ng-repeat="(key,value) in node.metadata">
-                    <td>
-                        <span ng-show="editField!=key" ng-click="beginEdit(key)">{{ key }}</span>
+                    <td ng-click="beginEdit(key)">
+                        <span ng-show="editField!=key">{{ key }}</span>
                         <input ng-hide="editField!=key" type="text" value="{{ key }}" ng-keyup="setKeyString($event,key)">
                     </td>
-                    <td>
-                        <span ng-show="editField!=key" ng-click="beginEdit(key)">{{ value }}</span>
+                    <td ng-click="beginEdit(key)">
+                        <span ng-show="editField!=key">{{ value }}</span>
                         <input ng-hide="editField!=key" type="text" value="{{ value }}" ng-keyup="setValueString($event,key)">
                     </td> 
                     <td>
                         <button class="bg2-icon-button" ng-click="removeKey(key)" ng-show="editField!=key"><i class="bg2-icon bg2-cancel"></i></button>
-                        <button class="bg2-icon-button" ng-click="beginEdit(key)" ng-show="editField!=key"><i class="bg2-icon bg2-edit"></i></button>
                         <button class="bg2-icon-button" ng-click="commitMetadataChanged(key)" ng-hide="editField!=key"><i class="bg2-icon bg2-ok"></i></button>
                     </td>
                   </tr>

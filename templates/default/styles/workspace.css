@@ -65,12 +65,13 @@
 }
 
 .bg2-tab-content {
-    border-top: 1px solid white;
+    border-top: 1px solid #868686;
 }
 
 .bg2-library-node-tabs ul {
     padding-left: 0px;
     margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .bg2-library-node-tabs li {

@@ -8,6 +8,42 @@ html {
     font-size: 13px;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #999999;
+    text-align: left;
+    padding: 8px;
+    color: white;
+    font-weight: bold;
+}
+
+th {
+    background-color: grey;
+    color: black;
+}
+
+tr:nth-child(even) {
+    background-color: #444444;
+}
+
+table .bg2-icon-button {
+    background-color: transparent;
+    color: transparent;
+    outline: none;
+    padding: 1px;
+}
+
+table .bg2-icon-button:hover {
+    background-color: transparent;
+    color: transparent;
+    outline: none;
+    padding: 0px;
+}
+
 .noselect {
     user-select: none;
 }
