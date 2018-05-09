@@ -122,6 +122,52 @@ app.addSource(() => {
 
     app.cameraCommands.SaveLens = SaveLens;
 
+
+
+    class SaveOrthographic extends app.Command {
+        constructor(camera,viewWidth,far) {
+            super();
+            this._camera = camera;
+            this._viewWidth = viewWidth;
+            this._far = far;
+
+            let strategy = camera.projectionStrategy;
+            if (strategy instanceof bg.scene.OrthographicProjectionStrategy) {
+                this._prevViewWidth = strategy.viewWidth;
+                this._prevFar = strategy.far;
+            }
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._prevViewWidth===undefined) {
+                    reject(new Error("Error executing SavePerspective command: the target camera is not configured with a OrthographicProjectionStrategy"));
+                }
+                this._camera.projectionStrategy.viewWidth = this._viewWidth;
+                this._camera.projectionStrategy.far = this._far;
+                this._camera.recalculateGizmo();
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                if (this._prevViewWidth===undefined) {
+                    reject(new Error("Error executing SavePerspective command: the target camera is not configured with a OrthographicProjectionStrategy"));
+                }
+                this._camera.projectionStrategy.viewWidth = this._prevViewWidth;
+                this._camera.projectionStrategy.far = this._prevFar;
+                this._camera.recalculateGizmo();
+                resolve();
+            });
+        }
+    }
+
+    app.cameraCommands.SaveOrthographic = SaveOrthographic;
+
+
+
+
     class SetMain extends app.Command {
         constructor(camera) {
             super();
