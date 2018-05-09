@@ -486,6 +486,64 @@ app.addDefinitions(() => {
             return nodeData;
         }
 
+        addNodeFromSceneNodes(nodes) {
+            return new Promise((resolve,reject) => {
+                let promises = [];
+                assertCurrentNodeIntegrity.apply(this);
+                this.deselectAll();
+    
+                const path = require("path");
+                const mkdirp = require("mkdirp");
+                let getName = (node) => { return (node.drawable.name || node.name || "").replace(/\s+/,"_") };
+                let gl = app.ComposerWindowController.Get().gl;
+    
+                nodes.forEach((node,i1) => {
+                    if (getName(node)=="") {
+                        node.drawable.name = bg.utils.generateUUID();
+                    }
+                    else {
+                        nodes.forEach((node2,i2) => {
+                            if (getName(node)==getName(node2) && i1!=i2) {
+                                node2.drawable.name = bg.utils.generateUUID();
+                            }
+                        });
+                    }
+                });
+    
+                let folderPath = this.repoPath;
+                if (folderPath) {
+                    nodes.forEach((node) => {
+                        let folderName = getName(node);
+                        let filePath = path.join(folderPath,folderName);
+                        mkdirp(filePath);
+                        filePath = app.standarizePath(path.join(filePath,`${folderName}.bg2`));
+                        let cmd = new app.fileCommands.ExportObject(gl,filePath,node);
+                        promises.push(app.CommandManager.Get().doCommand(cmd));
+                    });
+
+                    Promise.all(promises)
+                        .then(() => {
+                            nodes.forEach((sceneNode) => {
+                                let drawable = sceneNode.drawable;
+                                let libNode = {
+                                    type: 'model',
+                                    id: drawable.name,
+                                    name: drawable.name,
+                                    file: drawable.name + "/" + drawable.name + ".bg2",
+                                    folderName: drawable.name,
+                                    metadata: {}
+                                }
+                                this.currentNode.children.push(libNode);
+                            })
+                            resolve(nodes);
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        })
+                }
+            })
+        }
+
         removeNode(node,forceDelete=false) {
             assertCurrentNodeIntegrity.apply(this);
             this.deselectAll();

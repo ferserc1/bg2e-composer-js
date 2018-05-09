@@ -204,6 +204,7 @@ app.addSource(() => {
                 })
                 bg.base.Loader.Load(gl,filePath)
                     .then((node) => {
+                        node.addComponent(new bg.scene.Transform());
                         app.render.Scene.Get().selectionManager.prepareNode(node);
                         return app.CommandManager.Get().doCommand(
                             new app.nodeCommands.CreateNode(node,dstNode)

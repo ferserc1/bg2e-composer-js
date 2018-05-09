@@ -105,11 +105,26 @@ app.addSource(() => {
         }
     }
 
+    function fixDrawableNames(node,names) {
+        if (node.drawable && names.indexOf(node.drawable.name)!=-1) {
+            node.drawable.name = bg.utils.generateUUID();
+        }
+        else if (node.drawable) {
+            names.push(node.drawable.name);
+        }
+
+        node.children.forEach((child) => {
+            fixDrawableNames(child,names);
+        });
+    }
+
     class SaveScene extends app.ContextCommand {
         constructor(context,path,node) {
             super(context);
             this._path = path;
             this._node = node;
+            let names = [];
+            fixDrawableNames(node,names);
             
             this._undoable = false;
         }
