@@ -42,6 +42,7 @@ app.addSource(() => {
                     bg.base.Loader.Load(this.gl,this._path)
                         .then((node) => {
                             this._loadedNode = node;
+                            this._loadedNode.addComponent(new bg.scene.Transform());
                             app.render.Scene.Get().selectionManager.prepareNode(node);
                             node.addComponent(new bg.scene.Transform());
                             this._parentNode.addChild(node);

@@ -22,11 +22,14 @@ app.addSource(() => {
                     });
                 }
 
-                $scope.select = function(sel) {
+                $scope.select = function(sel,commit=false) {
                     $scope.selected = sel.componentUI;
                     $scope.componentList.forEach((item) => {
                         item.isSelected = item==sel;
                     });
+                    if (commit && $scope.selected) {
+                        app.ui.DialogView.Ok($scope.selected);
+                    }
                 }
             }]
         }

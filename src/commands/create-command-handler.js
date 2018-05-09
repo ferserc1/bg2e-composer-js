@@ -88,6 +88,7 @@ app.addSource(() => {
             case 'createCameraNode':
                 cmd = createNode((node) => {
                     node.addComponent(app.components.getUIForComponent("bg.scene.Camera").createInstance());
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Transform").createInstance());
                 });
                 break;
             case 'createTransformNode':
@@ -98,11 +99,13 @@ app.addSource(() => {
             case 'createLightNode':
                 cmd = createNode((node) => {
                     node.addComponent(app.components.getUIForComponent("bg.scene.Light").createInstance());
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Transform").createInstance());
                 });
                 break;
             case 'createDrawableNode':
                 cmd = createNode((node) => {
                     node.addComponent(app.components.getUIForComponent("bg.scene.Drawable").createInstance());
+                    node.addComponent(app.components.getUIForComponent("bg.scene.Transform").createInstance());
                 });
                 break;
             }
