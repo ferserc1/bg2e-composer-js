@@ -383,6 +383,22 @@ app.addDefinitions(() => {
 
                         node.file = `${ modelParsedPath.name }/${ modelParsedPath.base }`;
                         node.folderName = modelParsedPath.name;
+
+                        let inChain = node.component("bg.scene.InputChainJoint");
+                        let outChain = node.component("bg.scene.OutputChainJoint");
+                        node.metadata = node.metadata || {};
+                        if (inChain && outChain) {
+                            node.metadata.dock = "left,right";
+                        }
+                        else if (inChain) {
+                            node.metadata.dock = "left";
+                        }
+                        else if (outChain) {
+                            node.metadata.dock = "right";
+                        }
+                        else {
+                            node.metadata.dock = "none";
+                        }
                         
                         Promise.all(promises).then(() => {
                             resolve();
@@ -532,6 +548,20 @@ app.addDefinitions(() => {
                                     file: drawable.name + "/" + drawable.name + ".bg2",
                                     folderName: drawable.name,
                                     metadata: {}
+                                }
+                                let inChain = sceneNode.component("bg.scene.InputChainJoint");
+                                let outChain = sceneNode.component("bg.scene.OutputChainJoint");
+                                if (inChain && outChain) {
+                                    libNode.metadata.dock = "left,right";
+                                }
+                                else if (inChain) {
+                                    libNode.metadata.dock = "left";
+                                }
+                                else if (outChain) {
+                                    libNode.metadata.dock = "right";
+                                }
+                                else {
+                                    libNode.metadata.dock = "none";
                                 }
                                 this.currentNode.children.push(libNode);
                             })
