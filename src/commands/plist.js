@@ -294,18 +294,16 @@ app.addSource(() => {
                 // Check if some polyList does not belongs to the drawable
                 // and save undo data
                 this._restorePlist = [];
-                if (this._drawable.some((drwPlist,mat,trx) => {
-                    if (this._plistArray.indexOf(drwPlist)!=-1) {
+                if (this._plistArray.some((plist) => {
+                    let plIndex = this._drawable.indexOf(plist);
+                    if (plIndex!=-1) {
                         this._restorePlist.push({
-                            plist:drwPlist,
-                            mat:mat,
-                            trx:trx
+                            plist:plist,
+                            mat:this._drawable.getMaterial(plIndex),
+                            trx:this._drawable.getTransform(plIndex)
                         });
-                        return false;
                     }
-                    else {
-                        return true;
-                    }
+                    return plIndex==-1
                 })) {
                     reject(new Error("Could not combine polyLists: some polyLists belongs to different drawables."));
                     return;
