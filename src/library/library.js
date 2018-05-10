@@ -502,7 +502,65 @@ app.addDefinitions(() => {
             return nodeData;
         }
 
-        addNodeFromSceneNodes(nodes) {
+        addMaterialFromSelection() {
+            assertCurrentNodeIntegrity.apply(this);
+            this.deselectAll();
+            return new Promise((resolve,reject) => {
+                let sel = app.render.Scene.Get().selectionManager.selection;
+                let materials = [];
+                let i = 0;
+                sel.forEach((item) => {
+                    if (item.material) {
+                        let name = (item.plist && item.plist.name) || "material-" + ++i;
+                        materials.push({
+                            name:name,
+                            material:item.material
+                        });
+                    }
+                })
+     
+                if (materials.length>0) {
+                    function fixPath(modifierData,field) {
+                        if (modifierData[field] && modifierData[field]!="") {
+                            modifierData[field] = path.parse(modifierData[field]).base;
+                        }
+                    }
+                    function fixPaths(modifierData) {
+                        fixPath(modifierData,"shininessMask");
+                        fixPath(modifierData,"lightEmissionMask");
+                        fixPath(modifierData,"texture");
+                        fixPath(modifierData,"normalMap");
+                        fixPath(modifierData,"reflectionMask");
+                        fixPath(modifierData,"roughnessMask");
+                    }
+                    let resources = [];
+                    let promises = [];
+                    let mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
+                    materials.forEach((matData) => {
+                        matData.material.getExternalResources(resources);
+                        let mod = matData.material.getModifierWithMask(mask);
+                        let matNode = this.addNode(app.library.NodeType.MATERIAL);
+                        matNode.name = matData.name;
+                        matNode.materialModifier = mod.serialize();
+                        fixPaths(matNode.materialModifier);
+                    });
+
+                    resources.forEach((resource) => {
+                        let target = path.join(this.repoPath,path.parse(resource).base);
+                        promises.push(bg.base.Writer.CopyFile(resource,target));
+                    });
+
+                    Promise.all(promises)
+                        .then(() => resolve())
+                        .catch((err) => reject(err));
+                }
+                else {
+                    reject(new Error("No selected materials in the scene"));
+                }
+            })
+        }
+
+        addModelFromSceneNodes(nodes) {
             return new Promise((resolve,reject) => {
                 let promises = [];
                 assertCurrentNodeIntegrity.apply(this);

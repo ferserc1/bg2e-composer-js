@@ -101,13 +101,36 @@ app.addSource(() => {
         $scope.visibleToShadows = false;
 
         $scope.selection = [];
+        $scope.materials = [];
+        $scope.drawables = [];
+
+        $scope.canCombine = function() {
+            return $scope.drawables.length==1 && $scope.selection.length>1;
+        }
+
+        $scope.combinePlist = function() {
+            if ($scope.canCombine()) {
+                executeCommand(new app.plistCommands.Combine(
+                    $scope.drawables[0],
+                    $scope.selection,
+                    $scope.materials[0]
+                ));
+                app.render.Scene.Get().selectionManager.clear();
+            }
+        }
 
         function updateUI() {
             let selectionManager = app.render.Scene.Get().selectionManager;
             $scope.selection = [];
+            $scope.materials = [];
+            $scope.drawables = [];
             selectionManager.selection.forEach((selItem) => {
+                if (selItem.node && selItem.node.drawable && $scope.drawables.indexOf(selItem.node.drawable)==-1) {
+                    $scope.drawables.push(selItem.node.drawable);
+                }
                 if (selItem.plist) {
                     $scope.selection.push(selItem.plist);
+                    $scope.materials.push(selItem.material);
                 }
             });
 

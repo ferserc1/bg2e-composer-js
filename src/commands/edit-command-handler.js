@@ -6,7 +6,8 @@ app.addSource(() => {
                     "undo",
                     "redo",
                     "removeNode",
-                    "groupNodes"
+                    "groupNodes",
+                    'duplicateNode'
                 ]
             }
     
@@ -23,6 +24,9 @@ app.addSource(() => {
                     break;
                 case 'groupNodes':
                     this.groupNodes();
+                    break;
+                case 'duplicateNode':
+                    this.duplicateNode();
                     break;
                 }
             }
@@ -62,6 +66,34 @@ app.addSource(() => {
                 if (nodes.length>1) {
                     app.CommandManager.Get().doCommand(
                         new app.nodeCommands.Group(nodes)
+                    )
+                        .then(() => {
+                            app.render.Scene.Get().selectionManager.clear();
+                            app.render.Scene.Get().notifySceneChanged();
+                            app.ComposerWindowController.Get().updateView();
+                        })
+
+                        .catch((err) => {
+                            console.error(err.message);
+                        })
+                }
+                else {
+                    console.warn(nodes.length==0 ? "No nodes selected" :  "Only one node selected");
+                }
+            }
+
+            duplicateNode() {
+                let selection = app.render.Scene.Get().selectionManager.selection;
+                let nodes = [];
+                selection.forEach((item) => {
+                    if (item.node && nodes.indexOf(item.node)==-1 && item.node.parent) {
+                        nodes.push(item.node);
+                    }
+                });
+
+                if (nodes.length>0) {
+                    app.CommandManager.Get().doCommand(
+                        new app.nodeCommands.DuplicateNode(nodes)
                     )
                         .then(() => {
                             app.render.Scene.Get().selectionManager.clear();

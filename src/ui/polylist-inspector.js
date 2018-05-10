@@ -40,6 +40,7 @@ app.addSource(() => {
                 if (drw && includedDrawables.indexOf(drw)==-1) {
                     includedDrawables.push(drw);
                     let elem = {
+                        node:selItem.node,
                         name:drw.name || "<< untitled >>",
                         plist:[]
                     };
@@ -99,6 +100,15 @@ app.addSource(() => {
                 sm.selectItem(plist.node,plist.plist,plist.material);
             }
         };
+
+        $scope.selectAll = function(item,event) {
+            let sm = app.render.Scene.Get().selectionManager;
+            item.node.drawable.forEach((plist,mat) => {
+                if (!isSelected(plist)) {
+                    sm.selectItem(item.node,plist,mat);
+                }
+            });
+        }
 
         function refresh() {
             updateList();

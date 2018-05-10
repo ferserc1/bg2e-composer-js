@@ -1,4 +1,6 @@
 app.addSource(() => {
+    const path = require('path');
+
     app.fileCommands = {}
 
     class NewFile extends app.ContextCommand {
@@ -33,6 +35,7 @@ app.addSource(() => {
         }
 
         execute() {
+            
             return new Promise((resolve,reject) => {
                 if (this._loadedNode) {
                     this._parentNode.addChild(this._loadedNode);
@@ -41,6 +44,11 @@ app.addSource(() => {
                 else {
                     bg.base.Loader.Load(this.gl,this._path)
                         .then((node) => {
+                            let pathParsed = path.parse(this._path);
+                            node.name = pathParsed.name;
+                            if (node.drawable) {
+                                node.drawable.name = node.name;
+                            }
                             this._loadedNode = node;
                             this._loadedNode.addComponent(new bg.scene.Transform());
                             app.render.Scene.Get().selectionManager.prepareNode(node);

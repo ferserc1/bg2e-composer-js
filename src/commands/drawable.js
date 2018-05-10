@@ -1,4 +1,5 @@
 app.addSource(() => {
+    const path = require('path');
     app.drawableCommands = {};
 
     class LoadFromFile extends app.Command {
@@ -16,6 +17,9 @@ app.addSource(() => {
                     bg.base.Loader.Load(app.ComposerWindowController.Get().gl,this._file)
                         .then((node) => {
                             this._component = node.drawable;
+                            let pathParsed = path.parse(this._file);
+                            this._node.name = pathParsed.name;
+                            this._component.name = pathParsed.name;
                             this._node.addComponent(this._component);
                             app.render.Scene.Get().selectionManager.prepareNode(this._node);
                             resolve();

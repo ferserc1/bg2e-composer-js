@@ -2,7 +2,10 @@
 
 <div class="bg2-block-container" ng-show="visible" ng-click="hideMenu()">
     <ul ng-style="getStylePosition()">
-        <li ng-repeat="option in options" ng-click="selectOption(option)">{{ option.label }}</li>
+        <li ng-repeat="option in options" ng-click="selectOption(option)" ng-class="{ 'separator' : option.type=='separator' }">
+            <span ng-hide="option.type=='separator'">{{ option.label }}</span>
+            <div ng-show="option.type=='separator'" class="bg2-menu-separator"></div>
+        </li>
     </ul>
 
 </div>

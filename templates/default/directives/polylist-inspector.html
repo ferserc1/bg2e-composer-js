@@ -12,7 +12,7 @@
 </div>
 <ul>
     <li ng-repeat="drawable in elements">
-        <h1>{{ drawable.name }}</h1>
+        <h1 ng-dblclick="selectAll(drawable,$event)">{{ drawable.name }}</h1>
         <ul class="bg2-plist-items">
             <li ng-repeat="plist in drawable.plist" ng-class="{ 'bg2-selected' : plist.selected }">
                 <h2 ng-click="toggleItem(plist,$event)">{{ plist.name }}</h2>
