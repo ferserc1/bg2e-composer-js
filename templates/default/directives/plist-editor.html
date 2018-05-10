@@ -17,6 +17,7 @@
         </div>
         <button ng-click="flipFaces()">Flip faces</button>
         <button ng-click="flipNormals()">Flip normals</button>
+        <button ng-click="combinePlist()" ng-class="{ 'disabled' : !canCombine() }">Combine PolyList</button>
     </div>
 </div>
 <div ng-hide="selection.length">
