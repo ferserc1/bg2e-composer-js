@@ -34,7 +34,7 @@ app.addSource(() => {
             });
 
             if (nodes.length) {
-                libMgr.current.addNodeFromSceneNodes(nodes)
+                libMgr.current.addModelFromSceneNodes(nodes)
                     .then(() => {
                         libMgr.current.save();
                         libMgr.notifyLibraryChanged();
@@ -49,7 +49,14 @@ app.addSource(() => {
         }
 
         function addMaterialFromScene() {
-            alert("Not implemented");
+            libMgr.current.addMaterialFromSelection()
+                .then(() => {
+                    libMgr.current.save();
+                    libMgr.notifyLibraryChanged();
+                })
+                .catch((err) => {
+                    console.log(err.message,true);
+                });
         }
 
         libMgr.libraryChanged("libraryInspector",(library) => {
