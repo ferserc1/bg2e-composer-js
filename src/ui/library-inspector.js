@@ -24,7 +24,7 @@ app.addSource(() => {
             },50);
         }
 
-        function addNodeFromScene() {
+        function addModelFromScene() {
             let sel = app.render.Scene.Get().selectionManager.selection;
             let nodes = [];
             sel.forEach((selItem) => {
@@ -46,6 +46,10 @@ app.addSource(() => {
             else {
                 alert("Select at least one node in scene that contains a Drawable component.")
             }
+        }
+
+        function addMaterialFromScene() {
+            alert("Not implemented");
         }
 
         libMgr.libraryChanged("libraryInspector",(library) => {
@@ -129,10 +133,15 @@ app.addSource(() => {
                     { label:"Group", type:app.library.NodeType.GROUP },
                     { label:"Material", type:app.library.NodeType.MATERIAL },
                     { label:"Model", type:app.library.NodeType.MODEL },
-                    { label:"From Scene", type:-1 }
+                    { type:"separator" },
+                    { label:"Model From Scene", type:-1 },
+                    { label:"Material From Scene", type:-2 }
                 ],(sel) => {
                     if (sel.type==-1) {
-                        addNodeFromScene();
+                        addModelFromScene();
+                    }
+                    else if (sel.type==-2) {
+                        addMaterialFromScene();
                     }
                     else {
                         libMgr.current.addNode(sel.type);

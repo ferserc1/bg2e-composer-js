@@ -14,6 +14,7 @@ app.addSource(() => {
                 };
 
                 $scope.selectOption = function(option) {
+                    if (option.type=='separator') return;
                     if ($scope.onSelected) {
                         $scope.onSelected(option);
                     }

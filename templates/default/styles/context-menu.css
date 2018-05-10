@@ -34,3 +34,11 @@ context-menu .bg2-block-container ul li {
 context-menu .bg2-block-container ul li:hover {
     background-color: orange;
 }
+
+context-menu .bg2-menu-separator {
+    border-bottom: 1px solid white;
+}
+
+context-menu .bg2-block-container ul li.separator:hover {
+    background-color: transparent;
+}
