@@ -282,4 +282,46 @@ app.addSource(() => {
     }
 
     app.nodeCommands.AddComponent = AddComponent;
+
+    class DuplicateNode extends app.Command {
+        constructor(nodes) {
+            super();
+            this._nodes = nodes;
+            this._duplicatedNodes = [];
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._nodes.some((node) => node.parent==null)) {
+                    reject(new Error("You can't duplicate the root node"));
+                    return;
+                }
+
+                this._nodes.forEach((node) => {
+                    let parent = node.parent;
+                    let newNode = node.cloneComponents();
+                    this._duplicatedNodes.push(newNode);
+                    newNode.removeComponent("bg.manipulation.Gizmo");
+                    parent.addChild(newNode);
+                    app.render.Scene.Get().selectionManager.prepareNode(newNode);
+                });
+
+                resolve();
+            })
+        }
+
+        undo() {
+            return new Promise((resolve) => {
+                this._duplicatedNodes.forEach((node) => {
+                    let parent = node.parent;
+                    parent.removeChild(node);
+                    node.destroy();
+                });
+                this._duplicatedNodes = [];
+                resolve();
+            })
+        }
+    }
+
+    app.nodeCommands.DuplicateNode = DuplicateNode;
 });
