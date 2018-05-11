@@ -357,6 +357,13 @@ module.exports = {
 							}
 						},
 						{
+							label: 'Duplicate Nodes',
+							accelerator: 'CmdOrCtrl+D',
+							click: function(item,focusedWindow) {
+								focusedWindow.webContents.send('triggerMenu', { msg:'duplicateNode' })
+							}
+						},
+						{
 							label: 'Remove Node',
 							accelerator: 'Backspace',
 							click: function(item, focusedWindow) {
