@@ -21,6 +21,8 @@ class Plugins {
             path.join(__dirname, 'plugins'),
             path.resolve(path.join(__dirname,`..${ path.sep }composer-plugins`))
         ];
+        this._customPath = app.settings.get("customPluginPath");
+        this._paths.push(this._customPath);
 
         if (app.isRenderer) {
             this._modules = [];
@@ -78,6 +80,15 @@ class Plugins {
     get paths() {
         return this._paths;
     }
+
+    get customPath() {
+        return this._customPath;
+    }
+
+    set customPath(path) {
+        this._customPath = path;
+        app.settings.set("customPluginPath",path);
+    } 
 
     get modules() {
         return this._modules;
