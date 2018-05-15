@@ -21,8 +21,12 @@ class Plugins {
             path.join(__dirname, 'plugins'),
             path.resolve(path.join(__dirname,`..${ path.sep }composer-plugins`))
         ];
-        this._customPath = app.settings.get("customPluginPath");
-        this._paths.push(this._customPath);
+        const settings = require('electron-settings');
+        this._customPath = settings.get("customPluginPath");
+
+        if (this._customPath) {
+            this._paths.push(this._customPath);
+        }
 
         if (app.isRenderer) {
             this._modules = [];
