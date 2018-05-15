@@ -3,6 +3,7 @@ app.addSource(() => {
 
     angularApp.controller("PluginSettingsController",['$scope', function($scope) {
         let directives = app.getPluginSettingsDirectives();
+        $scope.pluginPath = app.plugins.customPath;
 
         $scope.reloadApp = function() {
             if (confirm("All the unsaved changes will be lost, Do you want to continue?")) {
@@ -14,6 +15,10 @@ app.addSource(() => {
         $scope.showDevTools = function() {
             let { remote } = require('electron');
             remote.getCurrentWindow().toggleDevTools();
+        }
+
+        $scope.pluginPathSelected = function() {
+            app.plugins.customPath = $scope.pluginPath;
         }
     }]);
 
