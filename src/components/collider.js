@@ -12,6 +12,10 @@ app.addSource(() => {
             setColliderShape(shape) {
                return app.CommandManager.Get().doCommand(new app.physicsCommands.SetCollider(this.componentInstance.node,shape));
             }
+
+            setConvexHullColliderGeometry(geoPath) {
+                return app.CommandManager.Get().doCommand(new app.physicsCommands.SetConvexHullGeometry(this.componentInstance, geoPath));
+            }
         }
     });
 
@@ -36,6 +40,11 @@ app.addSource(() => {
                 $scope.depth = 1;
                 $scope.radius = 1;
                 $scope.margin = 0.01;
+                $scope.geometryPath = "";
+                $scope.geometryFilters = [ { name:"bg2 engine models", extensions:["bg2","vwglb"]}, { name:"Wavefront OBJ", extensions:["obj"]} ];
+                if (app.fbxPlugin.available) {
+                    $scope.geometryFilters.push({ "name":"Autodesk FBX model", extensions:["fbx"]});
+                }
 
                 $scope.updateValues = function() {
                     if (!$scope.component) return false;
@@ -77,6 +86,18 @@ app.addSource(() => {
                             app.render.Scene.Get().notifySceneChanged();
                         });
                 };
+
+                $scope.onGeometrySelected = function() {
+                    if (!$scope.geometryPath || $scope.geometryPath=="") return;
+                    $scope.component.setConvexHullColliderGeometry($scope.geometryPath)
+                        .then(() => {
+                            app.render.Scene.Get().notifySceneChanged();
+                            app.ComposerWindowController.Get().updateView();
+                        })
+                        .catch((err) => {
+                            console.error(err.message,true);
+                        });
+                }
 
                 app.render.Scene.Get().selectionManager.selectionChanged("colliderUi", () => {
                     setTimeout(() => {
