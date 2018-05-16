@@ -77,4 +77,46 @@ app.addSource(() => {
     }
 
     app.physicsCommands.SetWorldGravity = SetWorldGravity;
+
+    class SetConvexHullGeometry extends app.Command {
+        constructor(collider,path) {
+            super();
+            this._collider = collider;
+            this._path = path;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (!this._collider.shape instanceof bg.physics.ConvexHullCollider) {
+                    reject(new Error("Invalid collider shape found in collider component."));
+                    return;
+                }
+
+                let gl = app.ComposerWindowController.Get().gl;
+                bg.base.Loader.Load(gl,this._path)
+                    .then((node) => {
+                        this._undoVertexList = this._collider.shape.vertexData;
+                        let visitor = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+                        node.accept(visitor);
+                        this._collider.shape.clearVertexData();
+                        visitor.result.forEach((node) => {
+                            this._collider.shape.setVertexData(node.drawable,true);
+                        });
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    })
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._collider.shape.vertexData = this._undoVertexList;
+                resolve();
+            })
+        }
+    }
+
+    app.physicsCommands.SetConvexHullGeometry = SetConvexHullGeometry;
 })
