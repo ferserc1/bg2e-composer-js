@@ -60,6 +60,7 @@ app.addDefinitions(() => {
      
             fbxNode.meshData.forEach((plistData) => {
                 let plist = new bg.base.PolyList(context);
+                plist.name = plistData.name;
                 let scaleRotationMatrix = matrix.rotation;
                 for (let i = 0; i<plistData.vertex.length; i+=3) {
                     let newVertex = matrix.multVector(new bg.Vector3(
