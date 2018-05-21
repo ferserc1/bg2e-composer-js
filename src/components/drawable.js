@@ -1,5 +1,15 @@
 app.addSource(() => {
     app.components.addComponent(() => {
+        function selectedDrawableNodes() {
+            let result = [];
+            app.render.Scene.Get().selectionManager.selection.forEach((item) => {
+                if (item.node && item.node.drawable && result.indexOf(item.node)==-1) {
+                    result.push(item.node);
+                }
+            });
+            return result;
+        }
+
         return class DrawableUI extends app.components.ComponentUI {
             constructor() {
                 super("bg.scene.Drawable","Drawable","drawable-ui");
@@ -49,15 +59,15 @@ app.addSource(() => {
             }
 
             applyTransform() {
-                return this.execCommand(new app.drawableCommands.ApplyTransform(this.componentInstance.node));
+                return this.execCommand(new app.drawableCommands.ApplyTransform(selectedDrawableNodes()));
             }
 
             moveToCenter() {
-                return this.execCommand(new app.drawableCommands.MoveToCenter(this.componentInstance.node));
+                return this.execCommand(new app.drawableCommands.MoveToCenter(selectedDrawableNodes()));
             }
 
             putOnFloor() {
-                return this.execCommand(new app.drawableCommands.PutOnFloor(this.componentInstance.node));
+                return this.execCommand(new app.drawableCommands.PutOnFloor(selectedDrawableNodes()));
             }
 
         }

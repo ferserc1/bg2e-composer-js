@@ -7,7 +7,8 @@ app.addSource(() => {
                     "redo",
                     "removeNode",
                     "groupNodes",
-                    'duplicateNode'
+                    "duplicateNode",
+                    "selectAll"
                 ]
             }
     
@@ -27,6 +28,9 @@ app.addSource(() => {
                     break;
                 case 'duplicateNode':
                     this.duplicateNode();
+                    break;
+                case 'selectAll':
+                    this.selectAll();
                     break;
                 }
             }
@@ -108,6 +112,14 @@ app.addSource(() => {
                 else {
                     console.warn("No nodes selected");
                 }
+            }
+
+            selectAll() {
+                let selectVisitor = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+                app.render.Scene.Get().root.accept(selectVisitor);
+                selectVisitor.result.forEach((item) => {
+                    app.render.Scene.Get().selectionManager.selectNode(item);
+                });
             }
         }
     

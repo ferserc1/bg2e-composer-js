@@ -1,6 +1,6 @@
 {
   "name": "bg2e-composer-js",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "bg2 engine editor application, based in Electron js",
   "main": "main.js",
   "scripts": {

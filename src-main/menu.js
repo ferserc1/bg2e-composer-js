@@ -350,6 +350,14 @@ module.exports = {
 						{ role: 'paste' },
 						{type: 'separator'},
 						{
+							label: 'Select All',
+							accelerator: 'Shift+A',
+							click: function(item,focusedWindow) {
+								focusedWindow.webContents.send('triggerMenu', { msg:'selectAll' })
+							}
+						},
+						{type: 'separator'},
+						{
 							label: 'Group Nodes',
 							accelerator: 'CmdOrCtrl+G',
 							click: function(item,focusedWindow) {
@@ -403,6 +411,14 @@ module.exports = {
 						{type: 'separator'},
 						{ role: 'copy' },
 						{ role: 'paste' },
+						{type: 'separator'},
+						{
+							label: 'Select All',
+							accelerator: 'Shift+A',
+							click: function(item,focusedWindow) {
+								focusedWindow.webContents.send('triggerMenu', { msg:'selectAll' })
+							}
+						},
 						{type: 'separator'},
 						{
 							label: 'Group Nodes',
