@@ -270,6 +270,17 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     }
     
     function loadApp() {
+        // Prevent drop files into window
+        document.addEventListener('dragover', function (event) {
+            event.preventDefault();
+            return false;
+        }, false);
+          
+        document.addEventListener('drop', function (event) {
+            event.preventDefault();
+            return false;
+        }, false);
+
         let ng = angular.module(GLOBAL_APP_NAME, app.angular.deps);
 
         app.plugins.requirePlugins(app,angular,bg);
