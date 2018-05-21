@@ -66,54 +66,28 @@ app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
     angularApp.controller("JointController", ['$scope',function($scope) {
-        $scope.rotationX = 0;
-        $scope.rotationY = 0;
-        $scope.rotationZ = 0;
-        $scope.offsetX = 0;
-        $scope.offsetY = 0;
-        $scope.offsetZ = 0;
-
-        $scope.$watch('rotationX',() => {
-            $scope.component.rotate(
-                bg.Math.degreesToRadians($scope.rotationX),
-                bg.Math.degreesToRadians($scope.rotationY),
-                bg.Math.degreesToRadians($scope.rotationZ));
-        });
-
-        $scope.$watch('rotationY',() => {
-            $scope.component.rotate(
-                bg.Math.degreesToRadians($scope.rotationX),
-                bg.Math.degreesToRadians($scope.rotationY),
-                bg.Math.degreesToRadians($scope.rotationZ));
-        });
-
-        $scope.$watch('rotationZ',() => {
-            $scope.component.rotate(
-                bg.Math.degreesToRadians($scope.rotationX),
-                bg.Math.degreesToRadians($scope.rotationY),
-                bg.Math.degreesToRadians($scope.rotationZ));
-        });
-
-        $scope.$watch('offsetX',() => {
-            $scope.component.offset($scope.offsetX,$scope.offsetY,$scope.offsetZ);
-        });
-
-        $scope.$watch('offsetY',() => {
-            $scope.component.offset($scope.offsetX,$scope.offsetY,$scope.offsetZ);
-        });
-
-        $scope.$watch('offsetZ',() => {
-            $scope.component.offset($scope.offsetX,$scope.offsetY,$scope.offsetZ);
-        });
+        $scope.offset = [];
+        $scope.rotation = [];
 
         $scope.updateValues = function() {
             let comp = $scope.component.componentInstance;
-            $scope.offsetX = comp.joint.offset.x;
-            $scope.offsetY = comp.joint.offset.y;
-            $scope.offsetZ = comp.joint.offset.z;
-            $scope.rotationX = bg.Math.radiansToDegrees(comp.joint.eulerRotation.x);
-            $scope.rotationY = bg.Math.radiansToDegrees(comp.joint.eulerRotation.y);
-            $scope.rotationZ = bg.Math.radiansToDegrees(comp.joint.eulerRotation.z);
+            $scope.offset = [comp.joint.offset.x,comp.joint.offset.y,comp.joint.offset.z];
+            $scope.rotation = [
+                bg.Math.radiansToDegrees(comp.joint.eulerRotation.x),
+                bg.Math.radiansToDegrees(comp.joint.eulerRotation.y),
+                bg.Math.radiansToDegrees(comp.joint.eulerRotation.z)
+            ];
+        }
+
+        $scope.commitChangesOffset = function() {
+            $scope.component.offset($scope.offset[0],$scope.offset[1],$scope.offset[2]);
+        }
+
+        $scope.commitChangesRotation = function() {
+            $scope.component.rotate(
+                bg.Math.degreesToRadians($scope.rotation[0]),
+                bg.Math.degreesToRadians($scope.rotation[1]),
+                bg.Math.degreesToRadians($scope.rotation[2]));
         }
 
         app.render.Scene.Get().selectionManager.selectionChanged("jointUi" + $scope.component.jointType, () => {
