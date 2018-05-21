@@ -55,8 +55,16 @@ app.addSource(() => {
                 .then((comp) => {
                     if (comp && $scope.selectedNode) {
                         let instance = comp.createInstance($scope.selectedNode);
+                        let selection = app.render.Scene.Get().selectionManager.selection;
+                        let selectedNodes = [];
+                        selection.forEach((selItem) => {
+                            if (selectedNodes.indexOf(selItem.node)==-1) {
+                                selectedNodes.push(selItem.node);
+                            }
+                        });
+
                         app.CommandManager.Get().doCommand(
-                            new app.nodeCommands.AddComponent($scope.selectedNode,instance)
+                            new app.nodeCommands.AddComponent(selectedNodes,instance)
                         )
                         .then(() => {
                             app.render.Scene.Get().notifySceneChanged();

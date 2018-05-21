@@ -267,15 +267,38 @@ app.addSource(() => {
 
         execute() {
             return new Promise((resolve,reject) => {
-                this._node.addComponent(this._component);
-                app.render.Scene.Get().selectionManager.prepareNode(this._node);
+
+                let addComponent = (n) => {
+                    n.addComponent(this._component.clone());
+                    app.render.Scene.Get().selectionManager.prepareNode(n);
+                }
+
+                if (Array.isArray(this._node)) {
+                    this._node.forEach((n) => {
+                        addComponent(n);
+                    });
+                }
+                else {
+                    addComponent(this._node);
+                }
                 resolve();
             });
         }
         
         undo() {
             return new Promise((resolve,reject) => {
-                this._node.removeComponent(this._component);
+                let removeComponent = (n) => {
+                    let c = n.component(this._component.typeId);
+                    n.removeComponent(c);
+                }
+                if (Array.isArray(this._node)) {
+                    this._node.forEach((n) => {
+                        removeComponent(n);
+                    });
+                }
+                else {
+                    removeComponent(this._node);
+                }
                 resolve();
             });
         }
