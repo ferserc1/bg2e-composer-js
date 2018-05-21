@@ -220,38 +220,50 @@ app.addSource(() => {
         polyList.build();
     }
 
+    function assertDrawables(nodes) {
+        return nodes.every((item) => item.drawable!=null && item.transform!=null);
+    }
+
     class ApplyTransform extends app.Command {
-        constructor(node) {
+        constructor(nodes) {
             super();
-            this._node = node;
-            if (node.drawable && node.transform) {
-                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
-                this._inverseMatrix = new bg.Matrix4(node.transform.matrix);
-                this._inverseMatrix.invert();
-            }
+            this._nodes = nodes;
         }
 
         execute() {
             return new Promise((resolve,reject) => {
-                if (this._node.transform && this._node.drawable) {
-                    this._node.drawable.forEach((plist) => {
-                        applyTransform(plist,this._prevMatrix);
+                if (!assertDrawables(this._nodes)) {
+                    reject(new Error("Could not apply transform: some items have not transform or drawable components"));
+                    return;
+                }
+
+                this._prevMatrix = [];
+                this._inverseMatrix = [];
+                this._nodes.forEach((node,index) => {
+                    let prev = new bg.Matrix4(node.transform.matrix);
+                    let inv = new bg.Matrix4(node.transform.matrix);
+                    inv.invert();
+                    this._prevMatrix.push(prev);
+                    this._inverseMatrix.push(inv);
+                    node.drawable.forEach((plist) => {
+                        applyTransform(plist,this._prevMatrix[index]);
                     });
-                    this._node.transform.matrix.identity();
-                    resolve();
-                }
-                else {
-                    reject(new Error("The selected node hasn't a transform or drawable node attached."))
-                }
+                    node.transform.matrix.identity();
+                });
+                resolve();
             })
         }
 
         undo() {
             return new Promise((resolve) => {
-                this._node.drawable.forEach((plist) => {
-                    applyTransform(plist,this._inverseMatrix);
+                this._nodes.forEach((node,index) => {
+                    let prev = this._prevMatrix[index];
+                    let inv  = this._inverseMatrix[index];
+                    node.drawable.forEach((plist) => {
+                        applyTransform(plist,inv);
+                    });
+                    node.transform.matrix.assign(prev);
                 });
-                this._node.transform.matrix.assign(this._prevMatrix);
                 resolve();
             })
         }
@@ -260,30 +272,32 @@ app.addSource(() => {
     app.drawableCommands.ApplyTransform = ApplyTransform;
 
     class MoveToCenter extends app.Command {
-        constructor(node) {
+        constructor(nodes) {
             super();
-            this._node = node;
-            if (node.drawable && node.transform) {
-                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
-            }
+            this._nodes = nodes;
         }
 
         execute() {
             return new Promise((resolve,reject) => {
-                if (this._node.drawable && this._node.transform) {
-                    let bbox = new bg.tools.BoundingBox(this._node.drawable);
-                    this._node.transform.matrix.setPosition(-bbox.center.x,-bbox.center.y,-bbox.center.z);
-                    resolve();
+                if (!assertDrawables(this._nodes)) {
+                    reject(new Error("Could not move to center: some items have no transform or drawable components"));
+                    return;
                 }
-                else {
-                    reject(new Error("The selected node hasn't a transformm or drawable node attached"));
-                }
+                this._prevMatrix = [];
+                this._nodes.forEach((node) => {
+                    this._prevMatrix.push(new bg.Matrix4(node.transform.matrix));
+                    let bbox = new bg.tools.BoundingBox(node.drawable);
+                    node.transform.matrix.setPosition(-bbox.center.x,-bbox.center.y,-bbox.center.z);
+                });
+                resolve();
             })
         }
 
         undo() {
             return new Promise((resolve,reject) => {
-                this._node.transform.matrix = new bg.Matrix4(this._prevMatrix);
+                this._nodes.forEach((node,index) => {
+                    node.transform.matrix = this._prevMatrix[index];
+                });
                 resolve();
             })
         }
@@ -293,31 +307,33 @@ app.addSource(() => {
     app.console.registerCommand('moveToCenter','app.drawableCommands.MoveToCenter');
 
     class PutOnFloor extends app.Command {
-        constructor(node) {
+        constructor(nodes) {
             super();
-            this._node = node;
-            if (node.drawable && node.transform) {
-                this._prevMatrix = new bg.Matrix4(node.transform.matrix);
-            }
+            this._nodes = nodes;
         }
 
         execute() {
             return new Promise((resolve,reject) => {
-                if (this._node.drawable && this._node.transform) {
-                    let bbox = new bg.tools.BoundingBox(this._node.drawable);
-                    let curPos = this._node.transform.matrix.position;
-                    this._node.transform.matrix.setPosition(curPos.x,-bbox.min.y,curPos.z);
-                    resolve();
+                if (!assertDrawables(this._nodes)) {
+                    reject(new Error("Could not put on floor: some items have no transform or drawable components"));
+                    return;
                 }
-                else {
-                    reject(new Error("The selected node hasn't a transformm or drawable node attached"));
-                }
+                this._prevMatrix = [];
+                this._nodes.forEach((node) => {
+                    this._prevMatrix.push(new bg.Matrix4(node.transform.matrix));
+                    let bbox = new bg.tools.BoundingBox(node.drawable);
+                    let curPos = node.transform.matrix.position;
+                    node.transform.matrix.setPosition(curPos.x,-bbox.min.y,curPos.z);
+                });
+                resolve();
             })
         }
 
         undo() {
             return new Promise((resolve,reject) => {
-                this._node.transform.matrix = new bg.Matrix4(this._prevMatrix);
+                this._nodes.forEach((node,index) => {
+                    node.transform.matrix = this._prevMatrix[index];
+                });
                 resolve();
             })
         }
