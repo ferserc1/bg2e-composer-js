@@ -435,4 +435,13 @@ app.addSource(() => {
             }]
         }
     })
+
+    angularApp.directive('autofocus', ["$timeout", function($timeout) {
+        return {
+            restrict: 'A',
+            link: function($scope,$element) {
+                $element[0].focus();
+            }
+        }
+    }])
 })
