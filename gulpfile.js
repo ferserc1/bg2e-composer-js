@@ -13,6 +13,11 @@ let raytracerPluginPath = {
     macOS: `${ __dirname }/../bg2e-raytracer-dist/osx`
 };
 
+let vitscnImportPath = {
+    win64: `${ __dirname }/../bg2e-scene-pkg/win64`,
+    macOS: `${ __dirname }/../bg2e-scene-pkg/macOS`
+};
+
 gulp.task("compile", function() {
     let sources = [];
 
@@ -40,6 +45,38 @@ gulp.task("compile", function() {
     return gulp.src(sources)
         .pipe(concat("window-main-compiled.js"))
         .pipe(gulp.dest(__dirname));
+});
+
+gulp.task("vitscnImport", function() {
+    return Promise.all([
+        gulp.src([
+            `${ vitscnImportPath.win64 }/bg2e.dll`,
+            `${ vitscnImportPath.win64 }/concrt140.dll`,
+            `${ vitscnImportPath.win64 }/msvcp140.dll`,
+            `${ vitscnImportPath.win64 }/OpenAL32.dll`,
+            `${ vitscnImportPath.win64 }/scene-pkg.exe`,
+            `${ vitscnImportPath.win64 }/vccorlib140.dll`,
+            `${ vitscnImportPath.win64 }/vcruntime140.dll`
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/win64')),
+    
+        gulp.src([
+            `${ vitscnImportPath.macOS }/libbg2e.dylib`,
+            `${ vitscnImportPath.macOS }/scene-pkg`
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/macos')),
+        
+        gulp.src([
+            "vitscnPlugin/plugin/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/plugin')),
+        
+        gulp.src([
+            "vitscnPlugin/src/*"
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/src'))
+        
+    ]);
 });
 
 gulp.task("fbxPlugin", function() {
