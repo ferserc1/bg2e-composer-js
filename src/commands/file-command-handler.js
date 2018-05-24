@@ -115,11 +115,13 @@ app.addSource(() => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
                 
+                let filters = [ { name:"bg2 engine scenes", extensions:["vitscnj"]} ];
+                if (app.vitscnPlugin.available) {
+                    filters.push({ name:"bg2 engine scene package", extensions:["vitscn"]});
+                }
                 let filePath = dialog.showOpenDialog({
                     properties:['openFile'],
-                    filters: [
-                        { name:"bg2 engine scenes", extensions:["vitscnj"]}
-                    ]
+                    filters: filters
                 });
                 if (filePath && filePath.length>0) {
                     filePath = app.standarizePath(filePath[0]);
