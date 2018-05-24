@@ -13,6 +13,10 @@ app.addDefinitions(() => {
         if (app.fbxPlugin.available) {
             bg.base.Loader.RegisterPlugin(new app.fbxPlugin.FbxLoaderPlugin());
         }
+
+        if (app.vitscnPlugin.available) {
+            bg.base.Loader.RegisterPlugin(new app.vitscnPlugin.SceneLoaderPlugin());
+        }
     }
 
     function sceneWillOpen(oldSceneRoot,newSceneRoot) {
