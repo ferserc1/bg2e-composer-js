@@ -269,7 +269,7 @@ app.addSource(() => {
             return new Promise((resolve,reject) => {
 
                 let addComponent = (n) => {
-                    n.addComponent(this._component.clone());
+                    n.addComponent(this._component.clone(n.context));
                     app.render.Scene.Get().selectionManager.prepareNode(n);
                 }
 
