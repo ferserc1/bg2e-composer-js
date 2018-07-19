@@ -110,6 +110,7 @@ app.addDefinitions(() => {
             this._selectionHighlight = new bg.manipulation.SelectionHighlight(context);
             this._selectionHighlight.highlightColor = bg.Color.Green();
             this._selectionHighlight.borderColor = 2;
+            this._selectionHighlight.drawInvisiblePolyList = true;
             this._gizmoManager.gizmoOpacity = 0.7;
             this._gizmoNode = null;
             this._gizmoTransform = null;
