@@ -143,4 +143,4 @@ gulp.task("fbxPlugin", function() {
     ])
 });
 
-gulp.task("default",["compile","fbxPlugin","vitscnImport"]);
+gulp.task("default",gulp.series("compile","fbxPlugin","vitscnImport"));
