@@ -41,6 +41,38 @@ app.addDefinitions(() => {
     //...
     //app.ui.DialogView.Ok("test"); > this will resolve the returned promise from DialogView.Show
     //app.ui.Close();   > this will reject the returned promise from DialogView.Show
+
+    class DialogInput {
+        static Show(params) {
+            return new Promise((resolve,reject) => {
+                params.ok = function(value) {
+                    resolve(value);
+                }
+                params.cancel = function() {
+                    reject();
+                }
+                app.trigger("showInputDialog",params);
+            });
+        }
+
+        static Close() {
+            app.trigger("hideInputDialog");
+        }
+
+        static Ok() {
+            app.trigger("hideInputDialog");
+        }
+    }
+
+    app.ui.DialogInput = DialogInput;
+
+    // Example:
+    // app.ui.DialogInput.Show({
+    //     x: 10,
+    //     y: 10,
+    //     value: 12.5,
+    //     validator: (value) => /^-?\d+(\.\d+)?$/.test(value)
+    // }).then((value) => console.log(value))
 });
 
 app.addSource(() => {
@@ -116,4 +148,92 @@ app.addSource(() => {
             }]
         };
     }]);
+
+    angularApp.directive("dialogInput", function() {
+        return {
+            restrict: "E",
+            templateUrl: `templates/${ app.config.templateName }/directives/dialog-input.html`,
+            scope: {
+
+            },
+            link: function(scope, element) {
+                scope.inputElement = element.find("input")[0];
+                scope.containerElement = scope.inputElement.parentElement;
+            },
+            controller: ['$scope', function($scope) {
+                $scope.visible = false;
+                $scope.position = { x:0, y:0 };
+                $scope.value = "";
+                $scope.validationError = false;
+                let cancelFunc = null;
+                let okFunc = null;
+                let validator = null;
+
+                app.on("showInputDialog","dialogInput", (params) => {
+                    $scope.visible = true;
+                    $scope.position.x = params.x;
+                    $scope.position.y = params.y;
+                    $scope.value = params.value;
+                    cancelFunc = params.cancel;
+                    okFunc  = params.ok;
+                    validator = params.validator;
+                    $scope.$apply();
+                    setTimeout(() => {
+                        $scope.inputElement.focus();
+
+                        // Check bounds
+                        let fieldWidth = $scope.containerElement.clientWidth + 60;
+                        let fieldRight = window.innerWidth - (params.x + fieldWidth);
+                        if (fieldRight<0) {
+                            $scope.position.x = window.innerWidth - fieldWidth;
+                            $scope.$apply();
+                        }
+                    },10);
+                });
+
+                app.on("hideDialogInput","dialogInput", (params) => {
+                    $scope.visible = false;
+                    $scope.$apply();
+                });
+
+                $scope.cancel = function() {
+                    $scope.visible = false;
+                    if (cancelFunc) {
+                        cancelFunc();
+                    }
+                };
+
+                $scope.ok = function() {
+                    if (validator && !validator($scope.value)) {
+                        return;
+                    }
+                    $scope.validationError = false;
+                    $scope.visible = false;
+                    if (okFunc) {
+                        okFunc($scope.value);
+                    }
+                };
+
+                $scope.keyUp = function(evt) {
+                    if (validator && !validator($scope.value)) {
+                        $scope.validationError = true;
+                    }
+                    else {
+                        $scope.validationError = false;
+                    }
+                    
+                    if (evt.key=="Enter") {
+                        $scope.ok();
+                    }
+                    else if (evt.key=="Esc") {
+                        $scope.cancel();
+                    }
+                };
+
+                $scope.click = function(evt) {
+                    evt.stopPropagation();
+                };
+            }]
+        }
+    })
 });

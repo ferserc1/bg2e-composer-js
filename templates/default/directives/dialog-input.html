@@ -1,0 +1,6 @@
+<div class="bg2-dialog-input-background" ng-click="cancel()" ng-show="visible">
+    <div class="bg2-dialog-input-container" style="left: {{ position.x }}px; top: {{ position.y }}px;">
+        <input type="text" ng-model="value" ng-keyup="keyUp($event)" ng-click="click($event)" ng-class="{ 'bg2-validation-error' : validationError }"/>
+        <button type="vutton" ng-click="ok()">Ok</button>
+    </div>
+</div>
