@@ -105,10 +105,15 @@ app.addDefinitions(() => {
 
     app.ui.StatusBar = StatusBar;
 
-    setTimeout(() => {
-        app.ui.StatusBar.Get().init();
-    }, 1000);
-
+    function initStatusBar() {
+        if (app.render.Scene.Get()) {
+            app.ui.StatusBar.Get().init();
+        }
+        else {
+            setTimeout(() => initStatusBar(), 500);
+        }
+    }
+    initStatusBar();
 });
 
 app.addSource(() => {
