@@ -26,63 +26,77 @@ app.addSource(() => {
 
         $scope.saveName = function() {
             if ($scope.selection.length==1) {
-                executeCommand(new app.plistCommands.SetName(
-                    $scope.selection[0],
-                    $scope.name
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.SetName(
+                        $scope.selection[0],
+                        $scope.name
+                    ));
+                },10)
             }
         };
 
         $scope.saveGroupName = function() {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.SetGroupName(
-                    $scope.selection,
-                    $scope.groupName
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.SetGroupName(
+                        $scope.selection,
+                        $scope.groupName
+                    ));
+                },10)
             }
         };
 
         $scope.saveVisibility = function() {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.SetVisibility(
-                    $scope.selection,
-                    $scope.visible
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.SetVisibility(
+                        $scope.selection,
+                        $scope.visible
+                    ));
+                },10)
             }
         };
 
         $scope.saveShadowVisibility = function() {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.SetShadowVisibility(
-                    $scope.selection,
-                    $scope.visibleToShadows
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.SetShadowVisibility(
+                        $scope.selection,
+                        $scope.visibleToShadows
+                    ));
+                },10)
             }
         };
 
         $scope.switchUvs = function(from,to) {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.SwapUVs(
-                    $scope.selection,
-                    from.id,
-                    to.id
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.SwapUVs(
+                        $scope.selection,
+                        from.id,
+                        to.id
+                    ));
+                },10)
             }
         };
 
         $scope.flipFaces = function() {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.FlipFaces(
-                    $scope.selection
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.FlipFaces(
+                        $scope.selection
+                    ));
+                },10)
             }
         };
 
         $scope.flipNormals = function() {
             if ($scope.selection.length) {
-                executeCommand(new app.plistCommands.FlipNormals(
-                    $scope.selection
-                ));
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.FlipNormals(
+                        $scope.selection
+                    ));
+                },10)
             }
         };
 

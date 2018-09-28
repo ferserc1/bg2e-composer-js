@@ -52,11 +52,45 @@ app.addSource(() => {
             $scope.sliderModel = $scope.value;
         }
 
+        let ctrlKey = false;
         $scope.onMouseDown = function(evt) {
-            updatePosition(evt);
+            if (evt.ctrlKey) {
+                app.ui.DialogInput.Show({
+                    x: evt.clientX,y: evt.clientY,
+                    value: $scope.value,
+                    validator: (value) => {
+                        if (!/^-?\d+(\.\d+)?$/.test(value)) {
+                            return false;
+                        }
+                        else {
+                            let numValue = Number(value);
+                            return numValue>=$scope.sliderOptions.floor && numValue<=$scope.sliderOptions.ceil;
+                        }
+                    }
+                }).then((value) => {
+                    $scope.sliderModel = value;
+                    updatePercent();
+                    $scope.$apply();
+                    if ($scope.sliderOptions.commitChanges) {
+                        $scope.sliderOptions.commitChanges();
+                    }
+                })
+                .catch((err) => {
+
+                });
+                ctrlKey = true;
+            }
+            else {
+                ctrlKey = false;
+                updatePosition(evt);
+            }
         };
 
         $scope.onMouseUp = function(evt) {
+            if (ctrlKey) {
+                return;
+            }
+            ctrlKey = false;
             if ($scope.sliderOptions.commitChanges) {
                 $scope.sliderOptions.commitChanges();
             }

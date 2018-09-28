@@ -48,7 +48,7 @@ app.addSource(() => {
             app.ui.DialogView.Show({
                 templateUrl:`templates/${ app.config.templateName }/directives/add-component-view.html`,
                 title:"Add Component",
-                showClose: false,
+                showClose: true,
                 type: 'modal-right bg2-modal-mini',
                 onAccept:(result) => { return result; }
             })

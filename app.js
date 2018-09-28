@@ -51,7 +51,9 @@ class AppClass {
             }
 
             if (!fs.existsSync(this._paths.temp)) {
-                fs.mkdir(this._paths.temp);
+                fs.mkdir(this._paths.temp,() => {
+                    
+                });
             }
         }
         return this._paths;

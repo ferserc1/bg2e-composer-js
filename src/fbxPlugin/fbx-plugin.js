@@ -54,8 +54,21 @@ app.addDefinitions(() => {
         if (fbxNode.transform) {
             matrix.mult(new bg.Matrix4(fbxNode.transform));
         }
+
+        let transformComponent = null;
+        if (app.fbxPlugin.applyTransforms) {
+            transformComponent = new bg.scene.Transform();
+        }
+        else {
+            let pos = matrix.position;
+            transformComponent = new bg.scene.Transform(bg.Matrix4.Translation(pos.x,pos.y,pos.z));
+            matrix.setPosition(0,0,0);
+        } 
+        
+        node.addComponent(transformComponent);
         if (fbxNode.meshData) {
             let drw = new bg.scene.Drawable();
+            drw.name = fbxNode.name;
             node.addComponent(drw);
      
             fbxNode.meshData.forEach((plistData) => {
