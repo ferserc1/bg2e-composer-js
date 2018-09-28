@@ -56,6 +56,7 @@ app.addDefinitions(() => {
         }
         if (fbxNode.meshData) {
             let drw = new bg.scene.Drawable();
+            drw.name = fbxNode.name;
             node.addComponent(drw);
      
             fbxNode.meshData.forEach((plistData) => {
