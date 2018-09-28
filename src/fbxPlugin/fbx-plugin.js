@@ -54,7 +54,17 @@ app.addDefinitions(() => {
         if (fbxNode.transform) {
             matrix.mult(new bg.Matrix4(fbxNode.transform));
         }
-        let transformComponent = new bg.scene.Transform(matrix);
+
+        let transformComponent = null;
+        if (app.fbxPlugin.applyTransforms) {
+            transformComponent = new bg.scene.Transform();
+        }
+        else {
+            let pos = matrix.position;
+            transformComponent = new bg.scene.Transform(bg.Matrix4.Translation(pos.x,pos.y,pos.z));
+            matrix.setPosition(0,0,0);
+        } 
+        
         node.addComponent(transformComponent);
         if (fbxNode.meshData) {
             let drw = new bg.scene.Drawable();
@@ -64,25 +74,25 @@ app.addDefinitions(() => {
             fbxNode.meshData.forEach((plistData) => {
                 let plist = new bg.base.PolyList(context);
                 plist.name = plistData.name;
-                // let scaleRotationMatrix = matrix.rotation;
-                // for (let i = 0; i<plistData.vertex.length; i+=3) {
-                //     let newVertex = matrix.multVector(new bg.Vector3(
-                //         plistData.vertex[0 + i],
-                //         plistData.vertex[1 + i],
-                //         plistData.vertex[2 + i]
-                //     ));
-                //     let newNormal = scaleRotationMatrix.multVector(new bg.Vector3(
-                //         plistData.normal[0 + i],
-                //         plistData.normal[1 + i],
-                //         plistData.normal[2 + i]
-                //     ));
-                //     plistData.vertex[0 + i] = newVertex.x;
-                //     plistData.vertex[1 + i] = newVertex.y;
-                //     plistData.vertex[2 + i] = newVertex.z;
-                //     plistData.normal[0 + i] = newNormal.x;
-                //     plistData.normal[1 + i] = newNormal.y;
-                //     plistData.normal[2 + i] = newNormal.z;
-                // }
+                let scaleRotationMatrix = matrix.rotation;
+                for (let i = 0; i<plistData.vertex.length; i+=3) {
+                    let newVertex = matrix.multVector(new bg.Vector3(
+                        plistData.vertex[0 + i],
+                        plistData.vertex[1 + i],
+                        plistData.vertex[2 + i]
+                    ));
+                    let newNormal = scaleRotationMatrix.multVector(new bg.Vector3(
+                        plistData.normal[0 + i],
+                        plistData.normal[1 + i],
+                        plistData.normal[2 + i]
+                    ));
+                    plistData.vertex[0 + i] = newVertex.x;
+                    plistData.vertex[1 + i] = newVertex.y;
+                    plistData.vertex[2 + i] = newVertex.z;
+                    plistData.normal[0 + i] = newNormal.x;
+                    plistData.normal[1 + i] = newNormal.y;
+                    plistData.normal[2 + i] = newNormal.z;
+                }
 
                 plist.vertex = plistData.vertex || [];
                 plist.normal = plistData.normal || [];
