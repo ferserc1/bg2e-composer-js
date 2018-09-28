@@ -223,7 +223,7 @@ app.addSource(() => {
                 $scope.id = "boolPicker_" + (g_boolPickerId++);
                 $scope.userChanged = function() {
                     if ($scope.commitChanges) {
-                        $scope.commitChanges();
+                        setTimeout(() => $scope.commitChanges(), 10);
                     }
                 }
             }]
