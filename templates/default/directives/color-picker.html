@@ -1,6 +1,6 @@
 <div class="bg2-form-field">
     <label class="bg2-width-30 bg2-text-left">{{ label }}</label>
-    <div class="bg2-color-picker-sample bg2-width-20" ng-style="preview"></div>
+    <input type="color" class="bg2-color-picker-sample bg2-width-20" ng-style="preview" ng-model="color" ng-change="colorValueChanged()">
     <div class="bg2-width-60 bg2-color-picker-sliders">
         <label class="bg2-width-10">R</label>
         <slider class="bg2-width-80" slider-model="value[0]" slider-options="options"></slider>

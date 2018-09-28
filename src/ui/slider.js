@@ -74,6 +74,9 @@ app.addSource(() => {
                     if ($scope.sliderOptions.commitChanges) {
                         $scope.sliderOptions.commitChanges();
                     }
+                })
+                .catch((err) => {
+
                 });
                 ctrlKey = true;
             }

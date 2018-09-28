@@ -23,14 +23,43 @@ app.addSource(() => {
                     }
                 }
 
+                $scope.color = "#ffffff";
+                let timeout = null;
+                $scope.colorValueChanged = function(evt) {
+                    let result = /#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/.exec($scope.color)
+                    if (result) {
+                        let r = parseInt("0x" + result[1]);
+                        let g = parseInt("0x" + result[2]);
+                        let b = parseInt("0x" + result[3]);
+                        $scope.value[0] = r / 255;
+                        $scope.value[1] = g / 255;
+                        $scope.value[2] = b / 255;
+                        if (timeout) {
+                            clearTimeout(timeout)
+                        }
+                        timeout = setTimeout(() => {
+                            if ($scope.commitChanges) {
+                                $scope.commitChanges();
+                            }
+                        }, 100);
+                    }
+                }
+
                 $scope.preview = { 'background-color': 'rgba(0,0,0,0)' };
                 $scope.$watch("value", () => {
+                    let r = Math.round($scope.value[0] * 255);
+                    let g = Math.round($scope.value[1] * 255);
+                    let b = Math.round($scope.value[2] * 255);
                     $scope.preview['background-color'] = 'rgba('
-                        + Math.round($scope.value[0] * 255) + ',' +
-                        + Math.round($scope.value[1] * 255) + ',' +
-                        + Math.round($scope.value[2] * 255) + ',' +
+                        + r + ',' +
+                        + g + ',' +
+                        + b + ',' +
                         + $scope.value[3] + ')';
+                    
+                    $scope.color = "#" + r.toString(16) + g.toString(16) + b.toString(16);
                 }, true);
+
+                
             }]
         };
     });
