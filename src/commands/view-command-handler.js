@@ -4,8 +4,31 @@ app.addSource(() => {
         return app.render.Scene.Get().selectionController;
     }
 
+    function updateGizmoStatus() {
+        app.ui.Toolbar.Get().setItemStatus('gizmoSelect',app.render.Gizmo.CurrentMode()==bg.manipulation.GizmoMode.SELECT);
+        app.ui.Toolbar.Get().setItemStatus('gizmoTranslate',app.render.Gizmo.CurrentMode()==bg.manipulation.GizmoMode.TRANSLATE);
+        app.ui.Toolbar.Get().setItemStatus('gizmoRotate',app.render.Gizmo.CurrentMode()==bg.manipulation.GizmoMode.ROTATE);
+        app.ui.Toolbar.Get().setItemStatus('gizmoScale',app.render.Gizmo.CurrentMode()==bg.manipulation.GizmoMode.SCALE);
+        app.ui.Toolbar.Get().setItemStatus('gizmoTransform',app.render.Gizmo.CurrentMode()==bg.manipulation.GizmoMode.TRANSFORM);
+        let currentWorkspace = app.currentWorkspace();
+        app.ui.Toolbar.Get().setItemStatus('showSceneEditor', currentWorkspace.endpoint=='/sceneEditor');
+        app.ui.Toolbar.Get().setItemStatus('showModelEditor', currentWorkspace.endpoint=='/modelEditor');
+        app.ui.Toolbar.Get().setItemStatus('showLibraryEditor', currentWorkspace.endpoint=='/libraryEditor');
+        app.ui.Toolbar.Get().updateStatus();
+    }
+
+
     class ViewCommandHandler extends app.CommandHandler {
+
+        updateToolbarIcons() {
+            updateGizmoStatus();
+        }
+
         getMessages() {
+            setTimeout(() => {
+                updateGizmoStatus();
+            }, 1000);
+
             return [
                 "gizmoSelect",
                 "gizmoTranslate",
@@ -36,18 +59,23 @@ app.addSource(() => {
             switch (message) {
             case 'gizmoSelect':
                 app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SELECT);
+                updateGizmoStatus();
                 break;
             case 'gizmoTranslate':
                 app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSLATE);
+                updateGizmoStatus();
                 break;
             case 'gizmoRotate':
                 app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.ROTATE);
+                updateGizmoStatus();
                 break;
             case 'gizmoScale':
                 app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SCALE);
+                updateGizmoStatus();
                 break;
             case 'gizmoTransform':
                 app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSFORM);
+                updateGizmoStatus();
                 break;
             case 'graphicSettings':
                 this.graphicSettings(params);
@@ -93,12 +121,15 @@ app.addSource(() => {
                 break;
             case 'showSceneEditor':
                 this.showSceneEditor();
+                updateGizmoStatus();
                 break;
             case 'showModelEditor':
                 this.showModelEditor();
+                updateGizmoStatus();
                 break;
             case 'showLibraryEditor':
                 this.showLibraryEditor();
+                updateGizmoStatus();
                 break;
             }
         }

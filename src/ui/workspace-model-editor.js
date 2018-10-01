@@ -13,6 +13,8 @@ app.addSource(() => {
 
         $scope.switchWorkspace = function() {
             location.hash = "#!/sceneEditor";
+
+            app.CommandHandler.Get("ViewCommandHandler").updateToolbarIcons();
         }
 
         app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {

@@ -18,6 +18,19 @@ app.addDefinitions(() => {
         get items() {
             return this._items;
         }
+
+        setItemStatus(commandName, status) {
+            this._items.some((item) => {
+                if (item.command==commandName) {
+                    item.selected = status;
+                    return true;
+                }
+            })
+        }
+
+        updateStatus() {
+            app.trigger("updateToolbarStatus");
+        }
     }
 
     app.ui.Toolbar = Toolbar;
@@ -45,6 +58,12 @@ app.addSource(() => {
                 $scope.$apply();
             },50);
         });
+
+        app.on('updateToolbarStatus', "toolbar", () => {
+            setTimeout(() => {
+                $scope.$apply();
+            },10);
+        })
     }]);
 
     angularApp.directive('toolbar', () => {
