@@ -1,16 +1,19 @@
 
 app.addSource(() => {
     app.library = app.library || {};
-    let g_manager = null;
+    let g_manager = {};
     const path = require('path');
 
 
     class Manager {
-        static Get() {
-            if (!g_manager) {
-                g_manager = new Manager();
+        static Get(mode) {
+            if (!mode) {
+                throw new Error("Error getting library manager: no mode specified")
             }
-            return g_manager;
+            if (!g_manager[mode]) {
+                g_manager[mode] = new Manager();
+            }
+            return g_manager[mode];
         }
 
         constructor() {
