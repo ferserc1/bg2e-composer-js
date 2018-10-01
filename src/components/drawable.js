@@ -70,6 +70,13 @@ app.addSource(() => {
                 return this.execCommand(new app.drawableCommands.PutOnFloor(selectedDrawableNodes()));
             }
 
+            centerPivot() {
+                return this.execCommand(new app.drawableCommands.CenterPivot(selectedDrawableNodes(), false));
+            }
+
+            pivotOnFloor() {
+                return this.execCommand(new app.drawableCommands.CenterPivot(selectedDrawableNodes(), true));
+            }
         }
     });
 
@@ -121,6 +128,20 @@ app.addSource(() => {
                 $scope.putOnFloor = function() {
                     if ($scope.canApplyTransform) {
                         $scope.component.putOnFloor();
+                        app.ComposerWindowController.Get().updateView();
+                    }
+                };
+
+                $scope.centerPivot = function() {
+                    if ($scope.canApplyTransform) {
+                        $scope.component.centerPivot();
+                        app.ComposerWindowController.Get().updateView();
+                    }
+                };
+
+                $scope.pivotOnFloor = function() {
+                    if ($scope.canApplyTransform) {
+                        $scope.component.pivotOnFloor();
                         app.ComposerWindowController.Get().updateView();
                     }
                 };

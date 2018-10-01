@@ -340,4 +340,65 @@ app.addSource(() => {
     }
 
     app.drawableCommands.PutOnFloor = PutOnFloor;
+
+    function centerPivot(node) {
+
+    }
+
+    class CenterPivot extends app.Command {
+        constructor(nodes, pivotOnFloor = false) {
+            super();
+            this._nodes = nodes;
+            this._pivotOnFloor = pivotOnFloor;
+        }
+
+        execute() {
+            return new Promise((resolve) => {
+                if (!assertDrawables(this._nodes)) {
+                    reject(new Error("Could not put on floor: some items have no transform or drawable components"));
+                    return;
+                }
+                this._prevMatrix = [];
+                this._prevDrawables = [];
+
+                this._nodes.forEach((node) => {
+                    this._prevMatrix.push(new bg.Matrix4(node.transform.matrix));
+                    this._prevDrawables.push(node.drawable);
+
+                    let bbox = new bg.tools.BoundingBox(node.drawable);
+                    let curPos = node.transform.matrix.position;
+                    let applyMatrix = bg.Matrix4.Identity();
+                    let trxPos = null;
+                    if (this._pivotOnFloor) {
+                        trxPos = [-bbox.center.x,-bbox.min.y,-bbox.center.z];
+                    }
+                    else {
+                        trxPos = [-bbox.center.x,-bbox.center.y,-bbox.center.z]
+                    }
+                    applyMatrix.translate(trxPos[0],trxPos[1],trxPos[2]);
+
+                    node.drawable.forEach((plist) => {
+                        applyTransform(plist,applyMatrix);
+                    });
+                    node.transform.matrix.translate(-trxPos[0],-trxPos[1],-trxPos[2]);
+
+                    centerPivot(node)
+                });
+                
+                resolve();
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._nodes.forEach((node,index) => {
+                    node.transform.matrix = this._prevMatrix[index];
+                    node.addComponent(this._prevDrawables[index]);
+                });
+                resolve();
+            })
+        }
+    }
+
+    app.drawableCommands.CenterPivot = CenterPivot;
 })
