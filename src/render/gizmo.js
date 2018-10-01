@@ -17,6 +17,10 @@ app.addSource(() => {
             g_mode = mode;
         }
 
+        static CurrentMode() {
+            return g_mode;
+        }
+
         constructor() {
             super(g_unifiedPath, g_translatePath, g_rotatePath, g_scalePath);
             g_gizmoObservers.push(this);

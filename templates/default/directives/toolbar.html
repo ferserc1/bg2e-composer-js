@@ -1,5 +1,5 @@
 <ul>
-    <li ng-repeat="item in toolbarItems" ng-show="isVisible(item)">
+    <li ng-repeat="item in toolbarItems" ng-show="isVisible(item)" ng-class="{ 'bg2-toolbar-item-selected' : item.selected }">
         <a ng-click="action(item)" title="{{ item.name }}" ng-show="item.type=='button'">
            <i class="bg2-icon bg2-{{ item.icon }}"></i>
         </a>

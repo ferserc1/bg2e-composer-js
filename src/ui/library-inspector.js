@@ -5,7 +5,7 @@ app.addSource(() => {
     angularApp.controller("LibraryInspectorController",['$scope',function($scope) {
         $scope.mode = $scope.mode || 'edit';
         $scope.onInsertNode = $scope.onInsertNode || null;
-        let libMgr = app.library.Manager.Get();
+        let libMgr = app.library.Manager.Get($scope.mode);
         function clearHash(node) {
             delete node.$$hashKey;
             if (node.children) {
@@ -88,7 +88,7 @@ app.addSource(() => {
         };
 
         $scope.loadLibrary = function() {
-            app.CommandHandler.Get("FileCommandHandler").openLibrary();
+            app.CommandHandler.Get("FileCommandHandler").openLibrary($scope.mode);
         };
 
         $scope.revealLibrary = function() {

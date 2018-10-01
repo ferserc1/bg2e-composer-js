@@ -4,7 +4,7 @@ app.addSource(() => {
     const fs = require("fs");
 
     angularApp.controller("LibraryNodeEditorController",["$scope",function($scope) {
-        let libMgr = app.library.Manager.Get();
+        let libMgr = app.library.Manager.Get("edit");
 
         $scope.fileFilters = [ { name:"bg2 engine models", extensions:["bg2","vwglb"]} ];
         $scope.modelFile = "";

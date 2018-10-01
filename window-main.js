@@ -86,6 +86,22 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         }
     };
 
+    app.currentWorkspace = function() {
+        let re = /#\!(\/.*)\/*/
+        let result = re.exec(window.location.hash);
+        let workspace = null;
+        if (result) {
+            let str = result[1];
+            g_workspaceData.some((ws) => {
+                if (ws.endpoint==str) {
+                    workspace = ws;
+                    return true;
+                }
+            });
+        }
+        return workspace;
+    };
+
     app.addPluginSettings = function(directiveName) {
         g_pluginSettings.push(directiveName);
     }

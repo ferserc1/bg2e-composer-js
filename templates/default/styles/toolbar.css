@@ -20,5 +20,14 @@ toolbar li {
     margin-right: 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-    padding: 4px;
+    padding: 1px;
+}
+
+toolbar li i {
+    padding: 0px;
+    box-sizing: border-box;
+}
+toolbar li.bg2-toolbar-item-selected i {
+    background-color: white;
+    border: 1px solid orange;
 }

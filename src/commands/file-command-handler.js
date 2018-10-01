@@ -310,7 +310,7 @@ app.addSource(() => {
                 });
                 if (filePath) {
                     filePath = app.standarizePath(filePath);
-                    app.library.Manager.Get().newLibrary(filePath)
+                    app.library.Manager.Get("edit").newLibrary(filePath)
                         .then(() => {
                             resolve(true);
                         })
@@ -325,6 +325,7 @@ app.addSource(() => {
         }
 
         openLibrary(params) {
+            let mode = params || "edit"
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
@@ -337,7 +338,7 @@ app.addSource(() => {
                 });
                 if (filePath && filePath.length>0) {
                     filePath = app.standarizePath(filePath[0]);
-                    app.library.Manager.Get().open(filePath)
+                    app.library.Manager.Get(mode).open(filePath)
                         .then(() => {
                             resolve();
                         })

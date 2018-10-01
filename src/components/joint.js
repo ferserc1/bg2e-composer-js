@@ -44,7 +44,7 @@ app.addSource(() => {
     });
 
     app.components.addComponent(() => {
-        return class InputJointUI extends JointUI {
+        return class OutputJointUI extends JointUI {
             constructor() {
                 super("bg.scene.OutputChainJoint","Output joint","output-joint-ui");
             }
