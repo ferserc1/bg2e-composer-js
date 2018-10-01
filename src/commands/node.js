@@ -259,6 +259,8 @@ app.addSource(() => {
     app.nodeCommands.RemoveComponent = RemoveComponent;
 
     class AddComponent extends app.Command {
+        // The component parameter may be an array, one component for each node
+        // If the component parameter is an array, it must be the same size as node array
         constructor(node,component) {
             super();
             this._node = node;
@@ -268,18 +270,30 @@ app.addSource(() => {
         execute() {
             return new Promise((resolve,reject) => {
 
-                let addComponent = (n) => {
-                    n.addComponent(this._component.clone(n.context));
+                let addComponent = (n,c) => {
+                    n.addComponent(c.clone(n.context));
                     app.render.Scene.Get().selectionManager.prepareNode(n);
                 }
 
-                if (Array.isArray(this._node)) {
+                if (!Array.isArray(this._node) && Array.isArray(this._component)) {
+                    this._component = this._component[0];
+                }
+
+                if (Array.isArray(this._node) && Array.isArray(this._component) && this._node.length != this._component.length) {
+                    reject(new Error("Different number of components and nodes specified"));
+                }
+                else if (Array.isArray(this._node) && !Array.isArray(this._component)) {
                     this._node.forEach((n) => {
-                        addComponent(n);
+                        addComponent(n,this._component);
+                    });
+                }
+                else if (Array.isArray(this._node) && Array.isArray(this._component)) {
+                    this._node.forEach((n,index) => {
+                        addComponent(n,this._component[index]);
                     });
                 }
                 else {
-                    addComponent(this._node);
+                    addComponent(this._node,this._component);
                 }
                 resolve();
             });
