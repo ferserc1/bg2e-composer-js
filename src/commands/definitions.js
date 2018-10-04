@@ -206,6 +206,10 @@ app.addDefinitions(() => {
                 return; // This events are only triggered by single keys
             }
 
+            if (document.activeElement!=document.body) {
+                return; // Do not process single key shortcuts if the focused element is not the body
+            }
+
             let shortcut = this._shortcuts[keyboardEvent.key];
             if (shortcut) {
                 shortcut.execute();
