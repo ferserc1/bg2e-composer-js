@@ -207,15 +207,15 @@ app.addSource(() => {
         }
 
         showSceneEditor() {
-            app.switchWorkspace('/sceneEditor');
+            app.switchWorkspace(app.Workspaces.SceneEditor);
         }
 
         showModelEditor() {
-            app.switchWorkspace('/modelEditor');
+            app.switchWorkspace(app.Workspaces.ModelEditor);
         }
 
         showLibraryEditor() {
-            app.switchWorkspace('/libraryEditor');
+            app.switchWorkspace(app.Workspaces.LibraryEditor);
         }
     }
 

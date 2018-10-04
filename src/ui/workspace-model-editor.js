@@ -12,7 +12,7 @@ app.addSource(() => {
         })
 
         $scope.switchWorkspace = function() {
-            app.switchWorkspace("/sceneEditor");
+            app.switchWorkspace(app.Workspaces.SceneEditor);
         }
 
         app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {

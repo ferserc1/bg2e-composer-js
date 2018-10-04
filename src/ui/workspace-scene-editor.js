@@ -134,7 +134,7 @@ app.addSource(() => {
         });
 
         $scope.switchWorkspace = function() {
-            app.switchWorkspace("/modelEditor");
+            app.switchWorkspace(app.Workspaces.ModelEditor);
         }
 
         // Main magerial, obtained from MaterialHandler

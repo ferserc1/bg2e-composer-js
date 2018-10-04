@@ -306,10 +306,15 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         g_appSource.forEach((cb) => cb());
         
 
+        app.Workspaces = {};
         ng.config(['$routeProvider', function($routeProvider) {
             let defaultWorkspace = null;
             g_workspaces.forEach((cb) => {
                 let workspaceData = cb();
+                let wsId = workspaceData.endpoint.replace("/","");
+                let first = wsId.charAt(0).toUpperCase();
+                wsId = wsId.charAt(0).toUpperCase() + wsId.slice(1);
+                app.Workspaces[wsId] = workspaceData.endpoint;
                 g_workspaceData.push(workspaceData);
                 $routeProvider.when(workspaceData.endpoint, {
                     templateUrl: workspaceData.templateUrl,

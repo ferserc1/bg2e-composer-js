@@ -312,6 +312,7 @@ app.addSource(() => {
                     filePath = app.standarizePath(filePath);
                     app.library.Manager.Get("edit").newLibrary(filePath)
                         .then(() => {
+                            app.switchWorkspace(app.Workspaces.LibraryEditor);
                             resolve(true);
                         })
                         .catch((err) => {
