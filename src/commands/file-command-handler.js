@@ -177,16 +177,20 @@ app.addSource(() => {
                 const path = require("path");
                 const mkdirp = require("mkdirp");
                 let getName = (node) => { return (node.drawable.name || node.name || "").replace(/\s+/,"_") };
+                let nameConflictString = "";
                 if (exportNodes.some((node) => getName(node)=="" )) {
                     console.error("Could not export multiple models: some untitled elements found.",true);
                     return;
                 }
                 else if (exportNodes.some((n1,i1) => {
                     return exportNodes.some((n2,i2) => {
-                        return getName(n1)==getName(n2) && i1!=i2;
+                        if (getName(n1)==getName(n2) && i1!=i2) {
+                            nameConflictString = getName(n1);
+                            return true;
+                        }
                     })
                 })) {
-                    console.error("Could not export multiple models: some objects have the same name.",true);
+                    console.error(`Could not export multiple models: some objects have the same name: ${ nameConflictString }`,true);
                     return;
                 }
                 let folderPath = dialog.showOpenDialog({

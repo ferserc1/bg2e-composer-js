@@ -198,6 +198,14 @@ app.addDefinitions(() => {
         }
 
         processKey(keyboardEvent) {
+            if (keyboardEvent.event.altKey ||
+                keyboardEvent.event.ctrlKey ||
+                keyboardEvent.event.metaKey ||
+                keyboardEvent.event.shiftKey)
+            {
+                return; // This events are only triggered by single keys
+            }
+
             let shortcut = this._shortcuts[keyboardEvent.key];
             if (shortcut) {
                 shortcut.execute();

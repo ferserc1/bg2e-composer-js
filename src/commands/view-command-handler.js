@@ -58,24 +58,19 @@ app.addSource(() => {
         execute(message,params) {
             switch (message) {
             case 'gizmoSelect':
-                app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SELECT);
-                updateGizmoStatus();
+                this.setSelectGizmo();
                 break;
             case 'gizmoTranslate':
-                app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSLATE);
-                updateGizmoStatus();
+                this.setTranslateGizmo();
                 break;
             case 'gizmoRotate':
-                app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.ROTATE);
-                updateGizmoStatus();
+                this.setRotateGizmo();
                 break;
             case 'gizmoScale':
-                app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SCALE);
-                updateGizmoStatus();
+                this.setScaleGizmo();
                 break;
             case 'gizmoTransform':
-                app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSFORM);
-                updateGizmoStatus();
+                this.setTransformGizmo();
                 break;
             case 'graphicSettings':
                 this.graphicSettings(params);
@@ -132,6 +127,31 @@ app.addSource(() => {
                 updateGizmoStatus();
                 break;
             }
+        }
+
+        setSelectGizmo() {
+            app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SELECT);
+            updateGizmoStatus();
+        }
+
+        setTranslateGizmo() {
+            app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSLATE);
+            updateGizmoStatus();
+        }
+
+        setRotateGizmo() {
+            app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.ROTATE);
+            updateGizmoStatus();
+        }
+
+        setScaleGizmo() {
+            app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.SCALE);
+            updateGizmoStatus();
+        }
+
+        setTransformGizmo() {
+            app.render.Gizmo.SetMode(bg.manipulation.GizmoMode.TRANSFORM);
+            updateGizmoStatus();
         }
 
         graphicSettings(params) {
