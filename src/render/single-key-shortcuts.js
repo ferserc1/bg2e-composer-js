@@ -19,4 +19,8 @@ app.addSource(() => {
     app.ShortcutManager.Get().addShortcut(new app.Shortcut("Set Transform Gizmo", "KeyT", () => {
         app.CommandHandler.Get("ViewCommandHandler").setTransformGizmo();
     }));
+
+    app.ShortcutManager.Get().addShortcut(new app.Shortcut("Zoom extent", "KeyZ", () => {
+        app.CommandHandler.Get("ViewCommandHandler").zoomAll();
+    }));
 })

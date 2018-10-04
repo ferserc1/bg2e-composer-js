@@ -51,7 +51,8 @@ app.addSource(() => {
                 'hideAll3DGizmos',
                 'showSceneEditor',
                 'showModelEditor',
-                'showLibraryEditor'
+                'showLibraryEditor',
+                'zoomAll'
             ]
         }
 
@@ -125,6 +126,9 @@ app.addSource(() => {
             case 'showLibraryEditor':
                 this.showLibraryEditor();
                 updateGizmoStatus();
+                break;
+            case 'zoomAll':
+                this.zoomAll();
                 break;
             }
         }
@@ -236,6 +240,65 @@ app.addSource(() => {
 
         showLibraryEditor() {
             app.switchWorkspace(app.Workspaces.LibraryEditor);
+        }
+
+        zoomAll() {
+            let scene = app.render.Scene.Get();
+            let camera = scene.camera;
+            let cameraController = camera && camera.component("bg.manipulation.OrbitCameraController");
+            if (!cameraController) {
+                return;
+            }
+
+            let selection = scene.selectionManager.selection;
+            let boundingBoxVisitor = new bg.scene.BoundingBoxVisitor();
+            let center = [0, 0, 0];
+            let distance = 5;
+            let min = { x: 0, y: 0, z: 0 };
+            let size = { x: 0, y: 0, z: 0 };
+            if (selection.length) {
+                min = { x: Number.MAX_SAFE_INTEGER, y: Number.MAX_SAFE_INTEGER, z: Number.MAX_SAFE_INTEGER };
+                let max = { x:-Number.MAX_SAFE_INTEGER, y:-Number.MAX_SAFE_INTEGER, z:-Number.MAX_SAFE_INTEGER };
+                selection.forEach((selItem) => {
+                    let transformVisitor = new bg.scene.TransformVisitor();
+                    selItem.node.acceptReverse(transformVisitor);
+                    if (selItem.node.drawable) {
+                        let bbox = new bg.tools.BoundingBox(selItem.node.drawable, transformVisitor.matrix)
+                        min = bbox.min;
+                        max = bbox.max;
+                    }
+                    else {
+                        let pos = transformVisitor.matrix.position;
+                        min.x = bg.Math.min(pos.x, min.x);
+                        min.y = bg.Math.min(pos.y, min.y);
+                        min.z = bg.Math.min(pos.z, min.z);
+                        max.x = bg.Math.max(pos.x, max.x);
+                        max.y = bg.Math.max(pos.y, max.y);
+                        max.z = bg.Math.max(pos.z, max.z);
+                    }
+                });
+                size = {
+                    x: max.x - min.x,
+                    y: max.y - min.y,
+                    z: max.z - min.z
+                };
+            }
+            else {
+                scene.root.accept(boundingBoxVisitor);
+                min = boundingBoxVisitor.min;
+                size = boundingBoxVisitor.size;
+            }
+
+            center = [
+                min.x + size.x / 2,
+                min.y + size.y / 2,
+                min.z + size.z / 2
+            ];
+            distance = bg.Math.max(size.x, bg.Math.max(size.y, size.z));
+
+            cameraController.center = new bg.Vector3(center[0], center[1], center[2]);
+            cameraController.distance = distance * 2;
+            app.ComposerWindowController.Get().postRedisplay();
         }
     }
 
