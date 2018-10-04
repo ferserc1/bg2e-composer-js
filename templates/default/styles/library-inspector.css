@@ -37,7 +37,7 @@ library-inspector .bg2-header button:focus {
     outline: none;
 }
 
-ul.bg2-library-container {
+.bg2-library-container {
     left: 7px;
     right: 7px;
     padding: 5px;
@@ -45,16 +45,40 @@ ul.bg2-library-container {
     border: 1px solid white;
     border-radius: 4px;
     position: absolute;
-    bottom: 20px;
+    bottom: 33px;
     top: 83px;
-    overflow: auto;
 }
 
-ul.bg2-library-container li {
+
+.bg2-library-container .bg2-filters input {
+    width: 70%;
+}
+
+.bg2-library-container .bg2-filters button {
+    width: 24%;
+}
+
+.bg2-library-container ul {
+    padding: 0px;
+    overflow: auto;
+    position: absolute;
+    bottom: 0px;
+    top: 15px;
+    left: 4px;
+    right: 4px;
+}
+
+.bg2-library-container ul li {
     list-style: none;
 }
 
-ul.bg2-library-container li:hover {
+.bg2-library-container ul li.bg2-filters-warning {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+}
+
+.bg2-library-container ul li:hover {
     background-color: #2d2d2d;
 }
 
@@ -62,27 +86,27 @@ ul.bg2-library-container li:hover {
     border: 2px solid rgb(205, 205, 205);
 }
 
-ul.bg2-library-container li.bg2-selected {
+.bg2-library-container ul li.bg2-selected {
     background-color: rgb(255, 166, 0);
 }
 
-ul.bg2-library-container li.bg2-selected:hover {
+.bg2-library-container ul li.bg2-selected:hover {
     color: white;
     background-color: rgb(215, 140, 0);
 }
 
-ul.bg2-library-container li h2 {
+.bg2-library-container ul li h2 {
     margin-bottom: 0px;
     margin-top: 0px;
 }
 
-ul.bg2-library-container li h2 i {
+.bg2-library-container ul li h2 i {
     vertical-align: middle;
     width: 18px;
     height: 18px;
 }
 
-ul.bg2-library-container li h2 span {
+.bg2-library-container ul li h2 span {
     vertical-align: middle;
     font-size: 12px;
 }

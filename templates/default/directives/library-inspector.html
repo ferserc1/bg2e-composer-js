@@ -15,14 +15,24 @@
             </li>
         </ul>
     </div>
-    <ul class="bg2-library-container" ng-click="deselectAll()">
-        <li ng-repeat="item in currentNode.children" ng-mouseover="onItemEnter(item,$event)" ng-mouseleave="onItemExit($event)" ng-class="{ 'bg2-selected' : item.selected }" drag-drop drag-item="item" on-drag="onDrag" on-drag-start="onDragStart" draggable="true">
-            <h2 ng-dblclick="enterNode(item)" ng-click="selectNode(item,$event)">
-                <i class="bg2-icon {{ getIconClass(item) }}"></i>
-                <span>{{ item.name }}</span>
-            </h2>
-        </li>
-    </ul>
+    <div class="bg2-library-container">
+        <div class="bg2-filters">
+            <input type="text" placeholder="search" ng-model="search">
+            <button ng-click="clearSearch()">Clear</button>
+        </div>
+        <ul ng-click="deselectAll()">
+            <li ng-hide="item.s3dLibraryViewFilterHidden" ng-repeat="item in currentNode.children" ng-mouseover="onItemEnter(item,$event)" ng-mouseleave="onItemExit($event)" ng-class="{ 'bg2-selected' : item.selected }" drag-drop drag-item="item" on-drag="onDrag" on-drag-start="onDragStart" draggable="true">
+                <h2 ng-dblclick="enterNode(item)" ng-click="selectNode(item,$event)">
+                    <i class="bg2-icon {{ getIconClass(item) }}"></i>
+                    <span>{{ item.name }}</span>
+                </h2>
+            </li>
+            <li ng-show="search!=''" class="bg2-filters-warning">
+                Filters applied
+                <button ng-click="clearSearch()">Clear filters</button>
+            </li>
+        </ul>
+    </div>
     <div class="bg2-actions" ng-show="mode!='read'">
         <button title="Add node" ng-click="addNode($event)"><i class="bg2-icon bg2-add"></i></button>
         <button title="Remove node" ng-click="removeNode($event)"><i class="bg2-icon bg2-remove"></i></button>

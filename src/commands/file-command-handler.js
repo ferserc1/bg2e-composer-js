@@ -222,7 +222,7 @@ app.addSource(() => {
             else {
                 return new Promise((resolve,reject) => {
                     let context = app.ComposerWindowController.Get().gl;
-                    let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
+                    let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().sceneRoot);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {
                             app.CommandManager.Get().clear();
@@ -257,7 +257,7 @@ app.addSource(() => {
                 });
                 if (filePath) {
                     filePath = app.standarizePath(filePath);
-                    let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                    let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().sceneRoot);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {
                             app.CommandManager.Get().clear();
@@ -299,6 +299,13 @@ app.addSource(() => {
         }
 
         newLibrary(params) {
+            let mode = "edit";
+            if (typeof(params) == "object") {
+                mode = params.mode || "edit"
+            }
+            else if (typeof(params) == "string") {
+                mode = params || "edit";
+            }
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
@@ -326,7 +333,13 @@ app.addSource(() => {
         }
 
         openLibrary(params) {
-            let mode = params || "edit"
+            let mode = "edit";
+            if (typeof(params) == "object") {
+                mode = params.mode || "edit"
+            }
+            else if (typeof(params) == "string") {
+                mode = params || "edit";
+            }
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
@@ -341,7 +354,10 @@ app.addSource(() => {
                     filePath = app.standarizePath(filePath[0]);
                     app.library.Manager.Get(mode).open(filePath)
                         .then(() => {
-                            resolve();
+                            if (mode=="edit") {
+                                app.switchWorkspace(app.Workspaces.LibraryEditor);
+                            }
+                            resolve(true);
                         })
                         .catch((err) => {
                             reject(err);

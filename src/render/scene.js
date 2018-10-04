@@ -204,8 +204,14 @@ app.addDefinitions(() => {
             return this._cameraMode;
         }
         
+        // Returns the current scene mode root
         get root() {
             return this._root;
+        }
+
+        // Returns the actual scene root
+        get sceneRoot() {
+            return this._sceneRoot;
         }
 
         get grid() {
