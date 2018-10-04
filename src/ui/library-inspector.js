@@ -14,7 +14,7 @@ app.addSource(() => {
         }
 
         function applySearch() {
-            let node = libMgr.current.root;
+            let node = libMgr.current.currentNode;
             if ($scope.search=="") {
                 node.children.forEach((ch) => {
                     delete ch.s3dLibraryViewFilterHidden;
@@ -144,6 +144,7 @@ app.addSource(() => {
                 }
             }
             else {
+                clearSearch();
                 libMgr.current.deselectAll();
                 libMgr.current.currentNode = node;
                 libMgr.notifyLibraryChanged();
