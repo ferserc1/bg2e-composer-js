@@ -176,9 +176,60 @@ app.addDefinitions(() => {
         }
     }
 
+
+    let g_shorcutManager = null;
+    class ShortcutManager {
+        static Get() {
+            if (!g_shorcutManager) {
+                g_shorcutManager = new ShortcutManager();
+            }
+            return g_shorcutManager;
+        }
+
+        constructor() {
+            this._shortcuts = {};
+        }
+
+        addShortcut(shortcut) {
+            if (this._shortcuts[shortcut.key]) {
+                console.warn(`Mapping shortcut twice: key ${ shortcut.key } is used to execute the command ${ this._shortcuts[shortcut.key].name }`)
+            }
+            this._shortcuts[shortcut.key] = shortcut;
+        }
+
+        processKey(keyboardEvent) {
+            let shortcut = this._shortcuts[keyboardEvent.key];
+            if (shortcut) {
+                shortcut.execute();
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+    class Shortcut {
+        constructor(name, key, fn) {
+            this._name = name;
+            this._key = key;
+            this._fn = fn;
+        }
+
+        get name() { return this._name; }
+        get key() { return this._key; }
+        get fn() { return this._fn; }
+
+        execute() {
+            this._fn();
+        }
+    }
+
     app.Command = Command;
     app.ContextCommand = ContextCommand;
     app.CommandManager = CommandManager;
+    app.ShortcutManager = ShortcutManager;
+    app.Shortcut = Shortcut;
 });
 
 app.addDefinitions(() => {

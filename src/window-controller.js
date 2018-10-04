@@ -219,6 +219,7 @@ app.addDefinitions(() => {
 
         keyUp(evt) {
             if (!this.scene.ready) return;
+            if (app.ShortcutManager.Get().processKey(evt)) return;
 
             this._inputVisitor.keyUp(this.scene.root, evt);
             this.updateView();
