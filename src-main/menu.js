@@ -213,6 +213,15 @@ module.exports = {
 							{ type: 'separator'},
 
 							{
+								label: 'Zoom All',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'zoomAll' })
+								}
+							},
+
+							{ type: 'separator' },
+
+							{
 								label: 'Graphic Settings',
 								click: function(item, focusedWindow) {
 									focusedWindow.webContents.send('triggerMenu', { msg:'graphicSettings' })
