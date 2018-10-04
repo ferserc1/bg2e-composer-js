@@ -134,9 +134,7 @@ app.addSource(() => {
         });
 
         $scope.switchWorkspace = function() {
-            location.hash = "#!/modelEditor";
-
-            app.CommandHandler.Get("ViewCommandHandler").updateToolbarIcons();
+            app.switchWorkspace("/modelEditor");
         }
 
         // Main magerial, obtained from MaterialHandler

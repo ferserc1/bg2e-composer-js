@@ -343,6 +343,11 @@ app.addDefinitions(() => {
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
 
             this.selectionManager.initScene(this._sceneRoot);
+
+            if (this.cameraMode==app.render.SceneMode.SCENE) {
+                // Update the root and camera references
+                this.setMode(app.render.SceneMode.SCENE);
+            }
             this.notifySceneChanged();
  //           this._sceneLightState = getSceneLightState.apply(this,[this._sceneRoot]);
         }

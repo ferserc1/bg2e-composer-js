@@ -83,6 +83,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         if (result) {
             window.location.hash = '#!' +  result.endpoint;
             app.render.Scene.Get().setMode(result.sceneMode);
+            app.CommandHandler.Get("ViewCommandHandler").updateToolbarIcons();
         }
     };
 
