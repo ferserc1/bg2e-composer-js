@@ -434,4 +434,86 @@ app.addSource(() => {
     }
 
     app.plistCommands.RemovePlist = RemovePlist;
+
+    class ExtractPlist extends app.Command {
+        constructor(plistAndDrawables) {
+            super();
+            this._plistAndDrawables = plistAndDrawables;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._plistAndDrawables.length==0) {
+                    reject(new Error("Could not extract poly list: empty data"));
+                    return;
+                }
+
+                this._undoData = [];
+                if (!this._plistAndDrawables.every((item) => {
+                    if (!item.drawable.node) {
+                        reject(new Error("Unexpected error: some drawable elements does not belong to any node."))
+                        return false;
+                    }
+                    else if (!item.drawable.node.parent) {
+                        reject(new Error("Could not extract poly list: some drawable components are attached to the scene root. Extract poly list in the scene root node is not allowed."));
+                        return false;
+                    }
+                    else {
+                        item.node = item.drawable.node;
+                        item.parent = item.drawable.node.parent;
+                        if (!item.node._composer_newNode) {
+                            item.node._composer_newNode = new bg.scene.Node(item.node.context);
+                            item.node._composer_newNode.addComponent(new bg.scene.Drawable());
+                            let trx = (item.node.transform && new bg.Matrix4(item.node.transform.matrix)) || bg.Matrix4.Identity();
+                            item.node._composer_newNode.addComponent(new bg.scene.Transform(trx));
+                            this._undoData.push({
+                                newNode: item.node._composer_newNode,
+                                srcNode: item.node,
+                                srcDrawable: item.drawable,
+                                polyList: item.polyList,
+                                material: item.material,
+                                transform: item.transform
+                            });
+                        }
+                        return true;
+                    }
+                })) {
+                    return;
+                }
+
+                this._plistAndDrawables.forEach((item) => {
+                    let newNode = item.node._composer_newNode;
+                    let srcNode = item.node;
+                    let drawable = newNode.drawable;
+                    if (!newNode.parent) {
+                        item.parent.addChild(newNode);
+                    }
+
+                    item.drawable.removePolyList(item.polyList);
+                    drawable.addPolyList(item.polyList, item.material, item.transform);
+                    app.render.Scene.Get().selectionManager.prepareNode(newNode);
+                    app.render.Scene.Get().selectionManager.prepareNode(srcNode);
+                });
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._undoData.forEach((item) => {
+                    item.srcDrawable.addPolyList(item.polyList,item.material,item.transform);
+                    if (item.newNode.parent) {
+                        item.newNode.parent.removeChild(item.newNode);
+                    }
+                    if (item.srcNode._composer_newNode) {
+                        delete item.srcNode._composer_newNode;
+                    }
+                    app.render.Scene.Get().selectionManager.prepareNode(item.srcNode);
+                });
+                resolve();
+            });
+        }
+    }
+
+    app.plistCommands.ExtractPlist = ExtractPlist;
 });

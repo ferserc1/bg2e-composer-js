@@ -165,7 +165,11 @@ app.addSource(() => {
         }
 
         $scope.extractPlist = function() {
-            
+            let sel = getGroupedSelection();
+            if (sel.length) {
+                executeCommand(new app.plistCommands.ExtractPlist(sel));
+                app.render.Scene.Get().selectionManager.clear();
+            }
         }
 
         function updateUI() {
