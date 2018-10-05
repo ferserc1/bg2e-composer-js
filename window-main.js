@@ -83,6 +83,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         if (result) {
             window.location.hash = '#!' +  result.endpoint;
             app.render.Scene.Get().setMode(result.sceneMode);
+            app.CommandHandler.Get("ViewCommandHandler").updateToolbarIcons();
         }
     };
 
@@ -303,12 +304,21 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         
         g_appDefines.forEach((cb) => cb());
         g_appSource.forEach((cb) => cb());
+
+
+        app.restoreSkin();
+        
         
 
+        app.Workspaces = {};
         ng.config(['$routeProvider', function($routeProvider) {
             let defaultWorkspace = null;
             g_workspaces.forEach((cb) => {
                 let workspaceData = cb();
+                let wsId = workspaceData.endpoint.replace("/","");
+                let first = wsId.charAt(0).toUpperCase();
+                wsId = wsId.charAt(0).toUpperCase() + wsId.slice(1);
+                app.Workspaces[wsId] = workspaceData.endpoint;
                 g_workspaceData.push(workspaceData);
                 $routeProvider.when(workspaceData.endpoint, {
                     templateUrl: workspaceData.templateUrl,

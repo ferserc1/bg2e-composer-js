@@ -204,8 +204,14 @@ app.addDefinitions(() => {
             return this._cameraMode;
         }
         
+        // Returns the current scene mode root
         get root() {
             return this._root;
+        }
+
+        // Returns the actual scene root
+        get sceneRoot() {
+            return this._sceneRoot;
         }
 
         get grid() {
@@ -343,6 +349,11 @@ app.addDefinitions(() => {
             floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
 
             this.selectionManager.initScene(this._sceneRoot);
+
+            if (this.cameraMode==app.render.SceneMode.SCENE) {
+                // Update the root and camera references
+                this.setMode(app.render.SceneMode.SCENE);
+            }
             this.notifySceneChanged();
  //           this._sceneLightState = getSceneLightState.apply(this,[this._sceneRoot]);
         }

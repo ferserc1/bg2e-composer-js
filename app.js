@@ -78,6 +78,92 @@ class AppClass {
         return this._resourcesDir;
     }
 
+    get skinsDir() {
+        if (!this._skinsDir) {
+            if (BG2E_COMPOSER_DEBUG) {
+                this._skinsDir = path.join(__dirname,"skins");
+            }
+            else {
+                this._skinsDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }skins`));
+            }
+        }
+        return this._skinsDir;
+    }
+
+    get skins() {
+        let skins = fs.readdirSync(this.skinsDir);
+        let result = [];
+        if (skins) {
+            skins.forEach((skin) => {
+                let fullPath = path.join(this.skinsDir, skin);
+                let parsedPath = path.parse(fullPath);
+                if (parsedPath.ext==".css") {
+                    result.push({
+                        name: parsedPath.name,
+                        path: path.join(fullPath)
+                    });
+                }
+            });
+        }
+        return result;
+    }
+
+    get currentSkin() {
+        let skins = this.skins;
+        if (!this._currentSkin) {
+            this._currentSkin = 0;
+        }
+        return this._currentSkin<skins.length ? this.skins[this._currentSkin] : null;
+    }
+
+    set currentSkin(skin) {
+        try {
+            let skinIndex = -1;
+            let skins = this.skins;
+            let name = "";
+            switch (typeof(skin)) {
+            case "string":
+                name = skin;
+                break;
+            case "object":
+                name = skin.name;
+                break;
+            case "number":
+                skinIndex = skin;
+                break;
+            }
+            if (skinIndex == -1) {
+                skins.some((s,i) => {
+                    if (s.name==name) {
+                        skinIndex = i;
+                        return true;
+                    }
+                });
+            }
+    
+            if (skinIndex!=-1) {
+                skin = skins[skinIndex];
+                this._currentSkin = skinIndex;
+                if (this._styleLinkTag) {
+                    document.head.removeChild(this._styleLinkTag);
+                }
+                this._styleLinkTag = document.createElement('link')
+                this._styleLinkTag.rel = "stylesheet";
+                this._styleLinkTag.href = skin.path;
+                document.head.appendChild(this._styleLinkTag);
+                app.settings.set("ui.skin",skin.name);
+            }
+        }
+        catch(err) {
+            console.error("Could not set default skin. Maybe the skin is missing?");
+            console.error("No such skin at path " + this.skinsDir);
+        }
+    }
+
+    restoreSkin() {
+        this.currentSkin = app.settings.get("ui.skin") || "dark";
+    }
+
     get config() {
         return require(__dirname + "/config.json");
     }

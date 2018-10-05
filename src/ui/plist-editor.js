@@ -133,6 +133,45 @@ app.addSource(() => {
             }
         }
 
+        function getGroupedSelection() {
+            let selectionData = [];
+            $scope.drawables.forEach((drw) => {
+                drw.forEach((plist, mat, trx) => {
+                    if ($scope.selection.indexOf(plist)!=-1) {
+                        selectionData.push({
+                            drawable:drw,
+                            polyList: plist,
+                            material: mat,
+                            transform: trx || bg.Matrix4.Identity()
+                        });
+                    }
+                });
+            });
+            return selectionData;
+        }
+        $scope.duplicatePlist = function() {
+            let sel = getGroupedSelection();
+
+            if (sel.length) {
+                executeCommand(new app.plistCommands.DuplicatePlist(sel));
+            }
+        }
+
+        $scope.removePlist = function() {
+            let sel = getGroupedSelection();
+            if (sel.length) {
+                executeCommand(new app.plistCommands.RemovePlist(sel));
+            }
+        }
+
+        $scope.extractPlist = function() {
+            let sel = getGroupedSelection();
+            if (sel.length) {
+                executeCommand(new app.plistCommands.ExtractPlist(sel));
+                app.render.Scene.Get().selectionManager.clear();
+            }
+        }
+
         function updateUI() {
             let selectionManager = app.render.Scene.Get().selectionManager;
             $scope.selection = [];

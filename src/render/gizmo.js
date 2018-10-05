@@ -15,6 +15,7 @@ app.addSource(() => {
                 gizmo.mode = mode;
             });
             g_mode = mode;
+            app.ComposerWindowController.Get().postRedisplay();
         }
 
         static CurrentMode() {
@@ -43,7 +44,6 @@ app.addSource(() => {
                 break;
             }
         }
-
 
     }
 

@@ -13,6 +13,46 @@ app.addSource(() => {
             }
         }
 
+        function applySearch() {
+            let node = libMgr.current.currentNode;
+            if ($scope.search=="") {
+                node.children.forEach((ch) => {
+                    delete ch.s3dLibraryViewFilterHidden;
+                });
+            }
+            else {
+                let re = new RegExp($scope.search,"i");
+                node.children.forEach((ch) => {
+                    if (!re.test(ch.name) && !re.test(ch.id)) {
+                        ch.s3dLibraryViewFilterHidden = true;
+                    }
+                    else if (ch.s3dLibraryViewFilterHidden) {
+                        delete ch.s3dLibraryViewFilterHidden;
+                    }
+                })
+            }
+        }
+
+        function clearSearch() {
+            $scope.search = "";
+            applySearch();
+        }
+
+        $scope.clearSearch = clearSearch;
+
+        $scope.search = "";
+        let searchTimer = null;
+        $scope.$watch("search", () => {
+            if (searchTimer) {
+                clearTimeout(searchTimer);
+            }
+            searchTimer = setTimeout(() => {
+                applySearch();
+                $scope.$apply();
+                searchTimer = null;
+            }, 1000);
+        });
+
         function update(library) {
             setTimeout(() => {
                 clearHash(libMgr.current.root);
@@ -88,6 +128,7 @@ app.addSource(() => {
         };
 
         $scope.loadLibrary = function() {
+            clearSearch();
             app.CommandHandler.Get("FileCommandHandler").openLibrary($scope.mode);
         };
 
@@ -103,6 +144,7 @@ app.addSource(() => {
                 }
             }
             else {
+                clearSearch();
                 libMgr.current.deselectAll();
                 libMgr.current.currentNode = node;
                 libMgr.notifyLibraryChanged();
@@ -134,6 +176,7 @@ app.addSource(() => {
         }
 
         $scope.addNode = function(event) {
+            clearSearch();
             if ($scope.mode!='edit') return;
             app.ui.contextMenu.show(
                 event,[
@@ -205,6 +248,7 @@ app.addSource(() => {
         };
 
         $scope.paste = function() {
+            clearSearch();
             if ($scope.mode!='edit') return;
             clearHash(libMgr.current.root);
             if (libMgr.current.clipboardContent.length) {
@@ -218,6 +262,7 @@ app.addSource(() => {
         };
 
         $scope.onDrag = function(fromNode,toNode) {
+            clearSearch();
             if ($scope.mode!='edit') return;
             libMgr.current.moveNode(fromNode,toNode);
             libMgr.current.save();

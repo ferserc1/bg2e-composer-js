@@ -177,16 +177,20 @@ app.addSource(() => {
                 const path = require("path");
                 const mkdirp = require("mkdirp");
                 let getName = (node) => { return (node.drawable.name || node.name || "").replace(/\s+/,"_") };
+                let nameConflictString = "";
                 if (exportNodes.some((node) => getName(node)=="" )) {
                     console.error("Could not export multiple models: some untitled elements found.",true);
                     return;
                 }
                 else if (exportNodes.some((n1,i1) => {
                     return exportNodes.some((n2,i2) => {
-                        return getName(n1)==getName(n2) && i1!=i2;
+                        if (getName(n1)==getName(n2) && i1!=i2) {
+                            nameConflictString = getName(n1);
+                            return true;
+                        }
                     })
                 })) {
-                    console.error("Could not export multiple models: some objects have the same name.",true);
+                    console.error(`Could not export multiple models: some objects have the same name: ${ nameConflictString }`,true);
                     return;
                 }
                 let folderPath = dialog.showOpenDialog({
@@ -222,7 +226,7 @@ app.addSource(() => {
             else {
                 return new Promise((resolve,reject) => {
                     let context = app.ComposerWindowController.Get().gl;
-                    let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().root);
+                    let cmd = new app.fileCommands.SaveScene(context,this._currentScenePath,app.render.Scene.Get().sceneRoot);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {
                             app.CommandManager.Get().clear();
@@ -257,7 +261,7 @@ app.addSource(() => {
                 });
                 if (filePath) {
                     filePath = app.standarizePath(filePath);
-                    let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().root);
+                    let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().sceneRoot);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {
                             app.CommandManager.Get().clear();
@@ -299,6 +303,13 @@ app.addSource(() => {
         }
 
         newLibrary(params) {
+            let mode = "edit";
+            if (typeof(params) == "object") {
+                mode = params.mode || "edit"
+            }
+            else if (typeof(params) == "string") {
+                mode = params || "edit";
+            }
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
@@ -312,6 +323,7 @@ app.addSource(() => {
                     filePath = app.standarizePath(filePath);
                     app.library.Manager.Get("edit").newLibrary(filePath)
                         .then(() => {
+                            app.switchWorkspace(app.Workspaces.LibraryEditor);
                             resolve(true);
                         })
                         .catch((err) => {
@@ -325,7 +337,13 @@ app.addSource(() => {
         }
 
         openLibrary(params) {
-            let mode = params || "edit"
+            let mode = "edit";
+            if (typeof(params) == "object") {
+                mode = params.mode || "edit"
+            }
+            else if (typeof(params) == "string") {
+                mode = params || "edit";
+            }
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
@@ -340,7 +358,10 @@ app.addSource(() => {
                     filePath = app.standarizePath(filePath[0]);
                     app.library.Manager.Get(mode).open(filePath)
                         .then(() => {
-                            resolve();
+                            if (mode=="edit") {
+                                app.switchWorkspace(app.Workspaces.LibraryEditor);
+                            }
+                            resolve(true);
                         })
                         .catch((err) => {
                             reject(err);
