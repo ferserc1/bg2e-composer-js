@@ -1,0 +1,74 @@
+.bg2-widget {
+    background-color: rgb(228, 228, 228);
+    color: rgb(41, 41, 41);
+}
+
+.bg2-message-info {
+    color: rgb(41,41,41);
+}
+
+.bg2-message-warning {
+    color: rgb(211, 138, 2);
+}
+
+.bg2-message-error {
+    color: #bb0000;
+}
+
+.bg2-selected {
+    color: rgb(238, 238, 238);
+    background-color: rgb(36, 68, 116);
+}
+
+/* PolyList inspector */
+polylist-inspector ul.bg2-plist-items {
+    background-color: rgb(210,210,210);
+}
+
+/* Library inspector */
+.bg2-library-container {
+    background-color: rgb(210,210,210);
+}
+
+.bg2-library-container ul li.bg2-selected {
+    color: rgb(238, 238, 238);
+    background-color: rgb(36, 68, 116);
+}
+
+.bg2-library-container ul li.bg2-selected:hover {
+    color: rgb(238, 238, 238);
+    background-color: rgb(63, 96, 145);
+}
+
+.bg2-library-container ul li:hover {
+    color: rgb(238, 238, 238);
+    background-color: rgb(12, 45, 94);
+}
+
+/* Library editor */
+th {
+    background-color: rgb(226, 226, 226);
+}
+
+td, th {
+    color: rgb(99, 99, 99);
+}
+
+tr:nth-child(even) {
+    background-color: rgb(233, 233, 233);
+}
+
+tr:nth-child(odd) {
+
+}
+
+/* Toolbar */
+toolbar li.bg2-toolbar-item-selected i {
+    background-color: rgb(36, 68, 116);
+    border: 1px solid white;
+}
+
+/* Dialog view content */
+dialog-view a {
+    color: rgb(99,99,99);
+}

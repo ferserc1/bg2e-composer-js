@@ -304,6 +304,10 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
         
         g_appDefines.forEach((cb) => cb());
         g_appSource.forEach((cb) => cb());
+
+
+        app.restoreSkin();
+        
         
 
         app.Workspaces = {};

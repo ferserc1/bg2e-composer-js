@@ -116,6 +116,13 @@ app.addSource(() => {
             { id: 0.9, label: "90%" },
             { id: 1, label: "100%" }
         ];
+        $scope.skinOptions = [];
+        app.skins.forEach((skin) => {
+            $scope.skinOptions.push({
+                id: skin.path,
+                label: skin.name
+            });
+        });
         $scope.renderPath = $scope.renderPaths[app.ComposerWindowController.Get().renderPath];
         $scope.antialiasing = app.ComposerWindowController.Get().renderSettings.antialiasing;
         $scope.raytracerQualities.some((q) => {
@@ -127,8 +134,19 @@ app.addSource(() => {
         $scope.raytracerScaleOptions.some((opt) => {
             if (opt.id==app.ComposerWindowController.Get().renderSettings.raytracerScale) {
                 $scope.raytracerScale = opt;
+                return true;
             }
         });
+        let currentSkin = app.currentSkin;
+        if (currentSkin) {
+            $scope.skinOptions.some((opt) => {
+                if (opt.label==currentSkin.name) {
+                    $scope.skin = opt;
+                    return true;
+                }
+            });
+        }
+
         function updateCurrentResolution() {
             let canvas = bg.app.MainLoop.singleton.canvas.domElement;
             setTimeout(() => {
@@ -244,6 +262,12 @@ app.addSource(() => {
         $scope.showDeferredSettings = function() {
             return $scope.renderPath.id==app.RenderPath.DEFERRED;
         };
+
+        $scope.$watch("skin", function() {
+            if ($scope.skin && $scope.skin.label) {
+                app.currentSkin = $scope.skin.label;
+            }
+        });
     }]);
 
     angularApp.directive("graphicSettings", function() {
