@@ -367,7 +367,6 @@ app.addSource(() => {
                     reject(new Error("Could not duplicate poly list: empty data."));
                     return;
                 }
-                //let ctx = app.ComposerWindowController.Get().context;
                 this._undoData = [];
                 this._plistAndDrawables.forEach((item) => {
                     let newPlist = item.polyList.clone();
@@ -400,17 +399,36 @@ app.addSource(() => {
     class RemovePlist extends app.Command {
         constructor(plistAndDrawables) {
             super();
+            this._plistAndDrawables = plistAndDrawables;
         }
 
         execute() {
             return new Promise((resolve,reject) => {
-                reject(new Error("Not implemented"));
+                if (this._plistAndDrawables.length==0) {
+                    reject(new Error("Could not delete poly list: empty data."));
+                    return;
+                }
+                this._undoData = [];
+                this._plistAndDrawables.forEach((item) => {
+                    this._undoData.push({
+                        drw: item.drawable,
+                        plist: item.polyList,
+                        mat: item.material,
+                        trx: item.transform
+                    });
+
+                    item.drawable.removePolyList(item.polyList);
+                });
+                resolve();
             })
         }
 
         undo() {
             return new Promise((resolve,reject) => {
-                reject(new Error("Not implemented"));
+                this._undoData.forEach((item) => {
+                    item.drw.addPolyList(item.plist,item.mat,item.trx);
+                });
+                resolve();
             })
         }
     }

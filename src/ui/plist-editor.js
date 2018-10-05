@@ -157,11 +157,15 @@ app.addSource(() => {
             }
         }
 
-        $scope.extractPlist = function() {
+        $scope.removePlist = function() {
             let sel = getGroupedSelection();
             if (sel.length) {
                 executeCommand(new app.plistCommands.RemovePlist(sel));
             }
+        }
+
+        $scope.extractPlist = function() {
+            
         }
 
         function updateUI() {
