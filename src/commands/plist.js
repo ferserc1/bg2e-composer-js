@@ -232,7 +232,7 @@ app.addSource(() => {
         }
 
         undo() {
-            this.execute();
+            return this.execute();
         }
     }
 
@@ -257,7 +257,7 @@ app.addSource(() => {
         }
 
         undo() {
-            this.execute();
+            return this.execute();
         }
     }
 
@@ -353,4 +353,67 @@ app.addSource(() => {
     }
 
     app.plistCommands.Combine = Combine;
+
+
+    class DuplicatePlist extends app.Command {
+        constructor(plistAndDrawables) {
+            super();
+            this._plistAndDrawables = plistAndDrawables;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._plistAndDrawables.length==0) {
+                    reject(new Error("Could not duplicate poly list: empty data."));
+                    return;
+                }
+                //let ctx = app.ComposerWindowController.Get().context;
+                this._undoData = [];
+                this._plistAndDrawables.forEach((item) => {
+                    let newPlist = item.polyList.clone();
+                    let newMat = item.material.clone();
+                    let newTrx = new bg.Matrix4(item.transform);
+
+                    this._undoData.push({
+                        drw: item.drawable,
+                        plist: newPlist
+                    });
+
+                    item.drawable.addPolyList(newPlist, newMat, newTrx);
+                });
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._undoData.forEach((item) => {
+                    item.drw.removePolyList(item.plist);
+                });
+                resolve();
+            });
+        }
+    }
+
+    app.plistCommands.DuplicatePlist = DuplicatePlist;
+
+    class RemovePlist extends app.Command {
+        constructor(plistAndDrawables) {
+            super();
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                reject(new Error("Not implemented"));
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                reject(new Error("Not implemented"));
+            })
+        }
+    }
+
+    app.plistCommands.RemovePlist = RemovePlist;
 });
