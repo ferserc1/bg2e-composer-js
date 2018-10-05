@@ -78,6 +78,18 @@ class AppClass {
         return this._resourcesDir;
     }
 
+    get skinsDir() {
+        if (!this._skinsDir) {
+            if (BG2E_COMPOSER_DEBUG) {
+                this._skinsDir = path.join(__dirname,"skins");
+            }
+            else {
+                this._skinsDir = path.resolve(path.join(__dirname, `..${ path.sep }..${ path.sep }skins`));
+            }
+        }
+        return this._skinsDir;
+    }
+
     get config() {
         return require(__dirname + "/config.json");
     }
