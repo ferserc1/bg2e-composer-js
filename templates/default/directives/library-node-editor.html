@@ -4,6 +4,7 @@
         <string-picker label="Name" value="name" commit-changes="saveChanges"></string-picker>
         <texture-picker label="Icon" value="icon" commit-changes="saveChanges"></texture-picker>
         <button ng-click="screenshot()" ng-show="node.type=='material' || node.type=='model'">Take Screenshot</button>
+        <bool-picker label="Hidden" value="hidden" commit-changes="saveChanges"></bool-picker>
     </div>
     <div class="bg2-widget bg2-library-node-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['Settings','Metadata']">
         <ul>

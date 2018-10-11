@@ -184,7 +184,7 @@ app.addSource(() => {
                 }
                 else if (exportNodes.some((n1,i1) => {
                     return exportNodes.some((n2,i2) => {
-                        if (getName(n1)==getName(n2) && i1!=i2) {
+                        if (getName(n1)==getName(n2) && i1!=i2 && n1!=n2) {
                             nameConflictString = getName(n1);
                             return true;
                         }
