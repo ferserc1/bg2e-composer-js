@@ -27,6 +27,7 @@ app.addSource(() => {
                     $scope.id = $scope.node.id;
                     $scope.name = $scope.node.name;
                     $scope.icon = libMgr.current.getResourceAbsolutePath($scope.node.icon);
+                    $scope.hidden = $scope.node.hidden;
                 }
 
                 if ($scope.node && $scope.node.type=="material") {
@@ -95,6 +96,7 @@ app.addSource(() => {
                 $scope.node.id = $scope.id;
                 $scope.node.name = $scope.name;
                 $scope.node.icon = libMgr.current.getResourceLocalPath($scope.icon);
+                $scope.node.hidden = $scope.hidden;
 
                 libMgr.current.save();
             }

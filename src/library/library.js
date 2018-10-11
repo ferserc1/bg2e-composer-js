@@ -11,6 +11,7 @@ app.addDefinitions(() => {
             id:"$root$",
             name:"root",
             type:"group",
+            hidden:false,
             children:[]
         };
         this._currentNode = this._data;
