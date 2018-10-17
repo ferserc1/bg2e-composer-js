@@ -257,6 +257,11 @@ app.addSource(() => {
                         setTimeout(() => $scope.commitChanges(), 10);
                     }
                 }
+                $scope.$watch('value', () => {
+                    if (typeof($scope.value)!="boolean") {
+                        $scope.value = $scope.value ? true : false;
+                    }
+                })
             }]
         };
     });
