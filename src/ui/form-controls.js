@@ -1,6 +1,16 @@
 app.addSource(() => {
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
+    let precission = 100000;
+    function adjustNumericPrecission(srcValue) {
+        if (typeof(srcValue)=="number") {
+            return Math.round(srcValue * precission) / precission;
+        }
+        else {
+            return srcValue;
+        }
+    }
+
     angularApp.directive("colorPicker", function() {
         return {
             restrict: 'E',
@@ -257,6 +267,11 @@ app.addSource(() => {
                         setTimeout(() => $scope.commitChanges(), 10);
                     }
                 }
+                $scope.$watch('value', () => {
+                    if (typeof($scope.value)!="boolean") {
+                        $scope.value = $scope.value ? true : false;
+                    }
+                })
             }]
         };
     });
@@ -272,16 +287,16 @@ app.addSource(() => {
                 commitChanges:"=?"
             },
             controller: ['$scope','$timeout', function($scope,$timeout) {
-                $scope.x = Number($scope.value[0]);
-                $scope.y = Number($scope.value[1]);
-                $scope.z = Number($scope.value[2]);
-                $scope.w = Number($scope.value[3]);
+                $scope.x = adjustNumericPrecission(Number($scope.value[0]));
+                $scope.y = adjustNumericPrecission(Number($scope.value[1]));
+                $scope.z = adjustNumericPrecission(Number($scope.value[2]));
+                $scope.w = adjustNumericPrecission(Number($scope.value[3]));
 
                 $scope.$watch('value',() => {
-                    $scope.x = Number($scope.value[0]);
-                    $scope.y = Number($scope.value[1]);
-                    $scope.z = Number($scope.value[2]);
-                    $scope.w = Number($scope.value[3]);
+                    $scope.x = adjustNumericPrecission(Number($scope.value[0]));
+                    $scope.y = adjustNumericPrecission(Number($scope.value[1]));
+                    $scope.z = adjustNumericPrecission(Number($scope.value[2]));
+                    $scope.w = adjustNumericPrecission(Number($scope.value[3]));
                 }, true);
 
                 let timer = null;
@@ -316,10 +331,10 @@ app.addSource(() => {
                     }
                 }
                 $scope.commit = function() {
-                    if ($scope.value.length>=1) $scope.value[0] = Number($scope.x);
-                    if ($scope.value.length>=2) $scope.value[1] = Number($scope.y);
-                    if ($scope.value.length>=3) $scope.value[2] = Number($scope.z);
-                    if ($scope.value.length>=4) $scope.value[3] = Number($scope.w);
+                    if ($scope.value.length>=1) $scope.value[0] = adjustNumericPrecission(Number($scope.x));
+                    if ($scope.value.length>=2) $scope.value[1] = adjustNumericPrecission(Number($scope.y));
+                    if ($scope.value.length>=3) $scope.value[2] = adjustNumericPrecission(Number($scope.z));
+                    if ($scope.value.length>=4) $scope.value[3] = adjustNumericPrecission(Number($scope.w));
                     if ($scope.commitChanges) {
                         $scope.commitChanges();
                     }
@@ -340,6 +355,7 @@ app.addSource(() => {
             },
             controller: ['$scope', function($scope) {
                 $scope.increment = $scope.increment || 1;
+                $scope.value = adjustNumericPrecission($scope.value);
                 $scope.keyDown = function(event) {
                     let inc = $scope.increment;
                     if (event.shiftKey) {
@@ -350,9 +366,11 @@ app.addSource(() => {
                     }
                     if (event.key=="ArrowDown") {
                         $scope.value -= inc - 0.0001;
+                        $scope.vlaue = adjustNumericPrecission($scope.value);
                     }
                     if (event.key=="ArrowUp") {
                         $scope.value += inc - 0.0001;
+                        $scope.vlaue = adjustNumericPrecission($scope.value);
                     }
                 };
                 $scope.commit = function() {
