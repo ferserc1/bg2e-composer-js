@@ -35,5 +35,39 @@ app.addSource(() => {
             $rootScope.$emit("bg2UpdateMaterialUI");
             app.ComposerWindowController.Get().updateView();
         });
+
+        $scope.libraryNodeSelected = app.workspaceUtilities.libraryNodeSelected;
+
+        $scope.currentMaterial = null;
+
+        $scope.onApplyToAll = function() {
+            app.ui.MaterialHandler.Get().applyToAll();
+            app.ComposerWindowController.Get().updateView();
+        };
+
+        $scope.commitChanges = function() {
+            app.ui.MaterialHandler.Get().restoreCurrent();
+            app.ui.MaterialHandler.Get().applyToSelected(true);
+            // Update the UI, to ensure that the material match the UI
+            $scope.currentMaterial = app.ui.MaterialHandler.Get().currentMaterial;
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
+        };
+
+        app.render.Scene.Get().selectionManager.selectionChanged("sceneEditorController", (s) => {
+            $scope.currentMaterial = app.ui.MaterialHandler.Get().updateCurrentFromSelection();
+        });
+
+        app.CommandManager.Get().onRedo("sceneEditorController",() => {
+            $scope.currentMaterial = app.ui.MaterialHandler.Get().updateCurrentFromSelection();
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
+        });
+
+        app.CommandManager.Get().onUndo("sceneEditorController",() => {
+            $scope.currentMaterial = app.ui.MaterialHandler.Get().updateCurrentFromSelection();
+            $rootScope.$emit("bg2UpdateMaterialUI");
+            app.ComposerWindowController.Get().updateView();
+        });
     }]);
 });

@@ -7,13 +7,17 @@
     <dialog-input></dialog-input>
     <context-menu></context-menu>
 
-    <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['PolyList']" ng-hide="isLocked">
-        <ul>
-            <li ng-repeat="item in tabs">
-                <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
-            </li>
-        </ul>
+    <div ng-hide="isLocked" class="bg2-model-editor-rightbar">
+        <div class="bg2-widget bg2-left-tabs bg2-tab-bar" ng-init="currentTab=0; tabs=['PolyList','Material','Library']">
+            <ul>
+                <li ng-repeat="item in tabs">
+                    <a ng-click="$parent.currentTab=$index" ng-class="{ 'bg2-selected' : $parent.currentTab==$index }">{{ item }}</a>
+                </li>
+            </ul>
+        </div>
+        <plist-editor ng-show="currentTab==0" ng-hide="isLocked"></plist-editor>
+        <material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
+        <library-inspector ng-show="currentTab==2" mode="read" on-insert-node="libraryNodeSelected"></library-inspector>
+        <!--<material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>-->
     </div>
-    <plist-editor ng-show="currentTab==0" ng-hide="isLocked"></plist-editor>
-    <!--<material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>-->
 </div>

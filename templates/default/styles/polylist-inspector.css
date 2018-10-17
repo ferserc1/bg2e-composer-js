@@ -44,3 +44,10 @@ polylist-inspector ul.bg2-plist-items {
     width: 90%;
     border-radius: 4px;
 }
+
+.bg2-model-editor-rightbar library-inspector {
+    left: auto;
+    right: 0px;
+    width: 350px;
+    top: 65px;
+}
