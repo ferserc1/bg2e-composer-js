@@ -30,9 +30,12 @@ app.addSource(() => {
                     $scope.hidden = $scope.node.hidden;
                 }
 
+                app.render.Scene.Get().showPreviewCustomBackground = true;
+                
                 if ($scope.node && $scope.node.type=="material") {
                     app.render.Scene.Get().drawablePreviewModel = null;
                     app.render.Scene.Get().previewNode.enabled = true;
+                    app.render.Scene.Get().showPreviewCustomBackground = false;
                     app.render.Scene.Get().resetLibraryCamera();
                     $scope.material = new bg.base.Material();
                     let modifier = new bg.base.MaterialModifier($scope.node.materialModifier);
@@ -42,6 +45,7 @@ app.addSource(() => {
                 else if ($scope.node && $scope.node.type=="model") {
                     let modelPath = path.resolve(path.join(libMgr.current.repoPath,$scope.node.file));
                     modelPath = app.standarizePath(modelPath);
+                    app.render.Scene.Get().showPreviewCustomBackground = true;
                     if (fs.existsSync(modelPath)) {
                         bg.base.Loader.Load(gl,modelPath)
                             .then((node) => {
