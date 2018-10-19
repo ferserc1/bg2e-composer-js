@@ -113,6 +113,22 @@ app.addDefinitions(() => {
     }
     */
 
+    function findLibraryBackground(node) {
+        if (node.name=="library-background") {
+            return node;
+        }
+        else {
+            let result = null;
+            node.children.some((child) => {
+                result = findLibraryBackground(child);
+                return result!=null;
+            });
+            return result;
+        }
+    }
+
+    app.findLibraryBackground = findLibraryBackground;
+
     class Scene {
         static Get() {
             return g_scene;
@@ -153,12 +169,32 @@ app.addDefinitions(() => {
                 this._camera = this._sceneCamera;
                 this._cameraMode = mode;
 //                this._enableSceneLights.apply(this);
+                if (this._libraryBackground) {
+                    this._libraryRoot.removeChild(this._libraryBackground);
+                    this._libraryBackground = null;
+                }
                 break;
             case app.render.SceneMode.LIBRARY:
                 this._root = this._libraryRoot;
                 this._camera = this._libraryCamera;
                 this._cameraMode = mode;
   //              this._enableLibraryLights.apply(this);
+
+                // Remove previous library background node
+                if (this._libraryBackground) {
+                    this._libraryRoot.removeChild(this._libraryBackground);
+                }
+
+                let libraryBackground = findLibraryBackground(this.sceneRoot);
+                if (libraryBackground && libraryBackground.drawable) {
+                    this._libraryBackground = new bg.scene.Node(libraryBackground.context); 
+                    this._libraryBackground.addComponent(libraryBackground.drawable.clone());
+                    this._libraryRoot.addChild(this._libraryBackground);
+                    this._libraryBackground.enabled = this._showPreviewCustomBackground;
+                }
+                else {
+                    this._libraryBackground = null;
+                }
                 break;
             default:
                 console.error("Invalid scene mode");
@@ -187,6 +223,14 @@ app.addDefinitions(() => {
 
         get previewNode() { return this._previewNode; }
         get materialPreviewModel() { return this._materialPreviewModel || this._defaultMaterialDrawable; }
+
+        get showPreviewCustomBackground() { return this._showPreviewCustomBackground; }
+        set showPreviewCustomBackground(c) {
+            this._showPreviewCustomBackground = c;
+            if (this._libraryBackground) {
+                this._libraryBackground.enabled = c;
+            }
+        }
 
         set drawablePreviewModel(model) {
             if (model) {
@@ -391,7 +435,7 @@ app.addDefinitions(() => {
             bg.base.Loader.Load(this.gl, `templates/${ app.config.templateName }/models/material.bg2`)
             .then((result) => {
                 result.name = "Material node";
-                result.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-0.5,0)));
+                //result.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-0.5,0)));
                 this._libraryRoot.addChild(result);
                 this._previewNode = result;
                 this._previewNode.enabled = false;

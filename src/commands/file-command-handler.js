@@ -253,6 +253,8 @@ app.addSource(() => {
             return new Promise((resolve,reject) => {
                 let context = app.ComposerWindowController.Get().gl;
                 const {dialog} = require('electron').remote;
+                const fs = require('fs');
+                const path = require('path');
                 
                 let filePath = dialog.showSaveDialog({
                     filters: [
@@ -261,6 +263,16 @@ app.addSource(() => {
                 });
                 if (filePath) {
                     filePath = app.standarizePath(filePath);
+                    // If the file exists, the user is overwriting an existing scene,
+                    // if not, we'll create a directory to bundle the scene files in it
+                    if (!fs.existsSync(filePath)) {
+                        let pathParsed = path.parse(filePath);
+                        let base = pathParsed.base;
+                        let dir = path.join(pathParsed.dir,pathParsed.name);
+                        filePath = path.join(dir,base);
+                        fs.mkdirSync(dir);
+                    }
+
                     let cmd = new app.fileCommands.SaveScene(context,filePath,app.render.Scene.Get().sceneRoot);
                     app.CommandManager.Get().doCommand(cmd)
                         .then(() => {
