@@ -85,6 +85,8 @@ gulp.task("fbxPlugin", function() {
             `${ fbxPluginPath.win64 }/concrt140.dll`,
             `${ fbxPluginPath.win64 }/libfbxsdk.dll`,
             `${ fbxPluginPath.win64 }/msvcp140.dll`,
+            `${ fbxPluginPath.win64 }/msvcp140_1.dll`,
+            `${ fbxPluginPath.win64 }/msvcp140_2.dll`,
             `${ fbxPluginPath.win64 }/vccorlib140.dll`,
             `${ fbxPluginPath.win64 }/vcruntime140.dll`,
             `${ fbxPluginPath.win64 }/fbx2json.exe`
