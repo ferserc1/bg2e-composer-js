@@ -28,6 +28,10 @@ app.addDefinitions(() => {
         return new Promise((resolve,reject) => {
             let outTmpPath = path.resolve(path.join(app.paths.temp,"import_fbx.json"));
             exec(`"${ app.fbxPlugin.path }" "${filePath}" "${outTmpPath}"`, (err,stdout,stderr) => {
+                if (stderr) {
+                    alert(stderr);
+                    console.warn(stderr);
+                }
                 if (err) {
                     reject(err);
                 }
