@@ -213,6 +213,30 @@ app.addSource(() => {
         }
     }
 
+    function fixNormals(plist) {
+        if (plist.index.length%3!=0) {
+            console.warn(`Fix normals in polyList ${ plist.name }: malformed index array.`);
+        }
+        else {
+            for (let i = 0; i<plist.index.length; i+=3) {
+                let i1 = i;
+                let i2 = i + 1;
+                let i3 = i + 3;
+                let A = new bg.Vector3(plist.vertex[i1],plist.vertex[i1 + 1],plist.vertex[i1 + 2]);
+                let B = new bg.Vector3(plist.vertex[i2],plist.vertex[i2 + 1],plist.vertex[i2 + 2]);
+                let C = new bg.Vector3(plist.vertex[i3],plist.vertex[i3 + 1],plist.vertex[i3 + 2]);
+                let BA = B.sub(A);
+                let CA = C.sub(A);
+                let n = BA.cross(CA);
+                n.normalize();
+                plist.normal[i1] = n.x; plist.normal[i1 + 1] = n.y; plist.normal[i1 + 2] = n.z;
+                plist.normal[i2] = n.x; plist.normal[i2 + 1] = n.y; plist.normal[i2 + 2] = n.z;
+                plist.normal[i3] = n.x; plist.normal[i3 + 1] = n.y; plist.normal[i3 + 2] = n.z;
+            }
+            plist.build();
+        }
+    }
+
     class FlipFaces extends app.Command {
         constructor(plistArray) {
             super();
@@ -262,6 +286,44 @@ app.addSource(() => {
     }
 
     app.plistCommands.FlipNormals = FlipNormals;
+
+
+    class FixNormals extends app.Command {
+        constructor(plistArray) {
+            super();
+            if (!Array.isArray(plistArray)) {
+                this._plistArray = [plistArray];
+            }
+            else {
+                this._plistArray = plistArray;
+            }
+        }
+
+        execute() {
+            return new Promise((resolve) => {
+                this._undoPlist = [];
+                this._plistArray.forEach((pl) => {
+                    this._undoPlist.push(pl.normal.slice(0));
+                    fixNormals(pl);
+                });
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve) => {
+                this._plistArray.forEach((pl,index) => {
+                    pl.normal = this._undoPlist[index];
+                    pl.build();
+                })
+                resolve();
+            });
+        }
+    }
+
+    app.plistCommands.FixNormals = FixNormals;
+
+
 
     function assertCompatiblePlist(pl1,pl2) {
         return  (pl1.vertex!=null)==(pl2.vertex!=null) &&

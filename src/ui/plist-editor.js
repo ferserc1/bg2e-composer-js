@@ -100,6 +100,16 @@ app.addSource(() => {
             }
         };
 
+        $scope.fixNormals = function() {
+            if ($scope.selection.length) {
+                setTimeout(() => {
+                    executeCommand(new app.plistCommands.FixNormals(
+                        $scope.selection
+                    ));
+                }, 10)
+            }
+        };
+
         $scope.uvChannels = [
             { id:0, label:"Channel 0" },
             { id:1, label:"Channel 1" },
