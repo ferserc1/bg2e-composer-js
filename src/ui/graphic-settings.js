@@ -10,6 +10,10 @@ app.addSource(() => {
             {
                 id: app.RenderPath.DEFERRED,
                 label: "Deferred render"
+            },
+            {
+                id: app.RenderPath.PBR,
+                label: "Forward render PBR"
             }
         ];
         $scope.raytracerQualities = [

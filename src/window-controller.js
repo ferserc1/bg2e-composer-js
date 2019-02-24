@@ -4,9 +4,14 @@ app.addDefinitions(() => {
 
     app.RenderPath = {
         FORWARD: 0,
-        DEFERRED: 1
+        DEFERRED: 1,
+        PBR: 2
     };
 
+    app.RenderModel = {
+        LEGACY: 0,
+        PBR: 1
+    };
 
     function assertProperty(collection,property,defaultValue) {
         if (collection[property]===undefined) {
@@ -58,7 +63,7 @@ app.addDefinitions(() => {
             super();
             g_windowController = this;
             this._renderPath = app.settings.has("graphics.renderPath") ? app.settings.get("graphics.renderPath") : app.RenderPath.FORWARD;
-            this._renderers = [null,null];
+            this._renderers = [null,null,null];
             this._renderSettings = app.settings.has("graphics.renderSettings") ? app.settings.get("graphics.renderSettings") : {};
             
             // Assert that all the render settings properties are present
@@ -135,12 +140,31 @@ app.addDefinitions(() => {
             this.updateView();
         }
 
+        get renderModel() {
+            if (this._renderPath>=2) {
+                return app.RenderModel.LEGACY;
+            } 
+            else {
+                return app.RenderModel.PBR;
+            }
+        }
+
         get highQualityRenderer() {
-            return this._renderers[app.RenderPath.DEFERRED];
+            if (this._renderPath<2) {
+                return this._renderers[app.RenderPath.DEFERRED];
+            }
+            else {
+                return this._renderers[app.RenderPath.PBR];
+            }
         }
 
         get lowQualityRenderer() {
-            return this._renderers[app.RenderPath.FORWARD];
+            if (this._renderPath<2) {
+                return this._renderers[app.RenderPath.FORWARD];
+            }
+            else {
+                return this._renderers[app.RenderPath.PBR];
+            }
         }
 
         get supportHighQualityRender() {
@@ -161,6 +185,7 @@ app.addDefinitions(() => {
 
             this._renderers[app.RenderPath.FORWARD] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.FORWARD);
             this._renderers[app.RenderPath.DEFERRED] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.DEFERRED);
+            this._renderers[app.RenderPath.PBR] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.PBR);
             this._renderers.forEach((rend) => rend.clearColor = new bg.Color(0.2,0.4,0.7,1));
             applyRenderSettings.apply(this);
     
