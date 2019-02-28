@@ -22,7 +22,7 @@
             dirContents.sort(sortFn);
             dirContents.forEach((fileName) => importFolder(path.join(src,fileName)));
         }
-        else {
+        else if (src.split(".").pop()=="js") {
             importFile(src);
         }
     }

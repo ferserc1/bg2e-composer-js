@@ -54,6 +54,10 @@ app.addDefinitions(() => {
         renderer.settings.shadows.quality = this.renderSettings.shadowQuality;
     }
 
+    function configurePrimitiveMaterials() {
+        bg.scene.PrimitiveFactory.SetPBRMaterials(this.usePBR);
+    }
+
     class ComposerWindowController extends bg.app.WindowController {
         static Get() {
             return g_windowController;
@@ -137,11 +141,12 @@ app.addDefinitions(() => {
         set renderPath(rp) {
             this._renderPath = rp;
             app.settings.set("graphics.renderPath",rp);
+            configurePrimitiveMaterials.apply(this);
             this.updateView();
         }
 
         get renderModel() {
-            if (this._renderPath>=2) {
+            if (this._renderPath<2) {
                 return app.RenderModel.LEGACY;
             } 
             else {
@@ -170,9 +175,20 @@ app.addDefinitions(() => {
         get supportHighQualityRender() {
             return this._renderers[app.RenderPath.DEFERRED].constructor == bg.render.DeferredRenderer;
         }
+
+        get usePBR() {
+            return this.renderModel==app.RenderModel.PBR;
+        }
     
         init() {
             bg.Engine.Set(new bg.webgl1.Engine(this.gl));
+
+            this._renderers[app.RenderPath.FORWARD] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.FORWARD);
+            this._renderers[app.RenderPath.DEFERRED] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.DEFERRED);
+            this._renderers[app.RenderPath.PBR] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.PBR);
+            this._renderers.forEach((rend) => rend.clearColor = new bg.Color(0.2,0.4,0.7,1));
+            applyRenderSettings.apply(this);
+            configurePrimitiveMaterials.apply(this);
 
             this._scene = new app.render.Scene(this.gl);
             this.scene.init();
@@ -182,12 +198,6 @@ app.addDefinitions(() => {
             };
             this.scene.sceneChanged("windowController",() => flushScene());
             this.scene.selectionManager.selectionChanged("windowController",() => flushScene());
-
-            this._renderers[app.RenderPath.FORWARD] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.FORWARD);
-            this._renderers[app.RenderPath.DEFERRED] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.DEFERRED);
-            this._renderers[app.RenderPath.PBR] = bg.render.Renderer.Create(this.gl,bg.render.RenderPath.PBR);
-            this._renderers.forEach((rend) => rend.clearColor = new bg.Color(0.2,0.4,0.7,1));
-            applyRenderSettings.apply(this);
     
             this._inputVisitor = new bg.scene.InputVisitor();
         }

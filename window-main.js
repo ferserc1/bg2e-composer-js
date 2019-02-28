@@ -166,9 +166,11 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
     });
     console.log("Data path: " + app.resourcesDir);
 
-    app.plugins.requireSources();
+    setTimeout(() => {
+        app.plugins.requireSources();
+        setTimeout(() => loadApp(), 100);
+    },100);
 
-    setTimeout(() => loadApp(), 100);
 
     const {ipcRenderer} = require('electron');
     ipcRenderer.on('triggerMenu', (event,arg) => {

@@ -94,7 +94,7 @@ app.addSource(() => {
         };
 
         function updateMaterial() {
-            if ($scope.material) {
+            if ($scope.material instanceof bg.base.Material) {
                 let m = $scope.material;
                 let promises = [];
 
@@ -136,11 +136,14 @@ app.addSource(() => {
                     Promise.all(promises).then(() => $scope.materialChanged($scope.material));
                 }
             }
+            else if ($scope.material instanceof bg.base.PBRMaterial) {
+                // TODO: PBR materials
+            }
         }
 
         function updateUI() {
             let m = $scope.material;
-            if ($scope.material) {
+            if ($scope.material instanceof bg.base.Material) {
                 $scope.diffuse = m.diffuse.toArray();
                 $scope.specular = m.specular.toArray();
                 $scope.alphaCutoff = m.alphaCutoff;
@@ -172,6 +175,10 @@ app.addSource(() => {
                 $scope.roughnessMaskInvert = m.roughnessMaskInvert;
                 $scope.unlit = m.unlit;
                 $scope.isDisabled = false;
+            }
+            else if ($scope.material instanceof bg.base.PBRMaterial) {
+                // TODO: Update PBR materials
+                $scope.isDisabled = true;
             }
             else {
                 $scope.isDisabled = true;
