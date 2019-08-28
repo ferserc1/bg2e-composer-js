@@ -28,12 +28,16 @@
     }
 
     let enginePath = path.resolve(path.join(__dirname,"../bg2e-js/"));
-    let physicsPath = path.resolve(path.join(__dirname,"../bg2e-js-physics/"))
+    let physicsPath = path.resolve(path.join(__dirname,"../bg2e-js-physics/"));
+    let voxelPath = path.resolve(path.join(__dirname,"../bg2e-js-voxel/"))
+
 
     let engineSource = path.join(enginePath,"src");
     let physicsSource = path.join(physicsPath,"src");
+    let voxelSource = path.join(voxelPath,"src");
     let importFileList = [];
 
     importFolder(engineSource);
     importFolder(physicsSource);
+    importFolder(voxelSource);
 })()
