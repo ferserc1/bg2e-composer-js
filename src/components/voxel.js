@@ -21,7 +21,7 @@ app.addSource(() => {
                     this.componentInstance.depth = d;
                     this.componentInstance.offset = new bg.Vector3(offset);
                 } catch(err) {
-
+                    console.error(err.message);
                 }
             }
         }
@@ -54,8 +54,8 @@ app.addSource(() => {
             $scope.sizeOptions.some((s) => {
                 if (s.id==id) {
                     result = s;
+                    return true;
                 }
-                return result!=null;
             });
             return result;
         }

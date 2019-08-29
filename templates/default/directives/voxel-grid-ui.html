@@ -1,4 +1,10 @@
 
 <div class="bg2-form-field">
-    <h1>Voxel grid component</h1>
+    <number-picker label="Grid size" value="gridSize" commit-changes="update"></number-picker>
+    <h4>Divisions:</h4>
+    <div class="bg2-widget-panel">
+        <select-picker label="Width" value="width" options="sizeOptions" commit-changes="update"></select-picker>
+        <select-picker label="Depth" value="depth" options="sizeOptions" commit-changes="update"></select-picker>
+    </div>
+    <vector-picker label="Offset" value="offset" commit-changes="update"></vector-picker>
 </div>
