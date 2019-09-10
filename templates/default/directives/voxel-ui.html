@@ -5,4 +5,11 @@
     <select-picker label="Height" value="height" options="sizeOptions" commit-changes="setHeight"></select-picker>
     <select-picker label="Depth" value="depth" options="sizeOptions" commit-changes="setDepth"></select-picker>
     <vector-picker label="Offset" value="offset" increment="0.1" commit-changes="setOffset"></vector-picker>
+    <div class="bg2-widget-panel">
+        <button ng-click="moveLeft()">Move Left</button>
+        <button ng-click="moveRight()">Move Right</button>
+        <button ng-click="moveDown()">Move Down</button>
+        <button ng-click="moveUp()">Move Up</button>
+        <button ng-click="rotate()">Rotate</button>
+    </div>
 </div>

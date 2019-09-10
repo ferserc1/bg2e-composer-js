@@ -24,6 +24,22 @@ app.addSource(() => {
                     console.error(err.message);
                 }
             }
+
+            move(x,y) {
+                let parent = this.componentInstance.node && this.componentInstance.node.parent;
+                let grid = parent && parent.component("bg.scene.VoxelGrid");
+                if (grid && parent) {
+                    let pos = grid.getVoxelPosition(this.componentInstance);
+                    pos.x += x;
+                    pos.y += y;
+                    grid.setVoxelPosition(this.componentInstance,pos.x, pos.y);
+                }
+            }
+
+            rotate() {
+                let r = this.componentInstance.rotationY;
+                this.componentInstance.rotationY = (r==3 ? 0 : r + 1);
+            }
         }
     });
 
@@ -78,6 +94,12 @@ app.addSource(() => {
         $scope.setDepth = function(v) { updateComponent(); };
         $scope.setOffset = function(v) { updateComponent(); };
 
+        $scope.moveLeft = function() {$scope.component.move(-1,0); app.ComposerWindowController.Get().updateView(); };
+        $scope.moveRight = function() { $scope.component.move(1, 0); app.ComposerWindowController.Get().updateView(); };
+        $scope.moveUp = function() { $scope.component.move(0, 1); app.ComposerWindowController.Get().updateView(); };
+        $scope.moveDown = function() { $scope.component.move(0,-1); app.ComposerWindowController.Get().updateView();};
+        $scope.rotate = function() { $scope.component.rotate(); app.ComposerWindowController.Get().updateView(); };
+
         $scope.updateValues = function() {
             let comp = $scope.component.componentInstance;
             $scope.voxelId = comp.identifier;
@@ -96,6 +118,7 @@ app.addSource(() => {
         });
 
         $scope.updateValues();
+
     }]);
 
     angularApp.directive("voxelUi", function() {
