@@ -24,7 +24,10 @@ function launch(indexFile,debug) {
             height: mainWindowState.height,
             x: mainWindowState.x,
             y: mainWindowState.y,
-            icon: path.join(__dirname, "data/bg2e-composer-512.png")
+            icon: path.join(__dirname, "data/bg2e-composer-512.png"),
+            webPreferences: {
+                nodeIntegration: true
+            }
         });
         win.setMinimumSize(800,600);
         if (mainWindowState.maximized) {
