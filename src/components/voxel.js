@@ -13,16 +13,15 @@ app.addSource(() => {
             }
 
             updateComponentData(id,size,w,h,d,offset) {
-                // TODO: Implement using commands
-                try {
-                    this.componentInstance.sideSize = size;
-                    this.componentInstance.width = w;
-                    this.componentInstance.height = h;
-                    this.componentInstance.depth = d;
-                    this.componentInstance.offset = new bg.Vector3(offset);
-                } catch(err) {
-                    console.error(err.message);
-                }
+                app.CommandManager.Get().doCommand(
+                    new app.voxelCommands.SetVoxelData(
+                        this.componentInstance,
+                        size,
+                        w, h, d,
+                        new bg.Vector3(offset))
+                )
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
             }
 
             move(x,y) {

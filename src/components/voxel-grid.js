@@ -13,15 +13,25 @@ app.addSource(() => {
             }
 
             updateComponentData(size,x,y,offset) {
-                // TODO: Implement using commands
-                try {
-                    this.componentInstance.gridSize = size;
-                    this.componentInstance.x = x;
-                    this.componentInstance.y = y;
-                    this.componentInstance.offset = new bg.Vector3(offset);
-                } catch(err) {
-                    console.error(err.message);
-                }
+                // // TODO: Implement using commands
+                // try {
+                //     this.componentInstance.gridSize = size;
+                //     this.componentInstance.x = x;
+                //     this.componentInstance.y = y;
+                //     this.componentInstance.offset = new bg.Vector3(offset);
+                // } catch(err) {
+                //     console.error(err.message);
+                // }
+
+                app.CommandManager.Get().doCommand(
+                    new app.voxelCommands.SetVoxelGridData(
+                        this.componentInstance,
+                        size,
+                        x, y,
+                        new bg.Vector3(offset))
+                )
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
             }
         }
     });
