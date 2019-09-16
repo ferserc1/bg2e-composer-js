@@ -35,6 +35,21 @@ module.exports = {
 									focusedWindow.webContents.send('triggerMenu', { msg:'saveSceneAs' });
 								}
 							},
+							{ type: 'separator' },
+							{
+								label: 'Save Prefab...',
+								accelerator: '',
+								click: function(item,focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'savePrefab' })
+								}
+							},
+							{
+								label: 'Import Prefab...',
+								accelerator: '',
+								click: function(item, focusedWindow) {
+									focusedWindow.webContents.send('triggerMenu', { msg:'placeScene' });
+								}
+							},
 							{type: 'separator'},
 							{
 								label: 'Import object',

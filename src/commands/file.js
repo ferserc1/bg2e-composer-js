@@ -96,6 +96,45 @@ app.addSource(() => {
 
     app.fileCommands.OpenScene = OpenScene;
 
+    class PlaceScene extends app.ContextCommand {
+        constructor(context,path,parentNode) {
+            super(context);
+            this._path = path;
+            this._parentNode = parentNode;
+            this._sceneNode = null;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                bg.base.Loader.Load(this.gl,this._path)
+                    .then((result) => {
+                        // The scene loader automatically creates a camera, we will load only the first
+                        // node of the loaded scene root
+                        result.sceneRoot.children
+                        if (result.sceneRoot.children.length) {
+                            this._sceneNode = result.sceneRoot.children[0];
+                            this._parentNode.addChild(this._sceneNode);
+                            resolve();
+                        }
+                        else {
+                            reject(new Error("The scene or prefab is empty"));
+                        }
+                    })
+
+                    .catch((err) => reject(err));
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._parentNode.removeChild(this._sceneNode);
+                resolve();
+            });
+        }
+    }
+
+    app.fileCommands.PlaceScene = PlaceScene;
+
     class ExportObject extends app.ContextCommand {
         constructor(context,path,node) {
             super(context);

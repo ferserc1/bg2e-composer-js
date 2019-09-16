@@ -13,9 +13,11 @@ app.addSource(() => {
                 "newScene",
                 "openFile",
                 "openScene",
+                "placeScene",
                 "exportSelected",
                 "saveScene",
                 "saveSceneAs",
+                "savePrefab",
                 "showPluginSettings",
                 "newLibrary",
                 "openLibrary",
@@ -35,6 +37,9 @@ app.addSource(() => {
             case 'openScene':
                 this.openScene(params);
                 break;
+            case 'placeScene':
+                this.placeScene(params);
+                break;
             case 'exportSelected':
                 this.exportSelected(params);
                 break;
@@ -43,6 +48,9 @@ app.addSource(() => {
                 break;
             case 'saveSceneAs':
                 this.saveSceneAs(params);
+                break;
+            case 'savePrefab':
+                this.savePrefab(params);
                 break;
             case 'showPluginSettings':
                 this.showPluginSettings(params);
@@ -139,6 +147,46 @@ app.addSource(() => {
                             }
                         });
                 }
+            }
+        }
+
+        placeScene() {
+            let context = app.ComposerWindowController.Get().gl;
+            const {dialog} = require('electron').remote;
+
+            let targetNode = null;
+            let selection = app.render.Scene.Get().selectionManager.selection;
+            selection = Array.isArray(selection) && selection.length && selection[0];
+            if (!selection || !selection.node) {
+                targetNode = app.render.Scene.Get().sceneRoot;
+            }
+            else {
+                targetNode = selection.node;
+            }
+
+            let filters = [ { name:"bg2 engine scenes", extensions:["vitscnj","bg2prefab"]} ];
+            if (app.vitscnPlugin.available) {
+                filters.push({ name:"bg2 engine scene package", extensions:["vitscn"]});
+            }
+            let filePath = dialog.showOpenDialog({
+                properties:['openFile'],
+                filters: filters
+            });
+            if (filePath && filePath.length>0) {
+                filePath = app.standarizePath(filePath[0]);
+                let cmd = new app.fileCommands.PlaceScene(context,filePath,targetNode);
+                app.CommandManager.Get().doCommand(cmd)
+                    .then(() => {
+                        
+                    })
+                    .catch((err) => {
+                        if (err) {
+                            console.error(err.message,true);
+                        }
+                        else {
+                            // command cancelled by user
+                        }
+                    });
             }
         }
 
@@ -298,6 +346,60 @@ app.addSource(() => {
                 }
                 else {
                     resolve(false);
+                }
+            });
+        }
+
+        savePrefab(params = {}) {
+            return new Promise((resolve,reject) => {
+                let context = app.ComposerWindowController.Get().gl;
+                const {dialog} = require('electron').remote;
+                const fs = require('fs');
+                const path = require('path');
+                
+                let selection = app.render.Scene.Get().selectionManager.selection;
+                selection = selection.length && selection[0] && selection[0].node;
+                if (selection) {
+                    let filePath = dialog.showSaveDialog({
+                        filters: [
+                            { name:"bg2 engine scene", extensions:["vitscnj"]}
+                        ]
+                    });
+                    if (filePath) {
+                        filePath = app.standarizePath(filePath);
+                        // If the file exists, the user is overwriting an existing scene,
+                        // if not, we'll create a directory to bundle the scene files in it
+                        if (!fs.existsSync(filePath)) {
+                            let pathParsed = path.parse(filePath);
+                            let base = pathParsed.base;
+                            let dir = path.join(pathParsed.dir,pathParsed.name);
+                            filePath = path.join(dir,base);
+                            fs.mkdirSync(dir);
+                        }
+
+                        let cmd = new app.fileCommands.SaveScene(context,filePath,selection);
+                        app.CommandManager.Get().doCommand(cmd)
+                            .then(() => {
+                                resolve(true);
+                            })
+                            .catch((err) => {
+                                if (err) {
+                                    console.error(err.message,true);
+                                    resolve(err);
+                                }
+                                else {
+                                    // command cancelled by user
+                                    resolve(false);
+                                }
+                            });
+                    }
+                    else {
+                        resolve(false);
+                    }
+                }
+                else {
+                    console.error("No node selected",true);
+                    reject(new Error("No node selected"));
                 }
             });
         }
