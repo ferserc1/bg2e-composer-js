@@ -156,6 +156,9 @@ app.addSource(() => {
 
                 $scope.clearFile = function() {
                     $scope.value = "";
+                    if ($scope.commitChanges) {
+                        setTimeout(() => $scope.commitChanges(""),10);
+                    }
                 };
             }]
         }
@@ -194,6 +197,9 @@ app.addSource(() => {
 
                 $scope.clearFile = function() {
                     $scope.value = "";
+                    if ($scope.commitChanges) {
+                        setTimeout(() => $scope.commitChanges(""),10);
+                    }
                 };
             }]
         }

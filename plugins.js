@@ -36,34 +36,39 @@ class Plugins {
         this._paths.forEach((pluginPath) => {
             if (fs.existsSync(pluginPath)) {
                 fs.readdirSync(pluginPath).forEach((plugin) => {
-                    let fullPluginPath = path.join(pluginPath,plugin);
-                    let stat = fs.statSync(fullPluginPath);
-                    if (stat.isDirectory) {
-                        let source = path.join(fullPluginPath,"src");
-                        if (fs.existsSync(source)) {
-                            stat = fs.statSync(source);
-                            if (stat.isDirectory) {
-                                this._pluginSources.push(source);
+                    try {
+                        let fullPluginPath = path.join(pluginPath,plugin);
+                        let stat = fs.statSync(fullPluginPath);
+                        if (stat.isDirectory) {
+                            let source = path.join(fullPluginPath,"src");
+                            if (fs.existsSync(source)) {
+                                stat = fs.statSync(source);
+                                if (stat.isDirectory) {
+                                    this._pluginSources.push(source);
+                                }
                             }
-                        }
-    
-                        let pluginSources = path.join(fullPluginPath,"plugin");
-                        if (fs.existsSync(pluginSources)) {
-                            stat = fs.statSync(pluginSources);
-                            if (stat.isDirectory) {
-                                fs.readdirSync(pluginSources).forEach((pluginFile) => {
-                                    if (pluginFile.split(".").pop()=="js") {
-                                        g_plugins.push(path.join(pluginSources,pluginFile));
-                                    }
-                                })
         
+                            let pluginSources = path.join(fullPluginPath,"plugin");
+                            if (fs.existsSync(pluginSources)) {
+                                stat = fs.statSync(pluginSources);
+                                if (stat.isDirectory) {
+                                    fs.readdirSync(pluginSources).forEach((pluginFile) => {
+                                        if (pluginFile.split(".").pop()=="js") {
+                                            g_plugins.push(path.join(pluginSources,pluginFile));
+                                        }
+                                    })
+            
+                                }
+                            }
+
+                            let menuPath = path.join(fullPluginPath,"menu.js");
+                            if (fs.existsSync(menuPath)) {
+                                g_menus.push(menuPath);
                             }
                         }
-
-                        let menuPath = path.join(fullPluginPath,"menu.js");
-                        if (fs.existsSync(menuPath)) {
-                            g_menus.push(menuPath);
-                        }
+                    }
+                    catch(e) {
+                        console.warn(e.message);
                     }
                 })
             }
