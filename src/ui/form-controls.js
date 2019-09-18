@@ -57,18 +57,20 @@ app.addSource(() => {
 
                 $scope.preview = { 'background-color': 'rgba(0,0,0,0)' };
                 $scope.$watch("value", () => {
-                    let r = Math.round($scope.value[0] * 255);
-                    let g = Math.round($scope.value[1] * 255);
-                    let b = Math.round($scope.value[2] * 255);
-                    $scope.preview['background-color'] = 'rgba('
-                        + r + ',' +
-                        + g + ',' +
-                        + b + ',' +
-                        + $scope.value[3] + ')';
-                    
-                    $scope.color = "#" + (r<16 ? "0":"") + r.toString(16)
-                         + (g<16 ? "0":"") + g.toString(16)
-                         + (b<16 ? "0":"") + b.toString(16);
+                    if (Array.isArray($scope.value)) {
+                        let r = Math.round($scope.value[0] * 255);
+                        let g = Math.round($scope.value[1] * 255);
+                        let b = Math.round($scope.value[2] * 255);
+                        $scope.preview['background-color'] = 'rgba('
+                            + r + ',' +
+                            + g + ',' +
+                            + b + ',' +
+                            + $scope.value[3] + ')';
+                        
+                        $scope.color = "#" + (r<16 ? "0":"") + r.toString(16)
+                             + (g<16 ? "0":"") + g.toString(16)
+                             + (b<16 ? "0":"") + b.toString(16);
+                    }
                 }, true);
 
                 
@@ -293,16 +295,26 @@ app.addSource(() => {
                 commitChanges:"=?"
             },
             controller: ['$scope','$timeout', function($scope,$timeout) {
-                $scope.x = adjustNumericPrecission(Number($scope.value[0]));
-                $scope.y = adjustNumericPrecission(Number($scope.value[1]));
-                $scope.z = adjustNumericPrecission(Number($scope.value[2]));
-                $scope.w = adjustNumericPrecission(Number($scope.value[3]));
-
-                $scope.$watch('value',() => {
+                if (Array.isArray($scope.value)) {
                     $scope.x = adjustNumericPrecission(Number($scope.value[0]));
                     $scope.y = adjustNumericPrecission(Number($scope.value[1]));
                     $scope.z = adjustNumericPrecission(Number($scope.value[2]));
                     $scope.w = adjustNumericPrecission(Number($scope.value[3]));
+                }
+                else {
+                    $scope.x = 0;
+                    $scope.y = 0;
+                    $scope.z = 0;
+                    $scope.w = 0;
+                }
+
+                $scope.$watch('value',() => {
+                    if (Array.isArray($scope.value)) {
+                        $scope.x = adjustNumericPrecission(Number($scope.value[0]));
+                        $scope.y = adjustNumericPrecission(Number($scope.value[1]));
+                        $scope.z = adjustNumericPrecission(Number($scope.value[2]));
+                        $scope.w = adjustNumericPrecission(Number($scope.value[3]));
+                    }
                 }, true);
 
                 let timer = null;
