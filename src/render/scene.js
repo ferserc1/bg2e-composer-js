@@ -209,7 +209,12 @@ app.addDefinitions(() => {
                 if (model) {
                     this._materialPreviewModel = model.instance("materialPreview");
                     this._materialPreviewModel.forEach((plist,mat) => {
-                        mat.copyMaterialSettings(new bg.base.Material(),0xFFFFFFFF);
+                        if (mat instanceof bg.base.PBRMaterial) {
+                            mat.copyMaterialSettings(new bg.base.PBRMaterial(),0xFFFFFFFF);
+                        }
+                        else if (mat instanceof bg.base.Material) {
+                            mat.copyMaterialSettings(new bg.base.Material(),0xFFFFFFFF);
+                        }
                     })
                     this._previewNode.addComponent(this._materialPreviewModel);
                 }
@@ -357,6 +362,7 @@ app.addDefinitions(() => {
 
         createDefaultScene() {
             // TODO: Import scene file
+            const path = require('path');
             this._sceneRoot = new bg.scene.Node(this.gl,"SceneRoot");
 
             this._grid = new app.render.Grid();
@@ -373,6 +379,18 @@ app.addDefinitions(() => {
             ctrl.distance = 15;
             this._cameraNode.addComponent(ctrl);
             bg.manipulation.OrbitCameraController.SetUniqueEnabled(ctrl,this._sceneRoot);
+
+            let env = new bg.base.Environment(this.gl);
+            env.create({
+                cubemapSize: 1024,
+                irradianceMapSize: 32,
+                specularMapSize: 32
+            });
+            this._sceneRoot.addComponent(new bg.scene.Environment(env));
+            bg.base.Loader.Load(this.gl,app.standarizePath(path.join(app.resourcesDir,"env-1.jpg")))
+                .then((texture) => {
+                    env.equirectangularTexture = texture;
+                });
 
 
             let lightNode = new bg.scene.Node(this.gl, "Main Light");
