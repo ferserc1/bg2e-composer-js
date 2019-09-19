@@ -42,38 +42,75 @@ app.addSource(() => {
             { id:3, label:"A" }
         ];
 
-        $scope.diffuse = [1,1,1,1];
-        $scope.specular = [1,1,1,1];
-        $scope.alphaCutoff = 0.5;
-        $scope.shininess = 0;
-        $scope.shininessMask = "";
-        $scope.shininessMaskChannel = $scope.maskChannels[0];
-        $scope.shininessMaskInvert = false;
-        $scope.lightEmission = 0;
-        $scope.lightEmissionMask = "";
-        $scope.lightEmissionMaskChannel = $scope.maskChannels[0];
-        $scope.lightEmissionMaskInvert = false;
-        $scope.texture = "";
-        $scope.textureOffset = [0,0];
-        $scope.textureScale = [1,1];
-        $scope.lightMap = "";
-        $scope.normalMap = "";
-        $scope.normalMapOffset = [0,0];
-        $scope.normalMapScale = [1,1];
-        $scope.reflection = 0;
-        $scope.reflectionMask = "";
-        $scope.reflectionMaskChannel = $scope.maskChannels[0];
-        $scope.reflectionMaskInvert = false;
-        $scope.castShadows = true;
-        $scope.receiveShadows = true;
-        $scope.cullFace = true;
-        $scope.roughness = 0;
-        $scope.roughnessMask = "";
-        $scope.roughnessMaskChannel = $scope.maskChannels[0];
-        $scope.roughnessMaskInvert = false;
-        $scope.unlit = false;
+        const MaterialType = {
+            PHONG: 0,
+            PBR: 1
+        };
+        $scope.materialType = MaterialType.PHONG;
+        $scope.materialVars = {};
+        $scope.pbrMaterialVars = {};
 
-        $scope.isDisabled = true;
+        $scope.materialVars.diffuse = [1,1,1,1];
+        $scope.materialVars.specular = [1,1,1,1];
+        $scope.materialVars.alphaCutoff = 0.5;
+        $scope.materialVars.shininess = 0;
+        $scope.materialVars.shininessMask = "";
+        $scope.materialVars.shininessMaskChannel = $scope.maskChannels[0];
+        $scope.materialVars.shininessMaskInvert = false;
+        $scope.materialVars.lightEmission = 0;
+        $scope.materialVars.lightEmissionMask = "";
+        $scope.materialVars.lightEmissionMaskChannel = $scope.maskChannels[0];
+        $scope.materialVars.lightEmissionMaskInvert = false;
+        $scope.materialVars.texture = "";
+        $scope.materialVars.textureOffset = [0,0];
+        $scope.materialVars.textureScale = [1,1];
+        $scope.materialVars.lightMap = "";
+        $scope.materialVars.normalMap = "";
+        $scope.materialVars.normalMapOffset = [0,0];
+        $scope.materialVars.normalMapScale = [1,1];
+        $scope.materialVars.reflection = 0;
+        $scope.materialVars.reflectionMask = "";
+        $scope.materialVars.reflectionMaskChannel = $scope.maskChannels[0];
+        $scope.materialVars.reflectionMaskInvert = false;
+        $scope.materialVars.castShadows = true;
+        $scope.materialVars.receiveShadows = true;
+        $scope.materialVars.cullFace = true;
+        $scope.materialVars.roughness = 0;
+        $scope.materialVars.roughnessMask = "";
+        $scope.materialVars.roughnessMaskChannel = $scope.maskChannels[0];
+        $scope.materialVars.roughnessMaskInvert = false;
+        $scope.materialVars.unlit = false;
+
+        // Values that could be vector/scalar or texture
+        $scope.pbrMaterialVars.diffuse = [1,1,1,1];
+        $scope.pbrMaterialVars.diffuseTexture = null;
+        $scope.pbrMaterialVars.metallic = 0;
+        $scope.pbrMaterialVars.metallicTexture = null;
+        $scope.pbrMaterialVars.metallicChannel = 0;
+        $scope.pbrMaterialVars.roughness = 0.9;
+        $scope.pbrMaterialVars.roughnessTexture = null;
+        $scope.pbrMaterialVars.roughnessChannel = 0;
+        $scope.pbrMaterialVars.lightEmission = 0;
+        $scope.pbrMaterialVars.lightEmissionTexture = null;
+        $scope.pbrMaterialVars.lightEmissionChannel = 0;
+
+        // Other values that only can be scalar, vector or texture
+        $scope.pbrMaterialVars.normalTexture = null;
+        $scope.pbrMaterialVars.heightTexture = 0;
+        $scope.pbrMaterialVars.heightChannel = 0;
+        $scope.pbrMaterialVars.alphaCutoff = 0.5;
+        $scope.pbrMaterialVars.isTransparent = false;
+        $scope.pbrMaterialVars.diffuseOffset = [0, 0];
+        $scope.pbrMaterialVars.diffuseScale = [1, 1];
+        $scope.pbrMaterialVars.normalOffset = [0, 0];
+        $scope.pbrMaterialVars.normalScale = [1, 1];
+        $scope.pbrMaterialVars.castShadows = true;
+        $scope.pbrMaterialVars.heightScale = 1;
+        $scope.pbrMaterialVars.cullFace = true;
+        $scope.pbrMaterialVars.unlit = false;
+
+        $scope.showPhong = false;
+        $scope.showPbr = false;
 
         $scope.applyToAll = function() {
             if ($scope.applyToAllPressed) {
@@ -98,90 +135,204 @@ app.addSource(() => {
                 let m = $scope.material;
                 let promises = [];
 
-                m.diffuse = new bg.Vector4($scope.diffuse);
-                m.specular = new bg.Vector4($scope.specular);
-                m.alphaCutoff = $scope.alphaCutoff;
+                m.diffuse = new bg.Vector4($scope.materialVars.diffuse);
+                m.specular = new bg.Vector4($scope.materialVars.specular);
+                m.alphaCutoff = $scope.materialVars.alphaCutoff;
 
-                m.shininess = $scope.shininess;
-                promises.push(updateTexture(m,'shininessMask',$scope.shininessMask));
-                m.shininessMaskChannel = $scope.shininessMaskChannel.id;
-                m.shininessMaskInvert = $scope.shininessMaskInvert;
+                m.shininess = $scope.materialVars.shininess;
+                promises.push(updateTexture(m,'shininessMask',$scope.materialVars.shininessMask));
+                m.shininessMaskChannel = $scope.materialVars.shininessMaskChannel.id;
+                m.shininessMaskInvert = $scope.materialVars.shininessMaskInvert;
 
-                m.lightEmission = $scope.lightEmission;
-                promises.push(updateTexture(m,'lightEmissionMask',$scope.lightEmissionMask));
-                m.lightEmissionMaskChannel = $scope.lightEmissionMaskChannel.id;
-                m.lightEmissionMaskInvert = $scope.lightEmissionMaskInvert;
+                m.lightEmission = $scope.materialVars.lightEmission;
+                promises.push(updateTexture(m,'lightEmissionMask',$scope.materialVars.lightEmissionMask));
+                m.lightEmissionMaskChannel = $scope.materialVars.lightEmissionMaskChannel.id;
+                m.lightEmissionMaskInvert = $scope.materialVars.lightEmissionMaskInvert;
 
-                promises.push(updateTexture(m,'texture',$scope.texture));
-                m.textureOffset = new bg.Vector2($scope.textureOffset);
-                m.textureScale = new bg.Vector2($scope.textureScale);
-                promises.push(updateTexture(m,'lightmap',$scope.lightMap));
-                promises.push(updateTexture(m,'normalMap',$scope.normalMap));
-                m.normalMapOffset = new bg.Vector2($scope.normalMapOffset);
-                m.normalMapScale = new bg.Vector2($scope.normalMapScale);
-                m.reflectionAmount = $scope.reflection;
-                promises.push(updateTexture(m,'reflectionMask',$scope.reflectionMask));
-                m.reflectionMaskChannel = $scope.reflectionMaskChannel.id;
-                m.reflectionMaskInvert = $scope.reflectionMaskInvert;
-                m.castShadows = $scope.castShadows;
-                m.receiveShadows = $scope.receiveShadows;
-                m.cullFace = $scope.cullFace;
-                m.roughness = $scope.roughness;
-                promises.push(updateTexture(m,'roughnessMask',$scope.roughnessMask));
-                m.roughnessMaskChannel = $scope.roughnessMaskChannel.id;
-                m.roughnessMaskInvert = $scope.roughnessMaskInvert;
-                m.unlit = $scope.unlit;
+                promises.push(updateTexture(m,'texture',$scope.materialVars.texture));
+                m.textureOffset = new bg.Vector2($scope.materialVars.textureOffset);
+                m.textureScale = new bg.Vector2($scope.materialVars.textureScale);
+                promises.push(updateTexture(m,'lightmap',$scope.materialVars.lightMap));
+                promises.push(updateTexture(m,'normalMap',$scope.materialVars.normalMap));
+                m.normalMapOffset = new bg.Vector2($scope.materialVars.normalMapOffset);
+                m.normalMapScale = new bg.Vector2($scope.materialVars.normalMapScale);
+                m.reflectionAmount = $scope.materialVars.reflection;
+                promises.push(updateTexture(m,'reflectionMask',$scope.materialVars.reflectionMask));
+                m.reflectionMaskChannel = $scope.materialVars.reflectionMaskChannel.id;
+                m.reflectionMaskInvert = $scope.materialVars.reflectionMaskInvert;
+                m.castShadows = $scope.materialVars.castShadows;
+                m.receiveShadows = $scope.materialVars.receiveShadows;
+                m.cullFace = $scope.materialVars.cullFace;
+                m.roughness = $scope.materialVars.roughness;
+                promises.push(updateTexture(m,'roughnessMask',$scope.materialVars.roughnessMask));
+                m.roughnessMaskChannel = $scope.materialVars.roughnessMaskChannel.id;
+                m.roughnessMaskInvert = $scope.materialVars.roughnessMaskInvert;
+                m.unlit = $scope.materialVars.unlit;
 
                 if ($scope.materialChanged) {
                     Promise.all(promises).then(() => $scope.materialChanged($scope.material));
                 }
             }
             else if ($scope.material instanceof bg.base.PBRMaterial) {
-                // TODO: PBR materials
+                let m = $scope.material;
+                let promises = [];
+
+                function setMixedValue(property) {
+                    let texture = $scope.pbrMaterialVars[`${ property }Texture`];
+                    let other = $scope.pbrMaterialVars[property];
+                    if (texture) {
+                        promises.push(updateTexture(m,property,texture));
+                    }
+                    else if (Array.isArray(other)) {
+                        switch (other.length) {
+                        case 2:
+                            m[property] = new bg.Vector2(other);
+                            break;
+                        case 3:
+                            m[property] = new bg.Vector3(other);
+                            break;
+                        case 4:
+                            m[property] = new bg.Vector4(other);
+                            break;
+                        default:
+                            console.warn(`Unexpected array length found in material property "${ property }"`);
+                        }
+                    }
+                    else if (typeof(other) == "number") {
+                        m[property] = other;
+                    }
+                }
+
+                setMixedValue("diffuse");
+                setMixedValue("metallic");
+                setMixedValue("roughness");
+                setMixedValue("lightEmission");
+        
+        //$scope.pbrMaterialVars.metallicChannel = 0;
+        //$scope.pbrMaterialVars.roughnessChannel = 0;
+        //$scope.pbrMaterialVars.lightEmissionChannel = 0;
+        //$scope.pbrMaterialVars.heightChannel = 0;
+
+                if ($scope.pbrMaterialVars.normalTexture) {
+                    promises.push(updateTexture(m,'normal',$scope.pbrMaterialVars.normalTexture));
+                }
+                if ($scope.pbrMaterialVars.heightTexture) {
+                    promises.push(updateTexture(m,'height',$scope.pbrMaterialVars.heightTexture));
+                }
+        
+                m.alphaCutoff = $scope.pbrMaterialVars.alphaCutoff;
+                m.isTransparent = $scope.pbrMaterialVars.isTransparent;
+                m.diffuseOffset = new bg.Vector2($scope.pbrMaterialVars.diffuseOffset);
+                m.diffuseScale = new bg.Vector2($scope.pbrMaterialVars.diffuseScale);
+                m.normalOffset = new bg.Vector2($scope.pbrMaterialVars.normalOffset);
+                m.normalScale = new bg.Vector2($scope.pbrMaterialVars.normalScale);
+                m.castShadows = $scope.pbrMaterialVars.castShadows;
+                m.heightScale = $scope.pbrMaterialVars.heightScale;
+                m.cullFace = $scope.pbrMaterialVars.cullFace;
+                m.unlit = $scope.pbrMaterialVars.unlit;
+                
+                // TODO: implement the rest of the properties
+                console.warn("MaterialEditor (src/ui/material-editor.js): PBR materials not implemented");
+
+                if ($scope.materialChanged) {
+                    Promise.all(promises).then(() => $scope.materialChanged($scope.material));
+                }
             }
         }
 
         function updateUI() {
             let m = $scope.material;
             if ($scope.material instanceof bg.base.Material) {
-                $scope.diffuse = m.diffuse.toArray();
-                $scope.specular = m.specular.toArray();
-                $scope.alphaCutoff = m.alphaCutoff;
-                $scope.shininess = m.shininess;
-                $scope.shininessMask = m.shininessMask && m.shininessMask.fileName || "";
-                $scope.shininessMaskChannel = $scope.maskChannels[m.shininessMaskChannel] || $scope.maskChannels[0];
-                $scope.shininessMaskInvert = m.shininessMaskInvert;
-                $scope.lightEmission = m.lightEmission;
-                $scope.lightEmissionMask = m.lightEmissionMask && m.lightEmissionMask.fileName || "";
-                $scope.lightEmissionMaskChannel = $scope.maskChannels[m.lightEmissionMaskChannel] || $scope.maskChannels[0];
-                $scope.lightEmissionMaskInvert = m.lightEmissionMaskInvert;
-                $scope.texture = m.texture && m.texture.fileName || "";
-                $scope.textureOffset = m.textureOffset.toArray();
-                $scope.textureScale = m.textureScale.toArray();
-                $scope.lightMap = m.lightmap && m.lightmap.fileName || "";
-                $scope.normalMap = m.normalMap && m.normalMap.fileName || "";
-                $scope.normalMapOffset = m.normalMapOffset.toArray();
-                $scope.normalMapScale = m.normalMapScale.toArray();
-                $scope.reflection = m.reflectionAmount;
-                $scope.reflectionMask = m.reflectionMask && m.reflectionMask.fileName || "";
-                $scope.reflectionMaskChannel = $scope.maskChannels[m.reflectionMaskChannel] || $scope.maskChannels[0];
-                $scope.reflectionMaskInvert = m.reflectionMaskInvert;
-                $scope.castShadows = m.castShadows;
-                $scope.receiveShadows = m.receiveShadows;
-                $scope.cullFace = m.cullFace;
-                $scope.roughness = m.roughness;
-                $scope.roughnessMask = m.roughnessMask && m.roughnessMask.fileName || "";
-                $scope.roughnessMaskChannel = $scope.maskChannels[m.roughnessMaskChannel] || $scope.maskChannels[0];
-                $scope.roughnessMaskInvert = m.roughnessMaskInvert;
-                $scope.unlit = m.unlit;
-                $scope.isDisabled = false;
+                $scope.materialVars.diffuse = m.diffuse.toArray();
+                $scope.materialVars.specular = m.specular.toArray();
+                $scope.materialVars.alphaCutoff = m.alphaCutoff;
+                $scope.materialVars.shininess = m.shininess;
+                $scope.materialVars.shininessMask = m.shininessMask && m.shininessMask.fileName || "";
+                $scope.materialVars.shininessMaskChannel = $scope.maskChannels[m.shininessMaskChannel] || $scope.maskChannels[0];
+                $scope.materialVars.shininessMaskInvert = m.shininessMaskInvert;
+                $scope.materialVars.lightEmission = m.lightEmission;
+                $scope.materialVars.lightEmissionMask = m.lightEmissionMask && m.lightEmissionMask.fileName || "";
+                $scope.materialVars.lightEmissionMaskChannel = $scope.maskChannels[m.lightEmissionMaskChannel] || $scope.maskChannels[0];
+                $scope.materialVars.lightEmissionMaskInvert = m.lightEmissionMaskInvert;
+                $scope.materialVars.texture = m.texture && m.texture.fileName || "";
+                $scope.materialVars.textureOffset = m.textureOffset.toArray();
+                $scope.materialVars.textureScale = m.textureScale.toArray();
+                $scope.materialVars.lightMap = m.lightmap && m.lightmap.fileName || "";
+                $scope.materialVars.normalMap = m.normalMap && m.normalMap.fileName || "";
+                $scope.materialVars.normalMapOffset = m.normalMapOffset.toArray();
+                $scope.materialVars.normalMapScale = m.normalMapScale.toArray();
+                $scope.materialVars.reflection = m.reflectionAmount;
+                $scope.materialVars.reflectionMask = m.reflectionMask && m.reflectionMask.fileName || "";
+                $scope.materialVars.reflectionMaskChannel = $scope.maskChannels[m.reflectionMaskChannel] || $scope.maskChannels[0];
+                $scope.materialVars.reflectionMaskInvert = m.reflectionMaskInvert;
+                $scope.materialVars.castShadows = m.castShadows;
+                $scope.materialVars.receiveShadows = m.receiveShadows;
+                $scope.materialVars.cullFace = m.cullFace;
+                $scope.materialVars.roughness = m.roughness;
+                $scope.materialVars.roughnessMask = m.roughnessMask && m.roughnessMask.fileName || "";
+                $scope.materialVars.roughnessMaskChannel = $scope.maskChannels[m.roughnessMaskChannel] || $scope.maskChannels[0];
+                $scope.materialVars.roughnessMaskInvert = m.roughnessMaskInvert;
+                $scope.materialVars.unlit = m.unlit;
+
+                $scope.showPhong = true;
+                $scope.showPbr = false;
             }
             else if ($scope.material instanceof bg.base.PBRMaterial) {
-                // TODO: Update PBR materials
-                $scope.isDisabled = true;
+                function setMixedValue(propertyName) {
+                    let materialValue = $scope.material[propertyName];
+                    if (materialValue instanceof bg.base.Texture) {
+                        $scope.pbrMaterialVars[`${ propertyName }Texture`] = materialValue;
+                    }
+                    else if (materialValue instanceof bg.Vector4 ||
+                        materialValue instanceof bg.Vector3 ||
+                        materialValue instanceof bg.Vector2)
+                    {
+                        $scope.pbrMaterialVars[propertyName] = materialValue.toArray();
+                    }
+                    else if (typeof(materialValue) == "number") {
+                        $scope.pbrMaterialVars[propertyName] = materialValue;
+                    }
+                }
+                setMixedValue("diffuse");
+                setMixedValue("metallic");
+                setMixedValue("roughness");
+                setMixedValue("lightEmission");
+                
+                $scope.pbrMaterialVars.metallicChannel = $scope.material.metallicChannel;
+                $scope.pbrMaterialVars.roughnessChannel = $scope.material.roughnessChannel;
+                $scope.pbrMaterialVars.lightEmissionChannel = $scope.material.lightEmissionChannel;
+                $scope.pbrMaterialVars.heightChannel = $scope.material.heightChannel;
+
+
+                if ($scope.material.normal instanceof bg.base.Texture) {
+                    $scope.pbrMaterialVars.normalTexture = $scope.material.normal.fileName;
+                }
+                else {
+                    $scope.pbrMaterialVars.normalTexture = null;
+                }
+                if ($scope.material.height instanceof bg.base.Texture) {
+                    $scope.pbrMaterialVars.heightTexture = $scope.material.height.fileName;
+                }
+                else {
+                    $scope.pbrMaterialVars.heightTexture = null;
+                }
+                $scope.pbrMaterialVars.alphaCutoff = $scope.material.alphaCutoff;
+                $scope.pbrMaterialVars.isTransparent = $scope.material.isTransparent;
+                $scope.pbrMaterialVars.diffuseOffset = $scope.material.diffuseOffset.toArray();
+                $scope.pbrMaterialVars.diffuseScale = $scope.material.diffuseScale.toArray();
+                $scope.pbrMaterialVars.normalOffset = $scope.material.normalOffset.toArray();
+                $scope.pbrMaterialVars.normalScale = $scope.material.normalScale.toArray();
+                $scope.pbrMaterialVars.castShadows = $scope.material.castShadows;
+                $scope.pbrMaterialVars.heightScale = $scope.material.heightScale;
+                $scope.pbrMaterialVars.cullFace = $scope.material.cullFace;
+                $scope.pbrMaterialVars.unlit = $scope.material.unlit;
+            
+                $scope.showPhong = false;
+                $scope.showPbr = true;
             }
             else {
-                $scope.isDisabled = true;
+                $scope.showPhong = false;
+                $scope.showPbr = false;
             }
         }
 
@@ -193,127 +344,66 @@ app.addSource(() => {
             updateUI(); 
         });
 
-        $scope.$watch("diffuse",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("specular",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("alphaCutoff",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("shininess",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("shininessMask",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("shininessMaskChannel",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("shininessMaskInvert",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("lightEmission",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("lightEmissionMask",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("lightEmissionMaskChannel",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("lightEmissionMaskInvert",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("texture",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("textureOffset",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("textureScale",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("lightMap",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("normalMap",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("normalMapOffset",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("normalMapScale",() => {
-            updateMaterial();
-        },true);
-
-        $scope.$watch("reflection",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("reflectionMask",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("reflectionMaskChannel",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("reflectionMaskInvert",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("roughness",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("roughnessMask",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("roughnessMaskChannel",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("roughnessMaskInvert",() => {
-            updateMaterial();
-        });
+        $scope.$watch("materialVars.diffuse",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.specular",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.alphaCutoff",() => { updateMaterial(); });
+        $scope.$watch("materialVars.shininess",() => { updateMaterial(); });
+        $scope.$watch("materialVars.shininessMask",() => { updateMaterial(); });
+        $scope.$watch("materialVars.shininessMaskChannel",() => { updateMaterial(); });
+        $scope.$watch("materialVars.shininessMaskInvert",() => { updateMaterial(); });
+        $scope.$watch("materialVars.lightEmission",() => { updateMaterial(); });
+        $scope.$watch("materialVars.lightEmissionMask",() => { updateMaterial(); });
+        $scope.$watch("materialVars.lightEmissionMaskChannel",() => { updateMaterial(); });
+        $scope.$watch("materialVars.lightEmissionMaskInvert",() => { updateMaterial(); });
+        $scope.$watch("materialVars.texture",() => { updateMaterial(); });
+        $scope.$watch("materialVars.textureOffset",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.textureScale",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.lightMap",() => { updateMaterial(); });
+        $scope.$watch("materialVars.normalMap",() => { updateMaterial(); });
+        $scope.$watch("materialVars.normalMapOffset",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.normalMapScale",() => { updateMaterial(); },true);
+        $scope.$watch("materialVars.reflection",() => { updateMaterial(); });
+        $scope.$watch("materialVars.reflectionMask",() => { updateMaterial(); });
+        $scope.$watch("materialVars.reflectionMaskChannel",() => { updateMaterial(); });
+        $scope.$watch("materialVars.reflectionMaskInvert",() => { updateMaterial(); });
+        $scope.$watch("materialVars.roughness",() => { updateMaterial(); });
+        $scope.$watch("materialVars.roughnessMask",() => { updateMaterial(); });
+        $scope.$watch("materialVars.roughnessMaskChannel",() => { updateMaterial(); });
+        $scope.$watch("materialVars.roughnessMaskInvert",() => { updateMaterial(); });
+        $scope.$watch("materialVars.castShadows",() => { updateMaterial(); });
+        $scope.$watch("materialVars.receiveShadows",() => { updateMaterial(); });
+        $scope.$watch("materialVars.cullFace",() => { updateMaterial(); });
+        $scope.$watch("materialVars.unlit",() => { updateMaterial(); });
 
 
+        
+        
+        $scope.$watch("pbrMaterialVars.diffuse", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.diffuseTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.metallic", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.metallicTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.metallicChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.roughness", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.roughnessTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.roughnessChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.lightEmission", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.lightEmissionTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.lightEmissionChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.normalTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.alphaCutoff", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.isTransparent", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.diffuseOffset", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.diffuseScale", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.normalOffset", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.normalScale", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.castShadows", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightScale", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.cullFace", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.unlit", () => updateMaterial());
 
-        $scope.$watch("castShadows",() => {
-            updateMaterial();
-        });
 
-        $scope.$watch("receiveShadows",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("cullFace",() => {
-            updateMaterial();
-        });
-
-        $scope.$watch("unlit",() => {
-            updateMaterial();
-        })
     }]);
 
     angularApp.directive("materialEditor", function() {

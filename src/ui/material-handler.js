@@ -57,10 +57,16 @@ app.addDefinitions(() => {
         updateCurrentFromSelection() {
             let mat = this.getMaterialsFromSelection();
             mat = mat.length>0 && mat[0];
-            if (mat) {
+            if (mat instanceof bg.base.Material) {
                 this._materialBackup = new bg.base.Material();
                 this._materialBackup.assign(mat);
                 this._currentMaterial = new bg.base.Material();
+                this._currentMaterial.assign(mat);
+            }
+            else if (mat instanceof bg.base.PBRMaterial) {
+                this._materialBackup = new bg.base.PBRMaterial();
+                this._materialBackup.assign(mat);
+                this._currentMaterial = new bg.base.PBRMaterial();
                 this._currentMaterial.assign(mat);
             }
             else {

@@ -1,66 +1,108 @@
 <h1 class="bg2-title">Material editor</h1>
 <div class="bg2-widget-panel bg2-apply-to-all-panel" ng-show="applyToAllPressed">
-    <button ng-click="applyToAll()" ng-class="{ 'disabled' : isDisabled }">Apply to all selection</button>
+    <button ng-click="applyToAll()" ng-class="{ 'disabled' : showPhong || showPbr }">Apply to all selection</button>
 </div>
-<div class="bg2-material-editor-controls" ng-hide="isDisabled">
+<div class="bg2-material-editor-controls" ng-show="showPhong">
     <h4>Color</h4>
     <div class="bg2-widget-panel">
-        <color-picker label="Diffuse" value="diffuse" commit-changes="onCommitChanges"></color-picker>
-        <color-picker label="Specular" value="specular" commit-changes="onCommitChanges"></color-picker>
-        <slider-picker label="Alpha cutoff" value="alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <color-picker label="Diffuse" value="materialVars.diffuse" commit-changes="onCommitChanges"></color-picker>
+        <color-picker label="Specular" value="materialVars.specular" commit-changes="onCommitChanges"></color-picker>
+        <slider-picker label="Alpha cutoff" value="materialVars.alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
     </div>
     
     <h4>Texture properties</h4>
     <div class="bg2-widget-panel">
-        <texture-picker value="texture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
-        <vector-picker label="Offset" value="textureOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
-        <vector-picker label="Scale" value="textureScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
-        <texture-picker value="lightMap" label="Light map" commit-changes="onCommitChanges"></texture-picker>
-        <texture-picker value="normalMap" label="Normal map" commit-changes="onCommitChanges"></texture-picker>
-        <vector-picker label="Offset" value="normalMapOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
-        <vector-picker label="Scale" value="normalMapScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <texture-picker value="materialVars.texture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <vector-picker label="Offset" value="materialVars.textureOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <vector-picker label="Scale" value="materialVars.textureScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <texture-picker value="materialVars.lightMap" label="Light map" commit-changes="onCommitChanges"></texture-picker>
+        <texture-picker value="materialVars.normalMap" label="Normal map" commit-changes="onCommitChanges"></texture-picker>
+        <vector-picker label="Offset" value="materialVars.normalMapOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <vector-picker label="Scale" value="materialVars.normalMapScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
     </div>
     
     <h4>Shininess</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="shininess" label="Amount" min="0" max="255" commit-changes="onCommitChanges"></slider-picker>
-        <texture-picker label="Mask" value="shininessMask" commit-changes="onCommitChanges"></texture-picker>
-        <select-picker label="Channel" value="shininessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
-        <bool-picker label="Invert values" value="shininessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
+        <slider-picker value="materialVars.shininess" label="Amount" min="0" max="255" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="materialVars.shininessMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="materialVars.hininessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="materialVars.shininessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Light emission</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="lightEmission" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
-        <texture-picker label="Mask" value="lightEmissionMask" commit-changes="onCommitChanges"></texture-picker>
-        <select-picker label="Channel" value="lightEmissionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
-        <bool-picker label="Invert values" value="lightEmissionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
+        <slider-picker value="materialVars.lightEmission" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="materialVars.lightEmissionMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="materialVars.lightEmissionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="materialVars.lightEmissionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Reflection</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="reflection" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
-        <texture-picker label="Mask" value="reflectionMask" commit-changes="onCommitChanges"></texture-picker>
-        <select-picker label="Channel" value="reflectionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
-        <bool-picker label="Invert values" value="reflectionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
+        <slider-picker value="materialVars.reflection" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="materialVars.reflectionMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="materialVars.reflectionMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="materialVars.reflectionMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
 
     <h4>Roughness</h4>
     <div class="bg2-widget-panel">
-        <slider-picker value="roughness" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
-        <texture-picker label="Mask" value="roughnessMask" commit-changes="onCommitChanges"></texture-picker>
-        <select-picker label="Channel" value="roughnessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
-        <bool-picker label="Invert values" value="roughnessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
+        <slider-picker value="materialVars.roughness" label="Amount" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <texture-picker label="Mask" value="materialVars.roughnessMask" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="materialVars.roughnessMaskChannel" options="maskChannels" commit-changes="onCommitChanges"></select-picker>
+        <bool-picker label="Invert values" value="materialVars.roughnessMaskInvert" commit-changes="onCommitChanges"></bool-picker>
     </div>
     
     <h4>Other</h4>
     <div class="bg2-widget-panel">
-        <bool-picker label="Cast shadows" value="castShadows" commit-changes="onCommitChanges"></bool-picker>
-        <bool-picker label="Receive shadows" value="receiveShadows" commit-changes="onCommitChanges"></bool-picker>
-        <bool-picker label="Cull face" value="cullFace" commit-changes="onCommitChanges"></bool-picker>
-        <bool-picker label="Unlit" value="unlit" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Cast shadows" value="materialVars.castShadows" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Receive shadows" value="materialVars.receiveShadows" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Cull face" value="materialVars.cullFace" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Unlit" value="materialVars.unlit" commit-changes="onCommitChanges"></bool-picker>
     </div>
 </div>
-<div ng-show="isDisabled">
+<div class="bg2-material-editor-controls" ng-show="showPbr">
+    <h4>PBR Material settings</h4>
+    <div class="bg2-widget-panel">
+        <h5>Diffuse</h5>
+        <texture-picker value="pbrMaterialVars.diffuseTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <vector-picker label="Offset" value="pbrMaterialVars.diffuseOffset" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <vector-picker label="Scale" value="pbrMaterialVars.scaleScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <color-picker label="Diffuse" value="pbrMaterialVars.diffuse" commit-changes="onCommitChanges"></color-picker>
+        <slider-picker label="Alpha cutoff" value="pbrMaterialVars.alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+        <bool-picker label="Transparent" value="pbrMaterialVars.isTransparent" commit-changes="onCommitChanges"></bool-picker>
+    </div>
+    <h4>Metallicity</h4>
+    <div class="bg2-widget-panel">
+        <texture-picker value="pbrMaterialVars.metallicTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <slider-picker label="Value" value="pbrMaterialVars.metallic" increment="0.01" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+    </div>
+    <h4>Roughness</h4>
+    <div class="bg2-widget-panel">
+        <texture-picker value="pbrMaterialVars.roughnessTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <slider-picker label="Value" value="pbrMaterialVars.roughness" increment="0.01" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+    </div>
+    <h4>Light emission</h4>
+    <div class="bg2-widget-panel">
+        <texture-picker value="pbrMaterialVars.lightEmissionTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <slider-picker label="Value" value="pbrMaterialVars.lightEmission" increment="0.01" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+    </div>
+    <h4>Height map</h4>
+    <div class="bg2-widget-panel">
+        <texture-picker value="pbrMaterialVars.heightTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <slider-picker label="Value" value="pbrMaterialVars.heightScale" increment="0.01" min="0" max="1" commit-changes="onCommitChanges"></slider-picker>
+    </div>
+    <h4>Normal mmap</h4>
+    <div class="bg2-widget-panel">
+            <texture-picker value="pbrMaterialVars.normalTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+    </div>
+    <h4>Other properties</h4>
+    <div class="bg2-widget-panel">
+        <bool-picker label="Cast shadows" value="pbrMaterialVars.castShadows" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Cull face" value="pbrMaterialVars.cullFace" commit-changes="onCommitChanges"></bool-picker>
+        <bool-picker label="Unlit" value="pbrMaterialVars.unlit" commit-changes="onCommitChanges"></bool-picker>
+    </div>
+</div>
+<div ng-hide="showPhong || showPbr">
     <h4>Nothing selected</h4>
 </div>

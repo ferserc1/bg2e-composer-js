@@ -4,7 +4,16 @@ app.addSource(() => {
     class ApplyMaterial extends app.Command {
         constructor(material,targets) {
             super();
-            this._material = new bg.base.Material();
+            if (material instanceof bg.base.Material) {
+                this._material = new bg.base.Material();
+            }
+            else if (material instanceof bg.base.PBRMaterial) {
+                this._material = new bg.base.PBRMaterial();
+            }
+            else {
+                throw new Error("ApplyMaterial command error: invalid source material.");
+            }
+
             this._material.assign(material);
             this._targets = [];
             if (Array.isArray(targets)) {
@@ -16,10 +25,17 @@ app.addSource(() => {
 
             this._undoTargets = [];
             this._targets.forEach((t) => {
-                let m = new bg.base.Material();
-                m.assign(t);
-                this._undoTargets.push(m);
-            })
+                if (t instanceof bg.base.Material && this._material instanceof bg.base.Material) {
+                    let m = new bg.base.Material();
+                    m.assign(t);
+                    this._undoTargets.push(m);
+                }
+                else if (t instanceof bg.base.PBRMaterial && this._material instanceof bg.base.PBRMaterial) {
+                    let m = new bg.base.PBRMaterial();
+                    m.assign(t);
+                    this._undoTargets.push(m);
+                }                
+            });
         }
 
         execute() {
