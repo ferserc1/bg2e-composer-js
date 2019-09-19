@@ -168,7 +168,7 @@ var BG2E_COMPOSER_DEBUG = !BG2E_COMPOSER_RELEASE;
 
     setTimeout(() => {
         app.plugins.requireSources();
-        setTimeout(() => loadApp(), 100);
+        setTimeout(() => loadApp(), 1000);
     },100);
 
 
