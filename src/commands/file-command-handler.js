@@ -213,7 +213,7 @@ app.addSource(() => {
                         .then(() => {})
                         .catch((err) => {
                             if (err) {
-                                console.error(error.message,true);
+                                console.error(err.message,true);
                             }
                             else {
                                 // command cancelled by user
