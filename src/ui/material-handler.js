@@ -104,6 +104,26 @@ app.addDefinitions(() => {
             }
             return commitMaterials.apply(this,[this.getMaterialsFromSelection(),true]);
         }
+
+        // Convert the selected materials to PBR
+        convertToPBR() {
+            // TODO: Implement using a command
+            let result = []
+            app.render.Scene.Get().selectionManager.selection.forEach((item) => {
+                if (item.node && item.node.drawable && item.material && item.plist) {
+                    result.push({
+                        node: item.node,
+                        drawable: item.node.drawable,
+                        index: item.node.drawable.indexOf(item.plist)
+                    });
+                }
+            });
+            result.forEach((replaceData) => {
+                replaceData.drawable.replaceMaterial(0,new bg.base.PBRMaterial());
+                replaceData.node.addComponent(new bg.manipulation.Selectable());
+            });
+            app.render.Scene.Get().selectionManager.clear();
+        }
     }
 
     app.ui.MaterialHandler = MaterialHandler;  

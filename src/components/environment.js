@@ -10,31 +10,25 @@ app.addSource(() => {
                 return comp;
             }
 
-            updateComponentData(tex,irradianceIntensity) {
-// TODO: Implement using a command
+            updateTexture(textureUrl) {
                 let comp = this.componentInstance;
-                comp.environment.irradianceIntensity = irradianceIntensity;
-                if (comp.equirectangularTexture && comp.equirectangularTexture.fileName==tex) {
+                if (comp.equirectangularTexture && comp.equirectangularTexture.fileName==textureUrl) {
                     return Promise.resolve();
                 }
-                else if (!tex) {
-                    comp.equirectangularTexture = null;
-                    return Promise.resolve();
-                }
-                else {
-                    return new Promise((resolve,reject) => {
-                        let context = app.ComposerWindowController.Get().gl;
-                        bg.base.Loader.Load(context,tex)
-                            .then((texture) => {
-                                comp.equirectangularTexture = texture;
-                                resolve();
-                            })
-                            .catch((err) => {
-                                console.error(err.message,true);
-                                reject();
-                            })
-                    })
-                }
+
+                return app.CommandManager.Get().doCommand(
+                    new app.environmentCommands.SetEnvironmentTexture(
+                        this.componentInstance,
+                        textureUrl)
+                );
+            }
+
+            updateIrradiance(irr) {
+                return app.CommandManager.Get().doCommand(
+                    new app.environmentCommands.SetIrradianceIntensity(
+                        this.componentInstance,
+                        irr)
+                );
             }
         }
     });
@@ -62,10 +56,17 @@ app.addSource(() => {
             irradianceRestore = $scope.irradianceIntensity;
         };
 
-        $scope.onCommitChanges = function() {
+        $scope.commitIrradiance = function(irr) {
             $scope.component.componentInstance.environment.irradianceIntensity = irradianceRestore;
-            $scope.component.updateComponentData($scope.texture,$scope.irradianceIntensity)
-                .then(() => app.ComposerWindowController.Get().updateView());
+            $scope.component.updateIrradiance($scope.irradianceIntensity)
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
+        };
+
+        $scope.commitTexture = function(value) {
+            $scope.component.updateTexture($scope.texture)
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
         };
 
         app.render.Scene.Get().selectionManager.selectionChanged("environmentUi", () => {

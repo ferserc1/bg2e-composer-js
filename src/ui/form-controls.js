@@ -112,7 +112,7 @@ app.addSource(() => {
                 $scope.clearTexture = function() {
                     $scope.value = "";
                     if ($scope.commitChanges) {
-                        $scope.commitChanges();
+                        setTimeout(() => $scope.commitChanges(), 50);
                     }
                 };
 
@@ -226,7 +226,7 @@ app.addSource(() => {
                     precision: 3,
                     commitChanges:function() {
                         if ($scope.commitChanges) {
-                            $scope.commitChanges();
+                            setTimeout(() => $scope.commitChanges(), 10);
                         }
                     }
                 };

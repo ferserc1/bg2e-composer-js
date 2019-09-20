@@ -54,6 +54,11 @@ app.addSource(() => {
             app.ComposerWindowController.Get().updateView();
         };
 
+        $scope.convertToPBR = function() {
+            app.ui.MaterialHandler.Get().convertToPBR();
+            app.ComposerWindowController.Get().updateView();
+        };
+
         $scope.commitChanges = function() {
             app.ui.MaterialHandler.Get().restoreCurrent();
             app.ui.MaterialHandler.Get().applyToSelected(true);

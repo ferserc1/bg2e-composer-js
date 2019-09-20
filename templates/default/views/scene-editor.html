@@ -16,7 +16,7 @@
             </ul>
         </div>
         <component-inspector ng-show="currentTab==0" selection="selection"></component-inspector>
-        <material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" commit-changes="commitChanges"></material-editor>
+        <material-editor ng-show="currentTab==1" material="currentMaterial" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" convert-to-pbr-pressed="convertToPBR" commit-changes="commitChanges"></material-editor>
         <library-inspector ng-show="currentTab==2" mode="read" on-insert-node="libraryNodeSelected"></library-inspector>
     </div>
 </div>
