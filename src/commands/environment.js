@@ -57,4 +57,45 @@ app.addSource(() => {
     }
 
     app.environmentCommands.SetIrradianceIntensity = SetIrradianceIntensity;
+
+    class SetData extends app.Command {
+        constructor(env,texture,irradiance) {
+            super();
+            this._prevIrradiance = env.environment.irradianceIntensity;
+            this._prevTexture = env.equirectangularTexture;
+            this._env = env;
+            this._texture = texture;
+            this._irradiance = irradiance;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._texture) {
+                    let context = app.ComposerWindowController.Get().gl;
+                    bg.base.Loader.Load(context,this._texture)
+                        .then((texture) => {
+                            this._env.equirectangularTexture = texture;
+                            this._env.environment.irradianceIntensity = this._irradiance;
+                            resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                }
+                else {
+                    this._env.equirectangularTexture = null;
+                    this._env.environment.irradianceIntensity = this._irradiance;
+                    resolve();
+                }
+            });
+        }
+
+        undo() {
+            this._env.equirectangularTexture = this._prevTexture;
+            this._env.environment.irradianceIntensity = this._prevIrradiance;
+            return Promise.resolve();
+        }
+    }
+
+    app.environmentCommands.SetData = SetData;
 })

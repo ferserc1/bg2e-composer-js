@@ -387,7 +387,7 @@ app.addDefinitions(() => {
                 specularMapSize: 32
             });
             this._sceneRoot.addComponent(new bg.scene.Environment(env));
-            bg.base.Loader.Load(this.gl,app.standarizePath(path.join(app.resourcesDir,"env-1.jpg")))
+            bg.base.Loader.Load(this.gl,app.standarizePath(path.join(app.resourcesDir,"standing_on_water.jpg")))
                 .then((texture) => {
                     env.equirectangularTexture = texture;
                 });

@@ -30,6 +30,21 @@ app.addSource(() => {
                         irr)
                 );
             }
+
+            updateAll(tex,irr) {
+                let comp = this.componentInstance;
+                if (comp.equirectangularTexture && comp.equirectangularTexture.fileName==tex &&
+                    comp.environment.irradianceIntensity==irr) {
+                    return Promise.resolve();
+                }
+
+                return app.CommandManager.Get().doCommand(
+                    new app.environmentCommands.SetData(
+                        this.componentInstance,
+                        tex, irr
+                    )
+                );
+            }
         }
     });
 
@@ -69,6 +84,12 @@ app.addSource(() => {
                 .catch((err) => console.error(err.message));
         };
 
+        $scope.commitAll = function() {
+            $scope.component.updateAll($scope.texture,$scope.irradianceIntensity)
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
+        }
+
         app.render.Scene.Get().selectionManager.selectionChanged("environmentUi", () => {
             setTimeout(() => {
                 $scope.updateValues();
@@ -77,6 +98,23 @@ app.addSource(() => {
         })
 
         $scope.updateValues();
+
+        $scope.predefinedEnvironments = [
+            { name:"env 1", image:"mulberry_harbour.jpg", irradiance: 1 },
+            { name:"env 2", image:"navarro_river_redwoods_state_park.jpg", irradiance: 1 },
+            { name:"env 3", image:"oblisque_de_luxor.jpg", irradiance: 1 },
+            { name:"env 4", image:"standing_on_water.jpg", irradiance: 1 },
+            { name:"env 5", image:"walker_lake_western_nevada.jpg", irradiance: 1 }
+        ];
+        $scope.selectEnvironment = function(envData) {
+            $scope.texture = $scope.getTextureImage(envData);
+            $scope.irradianceIntensity = envData.irradiance;
+            $scope.commitAll();
+        }
+        $scope.getTextureImage = function(envData) {
+            const path = require('path');
+            return app.standarizePath(path.join(app.resourcesDir,envData.image));
+        }
 
         $scope.$watch('irradianceIntensity', () => {
             $scope.component.componentInstance.environment.irradianceIntensity = $scope.irradianceIntensity;
