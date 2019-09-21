@@ -1,8 +1,10 @@
 <select-picker label="Type" value="type" options="lightTypes" commit-changes="onCommitChanges"></select-picker>
 <bool-picker label="Enabled" value="enabled" commit-changes="onCommitChanges"></bool-picker>
-<color-picker label="Ambient" value="ambient" commit-changes="onCommitChanges"></color-picker>
-<color-picker label="Diffuse" value="diffuse" commit-changes="onCommitChanges"></color-picker>
-<color-picker label="Specular" value="specular" commit-changes="onCommitChanges"></color-picker>
+<color-picker label="Ambient" value="ambient" commit-changes="onCommitChanges" ng-hide="pbrMode"></color-picker>
+<color-picker label="Diffuse" value="diffuse" commit-changes="onCommitChanges" ng-hide="pbrMode"></color-picker>
+<color-picker label="Color" value="diffuse" commit-changes="onCommitChanges" ng-show="pbrMode"></color-picker>
+<color-picker label="Specular" value="specular" commit-changes="onCommitChanges" ng-hide="pbrMode"></color-picker>
+<slider-picker ng-show="pbrMode" label="Intensity" value="intensity"  min="0" max="10" commit-changes="onCommitChanges"></slider-picker>
 
 <number-picker ng-hide="showDirectional" label="Cutoff distance" value="cutoffDistance" commit-changes="onCommitChanges"></number-picker>
 

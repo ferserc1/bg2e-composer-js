@@ -47,6 +47,7 @@ app.addSource(() => {
                         ambient:new bg.Vector4($scope.ambient),
                         diffuse:new bg.Vector4($scope.diffuse),
                         specular:new bg.Vector4($scope.specular),
+                        intensity:$scope.intensity,
                         constantAttenuation:$scope.constantAttenuation,
                         linearAttenuation:$scope.linearAttenuation,
                         quadraticAttenuation:$scope.quadraticAttenuation,
@@ -74,6 +75,8 @@ app.addSource(() => {
                 $scope.showDirectional = false;
                 $scope.showPoint = false;
 
+                $scope.pbrMode = app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR;
+
                 function updateUI() {
                     let l = $scope.component.componentInstance.light;
                     $scope.showSpot = false;
@@ -97,6 +100,7 @@ app.addSource(() => {
                     $scope.ambient = l.ambient.toArray();
                     $scope.diffuse = l.diffuse.toArray();
                     $scope.specular = l.specular.toArray();
+                    $scope.intensity = l.intensity;
                     $scope.constantAttenuation = l.constantAttenuation;
                     $scope.linearAttenuation = l.linearAttenuation;
                     $scope.quadraticAttenuation = l.quadraticAttenuation;
