@@ -222,7 +222,7 @@ app.addSource(() => {
                     promises.push(updateTexture(m,'normal',$scope.pbrMaterialVars.normalTexture));
                 }
                 else {
-                    m.normal = new bg.Vector3(0.5,0.5,1.0);
+                    m.normal = new bg.Vector4(0.5,0.5,1.0,1.0);
                 }
                 if ($scope.pbrMaterialVars.heightTexture) {
                     promises.push(updateTexture(m,'height',$scope.pbrMaterialVars.heightTexture));

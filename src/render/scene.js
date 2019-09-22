@@ -195,6 +195,19 @@ app.addDefinitions(() => {
                 else {
                     this._libraryBackground = null;
                 }
+
+                // Ensure that the preview model materials match the current rendering model (PBR/Phong)
+                let drw = this._previewNode.drawable;
+                let index = 0;
+                drw && drw.forEach((plist,mat,trx) => {
+                    if (app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR) {
+                        drw.replaceMaterial(index, new bg.base.PBRMaterial());
+                    }
+                    else {
+                        drw.replaceMaterial(index, new bg.base.Material());
+                    }
+                    ++index;
+                });
                 break;
             default:
                 console.error("Invalid scene mode");

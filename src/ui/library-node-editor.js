@@ -37,10 +37,36 @@ app.addSource(() => {
                     app.render.Scene.Get().previewNode.enabled = true;
                     app.render.Scene.Get().showPreviewCustomBackground = false;
                     app.render.Scene.Get().resetLibraryCamera();
-                    $scope.material = new bg.base.Material();
-                    let modifier = new bg.base.MaterialModifier($scope.node.materialModifier);
-                    $scope.material.applyModifier(gl, modifier, libMgr.current.repoPath);
-                    updateMaterialNode();
+                    let modifier = null;
+                    if ($scope.node.materialModifier['class'] == "PBRMaterial") {
+                        if (app.ComposerWindowController.Get().renderModel==app.RenderModel.LEGACY) {
+                            console.error("Could not edit PBR material. Change the graphic settings to PBR mode.",true);
+                        }
+                        else {
+                            $scope.material = new bg.base.PBRMaterial();
+                            modifier = new bg.base.PBRMaterialModifier($scope.node.materialModifier);
+                        }
+                    }
+                    else {
+                        if (app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR) {
+                            console.error("Could not edit phong material. Change the graphic settings to non-PBR mode.",true);
+                        }
+                        else {
+                            $scope.material = new bg.base.Material();
+                            modifier = new bg.base.MaterialModifier($scope.node.materialModifier);
+                        }
+                    }
+
+                    if (modifier) {
+                        $scope.material.applyModifier(gl, modifier, libMgr.current.repoPath);
+                        updateMaterialNode();
+                    }
+                    else {
+                        libMgr.current.deselectAll();
+                        app.render.Scene.Get().previewNode.enabled = false;
+                        app.render.Scene.Get().drawablePreviewModel = null;
+                        app.render.Scene.Get().previewNode.enabled = false;
+                    }
                 }
                 else if ($scope.node && $scope.node.type=="model") {
                     let modelPath = path.resolve(path.join(libMgr.current.repoPath,$scope.node.file));
@@ -120,17 +146,46 @@ app.addSource(() => {
                 promises.push(bg.base.Writer.CopyFile(filePath,dstPath));
                 return pathParsed.base;
             };
-            let mod = $scope.material.getModifierWithMask(~0 & ~bg.base.MaterialFlag.LIGHT_MAP);
+            let mask = 0;
+            if ($scope.material instanceof bg.base.Material) {
+                mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
+            }
+            else if ($scope.material instanceof bg.base.PBRMaterial) {
+                mask = 0xFFFFFFFF;
+            }
+            let mod = $scope.material.getModifierWithMask(mask);
             $scope.node.materialModifier = mod.serialize();
 
             mod = $scope.node.materialModifier;
 
-            mod.shininessMask = fixRelative(mod.shininessMask);
-            mod.lightEmissionMask = fixRelative(mod.lightEmissionMask);
-			mod.texture = fixRelative(mod.texture);
-            mod.normalMap = fixRelative(mod.normalMap);
-            mod.reflectionMask = fixRelative(mod.reflectionMask);
-			mod.roughnessMask = fixRelative(mod.roughnessMask);
+            if (mod['class']=="PBRMaterial") {
+                if (typeof(mod.diffuse) == "string") {
+                    mod.diffuse = fixRelative(mod.diffuse);
+                }
+                if (typeof(mod.metallic) == "string") {
+                    mod.metallic = fixRelative(mod.metallic);
+                }
+                if (typeof(mod.roughness) == "string") {
+                    mod.roughness = fixRelative(mod.roughness);
+                }
+                if (typeof(mod.lightEmission) == "string") {
+                    mod.lightEmission = fixRelative(mod.lightEmission);
+                }
+                if (typeof(mod.height) == "string") {
+                    mod.height = fixRelative(mod.height);
+                }
+                if (typeof(mod.normal) == "string") {
+                    mod.normal = fixRelative(mod.normal);
+                }
+            }
+            else {
+                mod.shininessMask = fixRelative(mod.shininessMask);
+                mod.lightEmissionMask = fixRelative(mod.lightEmissionMask);
+                mod.texture = fixRelative(mod.texture);
+                mod.normalMap = fixRelative(mod.normalMap);
+                mod.reflectionMask = fixRelative(mod.reflectionMask);
+                mod.roughnessMask = fixRelative(mod.roughnessMask);
+            }
 
             Promise.all(promises).then(() => {
                 libMgr.current.save();

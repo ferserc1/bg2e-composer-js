@@ -117,6 +117,107 @@ app.addDefinitions(() => {
         }
     }
 
+    function addPhongMaterialNode(nodeData) {
+        nodeData.materialModifier = {
+            class: "Material",
+
+            diffuseR:0.9,
+            diffuseG:0.9,
+            diffuseB:0.9,
+            diffuseA:1.0,
+            specularR:1,
+            specularG:1,
+            specularB:1,
+            specularA:1,
+
+            shininess:0,
+            shininessMask:"",
+            shininessMaskChannel:0,
+            invertShininessMask:false,
+
+            alphaCutoff:0.5,
+
+            lightEmission:0,
+            lightEmissionMask:"",
+            lightEmissionMaskChannel:0,
+            invertLightEmissionMask:false,
+            
+            refractionAmount:0,
+            reflectionAmount:0,
+            
+            texture:"",
+            textureOffsetX:0,
+            textureOffsetY:0,
+            textureScaleX:1,
+            textureScaleY:1,
+
+            // The lightmap is defined for each object, so it is not a good idea to
+            // modify it in almost any case. For that reason, the material modifiers
+            // should not include the lightmap parameters
+            // lightmap:"",
+            // lightmapOffsetX:0,
+            // lightmapOffsetY:0,
+            // lightmapScaleX:1,
+            // lightmapScaleY:1,
+
+            normalMap:"",
+            normalMapOffsetX:0,
+            normalMapOffsetY:0,
+            normalMapScaleX:1,
+            normalMapScaleY:1,
+            
+            castShadows:true,
+            receiveShadows:true,
+
+            reflectionMask:0,
+            reflectionMaskChannel:"",
+            invertReflectionMask:0,
+            reflectionMaskInvert:false,
+
+            roughness:0,
+            roughnessMask:"",
+            roughnessMaskChannel:0,
+            invertRoughnessMask:false,
+
+            unlit:false,
+        }
+    }
+
+    function addPBRMaterialNode(nodeData) {
+        nodeData.materialModifier = {
+            class: "PBRMaterial",
+            diffuse: [1,1,1,1],
+            isTransparent: false,
+            alphaCutoff: 0.5,
+            diffuseScale: [1,1],
+            diffuseOffset: [0,0],
+            metallic: 0,
+            metallicChannel: 0,
+            roughness: 0.92,
+            roughnessChannel: 0,
+            lightEmission: 0,
+            lightEmissionChannel: 0,
+            height: 0,
+            heightChannel: 0,
+            heightScale: 1,
+            normal: [0.5,0.5,1,1],
+            normalScale: [1,1],
+            normalOffset: [0,0],
+            castShadows: true,
+            cullFace: true,
+            unlit: false
+        }
+    }
+
+    function addMaterialNode(nodeData) {
+        if (app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR) {
+            addPBRMaterialNode.apply(this,[nodeData]);
+        }
+        else {
+            addPhongMaterialNode.apply(this,[nodeData]);
+        }
+    }
+
     app.library.NodeType = {
         GROUP: "group",
         MODEL: "model",
@@ -432,67 +533,7 @@ app.addDefinitions(() => {
                 nodeData.folderName = "";
                 break;
             case app.library.NodeType.MATERIAL:
-                nodeData.materialModifier = {
-                    diffuseR:0.9,
-                    diffuseG:0.9,
-                    diffuseB:0.9,
-                    diffuseA:1.0,
-                    specularR:1,
-                    specularG:1,
-                    specularB:1,
-                    specularA:1,
-
-                    shininess:0,
-                    shininessMask:"",
-                    shininessMaskChannel:0,
-                    invertShininessMask:false,
-
-                    alphaCutoff:0.5,
-
-                    lightEmission:0,
-                    lightEmissionMask:"",
-                    lightEmissionMaskChannel:0,
-                    invertLightEmissionMask:false,
-                    
-                    refractionAmount:0,
-                    reflectionAmount:0,
-                    
-                    texture:"",
-                    textureOffsetX:0,
-                    textureOffsetY:0,
-                    textureScaleX:1,
-                    textureScaleY:1,
-
-                    // The lightmap is defined for each object, so it is not a good idea to
-                    // modify it in almost any case. For that reason, the material modifiers
-                    // should not include the lightmap parameters
-                    // lightmap:"",
-                    // lightmapOffsetX:0,
-                    // lightmapOffsetY:0,
-                    // lightmapScaleX:1,
-                    // lightmapScaleY:1,
-
-                    normalMap:"",
-                    normalMapOffsetX:0,
-                    normalMapOffsetY:0,
-                    normalMapScaleX:1,
-                    normalMapScaleY:1,
-                    
-                    castShadows:true,
-                    receiveShadows:true,
-
-                    reflectionMask:0,
-                    reflectionMaskChannel:"",
-                    invertReflectionMask:0,
-                    reflectionMaskInvert:false,
-    
-                    roughness:0,
-                    roughnessMask:"",
-                    roughnessMaskChannel:0,
-                    invertRoughnessMask:false,
-    
-                    unlit:false,
-                }
+                addMaterialNode.apply(this,[nodeData]);
                 break;
             default:
                 throw new Error(`Error creating node: invalid node type ${ type }`);
@@ -539,6 +580,12 @@ app.addDefinitions(() => {
                     let mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
                     materials.forEach((matData) => {
                         matData.material.getExternalResources(resources);
+                        if (matData.material instanceof bg.base.Material) {
+                            mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
+                        }
+                        else if (matData.material instanceof bg.base.PBRMaterial) {
+                            mask = ~0;
+                        }
                         let mod = matData.material.getModifierWithMask(mask);
                         let matNode = this.addNode(app.library.NodeType.MATERIAL);
                         matNode.name = matData.name;
