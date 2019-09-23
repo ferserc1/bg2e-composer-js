@@ -204,7 +204,26 @@ app.addSource(() => {
         }
         
         $scope.$watch("renderPath",function() {
-            app.ComposerWindowController.Get().renderPath = $scope.renderPath.id;
+            let currentRenderModel = app.ComposerWindowController.Get().renderModel;
+            let reload = false;
+            let confirmMessage = null;
+            if (currentRenderModel != app.RenderModel.PBR && $scope.renderPath.id==app.RenderPath.PBR) {
+                confirmMessage = "The current render path is not compatible with Physically Based Rendering. To change the rendering model it is necessary to restart the application and all changes in the current scene will be lost. Do you want to continue?";
+            }
+            else if (currentRenderModel == app.RenderModel.PBR && $scope.renderPath.id != app.RenderPath.PBR) {
+                confirmMessage = "The current render path is not compatible with the selected Phong shader forward or deferred render path. To change the rendering model it is necessary to restart the application and all changes in the current scene will be lost. Do you want to continue?";
+            }
+
+            if (confirmMessage && confirm(confirmMessage)) {
+                app.ComposerWindowController.Get().renderPath = $scope.renderPath.id;
+                setTimeout(() => {
+                    window.location.href = "";
+                    window.reload();
+                },100);
+            }
+            else if (!confirmMessage) {
+                app.ComposerWindowController.Get().renderPath = $scope.renderPath.id;
+            }
         });
 
         $scope.$watch("antialiasing",function() {
