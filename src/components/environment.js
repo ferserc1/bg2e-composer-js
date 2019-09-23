@@ -105,8 +105,12 @@ app.addSource(() => {
             { name:"env 3", image:"oblisque_de_luxor.jpg", irradiance: 1 },
             { name:"env 4", image:"standing_on_water.jpg", irradiance: 1 },
             { name:"env 5", image:"walker_lake_western_nevada.jpg", irradiance: 1 },
+            { name:"env 5", image:"interior_house.jpg", irradiance: 1 },
             { name:"env 6", image:"black_environment.jpg", irradiance: 1 },
-            { name:"env 7", image:"white_environment.jpg", irradiance: 0.6 }
+            { name:"env 7", image:"white_environment.jpg", irradiance: 0.6 },
+            { name:"env 8", image:"country_field_sunset.jpg", irradiance: 0.6 },
+            { name:"env 9", image:"country_field_sun.jpg", irradiance: 0.6 },
+            { name:"env 10", image:"sunset.jpg", irradiance: 1 }
         ];
         $scope.selectEnvironment = function(envData) {
             $scope.texture = $scope.getTextureImage(envData);

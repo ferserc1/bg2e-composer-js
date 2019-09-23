@@ -400,7 +400,7 @@ app.addDefinitions(() => {
                 specularMapSize: 32
             });
             this._sceneRoot.addComponent(new bg.scene.Environment(env));
-            bg.base.Loader.Load(this.gl,app.standarizePath(path.join(app.resourcesDir,"standing_on_water.jpg")))
+            bg.base.Loader.Load(this.gl,app.standarizePath(path.join(app.resourcesDir,"country_field_sun.jpg")))
                 .then((texture) => {
                     env.equirectangularTexture = texture;
                 });
@@ -417,11 +417,17 @@ app.addDefinitions(() => {
                     .rotate(bg.Math.degreesToRadians(55),-1,0,0)
                     .translate(0,1.4,3)
             ));
+            lightNode.light.light.shadowStrength = 0.3;
 
+            let ballNode = new bg.scene.Node(this.gl, "Ball");
+            this._sceneRoot.addChild(ballNode);
+            ballNode.addComponent(bg.scene.PrimitiveFactory.Sphere(this.gl,2,60,60));
+            ballNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,1,0)));
+            
             let floorNode = new bg.scene.Node(this.gl, "Floor");
             this._sceneRoot.addChild(floorNode);
-            floorNode.addComponent(bg.scene.PrimitiveFactory.Plane(this.gl,10));
-            floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,0,0)));
+            floorNode.addComponent(bg.scene.PrimitiveFactory.Plane(this.gl,40));
+            floorNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,-1,0)));
 
             this.selectionManager.initScene(this._sceneRoot);
 
