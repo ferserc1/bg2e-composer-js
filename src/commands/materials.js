@@ -63,7 +63,13 @@ app.addSource(() => {
     class ApplyModifier extends app.Command {
         constructor(modifier,resPath,targets) {
             super();
-            this._modifier = new bg.base.MaterialModifier(modifier);
+            this._isPBR = modifier["class"] == "PBRMaterial" || modifier.type=="pbr";
+            if (this._isPBR) {
+                this._modifier = new bg.base.PBRMaterialModifier(modifier);
+            }
+            else {
+                this._modifier = new bg.base.MaterialModifier(modifier);
+            }
             this._resPath = resPath;
             this._targets = [];
             if (Array.isArray(targets)) {
@@ -75,7 +81,7 @@ app.addSource(() => {
 
             this._undoTargets = [];
             this._targets.forEach((t) => {
-                let m = new bg.base.Material();
+                let m = this._isPBR ? new bg.base.PBRMaterial() : new bg.base.Material();
                 m.assign(t);
                 this._undoTargets.push(m);
             })
