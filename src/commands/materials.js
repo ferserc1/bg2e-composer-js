@@ -108,4 +108,60 @@ app.addSource(() => {
     }
 
     app.materialCommands.ApplyModifier = ApplyModifier;
+
+    class ConvertToPBR extends app.Command {
+        // Targets are an array of objects containing:
+        //  - drawable
+        //  - index of plist to replace material
+        constructor(targets) {
+            super();
+            this._targets = targets;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._undoItems = [];
+                if (!this._targets.every((item) => {
+                    if (!item.drawable instanceof bg.scene.Drawable ||
+                        item.index===null || item.index===undefined) {
+                        return false;
+                    }
+                    this._undoItems.push({
+                        drawable: item.drawable,
+                        index: item.index,
+                        material: item.drawable.getMaterial(item.index)
+                    });
+                    return true;
+                })) {
+                    reject(new Error("ConvertToPBR: invalid target element found."));
+                    this._undoItems = null;
+                }
+                else {
+                    this._targets.forEach((target) => {
+                        target.drawable.replaceMaterial(target.index, new bg.base.PBRMaterial());
+                        // Adding a selectable component will initialize the selection highlight
+                        target.drawable.node.addComponent(new bg.manipulation.Selectable());
+                    });
+                    resolve();
+                }
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                if (!this._undoItems) {
+                    reject(new Error("ConvertToPBR.undo(): Unexpected error: invalid undo items."))
+                }
+                else {
+                    this._undoItems.forEach((undoItem) => {
+                        undoItem.drawable.replaceMaterial(undoItem.index, undoItem.material);
+                        undoItem.drawable.node.addComponent(new bg.manipulation.Selectable());
+                    })
+                    resolve();
+                }
+            });
+        }
+    }
+
+    app.materialCommands.ConvertToPBR = ConvertToPBR;
 });
