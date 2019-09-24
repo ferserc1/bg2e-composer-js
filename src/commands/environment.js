@@ -58,14 +58,37 @@ app.addSource(() => {
 
     app.environmentCommands.SetIrradianceIntensity = SetIrradianceIntensity;
 
+    class SetSkybox extends app.Command {
+        constructor(env,skybox) {
+            super();
+            this._env = env;
+            this._skybox = skybox;
+            this._prevSkybox = this._env.environment.showSkybox;
+        }
+
+        execute() {
+            this._env.environment.showSkybox = this._skybox;
+            return Promise.resolve();
+        }
+
+        undo() {
+            this._env.environment.showSkybox = this._prevSkybox;
+            return Promise.resolve();
+        }
+    }
+
+    app.environmentCommands.SetSkybox = SetSkybox;
+
     class SetData extends app.Command {
-        constructor(env,texture,irradiance) {
+        constructor(env,texture,irradiance,skybox) {
             super();
             this._prevIrradiance = env.environment.irradianceIntensity;
             this._prevTexture = env.equirectangularTexture;
+            this._prevSkybox = env.environment.showSkybox;
             this._env = env;
             this._texture = texture;
             this._irradiance = irradiance;
+            this._skybox = skybox;
         }
 
         execute() {
@@ -76,6 +99,7 @@ app.addSource(() => {
                         .then((texture) => {
                             this._env.equirectangularTexture = texture;
                             this._env.environment.irradianceIntensity = this._irradiance;
+                            this._env.environment.showSkybox = this._skybox;
                             resolve();
                         })
                         .catch((err) => {
@@ -85,6 +109,7 @@ app.addSource(() => {
                 else {
                     this._env.equirectangularTexture = null;
                     this._env.environment.irradianceIntensity = this._irradiance;
+                    this._env.environment.showSkybox = this._skybox;
                     resolve();
                 }
             });
@@ -93,6 +118,7 @@ app.addSource(() => {
         undo() {
             this._env.equirectangularTexture = this._prevTexture;
             this._env.environment.irradianceIntensity = this._prevIrradiance;
+            this._env.environment.showSkybox = this._prevSkybox;
             return Promise.resolve();
         }
     }

@@ -31,7 +31,16 @@ app.addSource(() => {
                 );
             }
 
-            updateAll(tex,irr) {
+            updateSkybox(skybox) {
+                return app.CommandManager.Get().doCommand(
+                    new app.environmentCommands.SetSkybox(
+                        this.componentInstance,
+                        skybox
+                    )
+                );
+            }
+
+            updateAll(tex,irr,skybox) {
                 let comp = this.componentInstance;
                 if (comp.equirectangularTexture && comp.equirectangularTexture.fileName==tex &&
                     comp.environment.irradianceIntensity==irr) {
@@ -41,7 +50,7 @@ app.addSource(() => {
                 return app.CommandManager.Get().doCommand(
                     new app.environmentCommands.SetData(
                         this.componentInstance,
-                        tex, irr
+                        tex, irr, skybox
                     )
                 );
             }
@@ -53,6 +62,7 @@ app.addSource(() => {
     angularApp.controller("EnvironmentController",['$scope', function($scope) {
         $scope.texture = null;
         $scope.irradianceIntensity = 1;
+        $scope.showSkybox = true;
 
         // This is used to restore the original irradiance value after preview
         // the slider value. It's necesary to restore the original value to
@@ -69,6 +79,7 @@ app.addSource(() => {
             }
             $scope.irradianceIntensity = comp.environment.irradianceIntensity;
             irradianceRestore = $scope.irradianceIntensity;
+            $scope.showSkybox = comp.environment.showSkybox;
         };
 
         $scope.commitIrradiance = function(irr) {
@@ -84,18 +95,24 @@ app.addSource(() => {
                 .catch((err) => console.error(err.message));
         };
 
-        $scope.commitAll = function() {
-            $scope.component.updateAll($scope.texture,$scope.irradianceIntensity)
+        $scope.commitSkybox = function(value) {
+            $scope.component.updateSkybox($scope.showSkybox)
                 .then(() => app.ComposerWindowController.Get().updateView())
                 .catch((err) => console.error(err.message));
-        }
+        };
+
+        $scope.commitAll = function() {
+            $scope.component.updateAll($scope.texture,$scope.irradianceIntensity,$scope.showSkybox)
+                .then(() => app.ComposerWindowController.Get().updateView())
+                .catch((err) => console.error(err.message));
+        };
 
         app.render.Scene.Get().selectionManager.selectionChanged("environmentUi", () => {
             setTimeout(() => {
                 $scope.updateValues();
                 $scope.$apply();
             })
-        })
+        });
 
         $scope.updateValues();
 
