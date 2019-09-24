@@ -346,6 +346,7 @@ app.addDefinitions(() => {
                 let observer = this._sceneObservers.changed[observerId];
                 observer(this.root);
             }
+            this.selectionController.updateGizmoVisibility();
         }
 
         createCameraController() {
@@ -421,7 +422,7 @@ app.addDefinitions(() => {
 
             let ballNode = new bg.scene.Node(this.gl, "Ball");
             this._sceneRoot.addChild(ballNode);
-            ballNode.addComponent(bg.scene.PrimitiveFactory.Sphere(this.gl,2,60,60));
+            ballNode.addComponent(bg.scene.PrimitiveFactory.Sphere(this.gl,2,40,40));
             ballNode.addComponent(new bg.scene.Transform(bg.Matrix4.Translation(0,1,0)));
             
             let floorNode = new bg.scene.Node(this.gl, "Floor");

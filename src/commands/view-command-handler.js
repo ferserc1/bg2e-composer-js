@@ -47,6 +47,8 @@ app.addSource(() => {
                 'toggleLight3DGizmo',
                 'toggleOrbitCameraController3DGizmo',
                 'toggleCollider3DGizmo',
+                'toggleDrawable3DGizmo',
+                'toggleVoxel3DGizmo',
                 'showAll3DGizmos',
                 'hideAll3DGizmos',
                 'showSceneEditor',
@@ -108,6 +110,12 @@ app.addSource(() => {
                 break;
             case 'toggleCollider3DGizmo':
                 this.toggleCollider3DGizmo();
+                break;
+            case 'toggleDrawable3DGizmo':
+                this.toggleDrawable3DGizmo();
+                break;
+            case 'toggleVoxel3DGizmo':
+                this.toggleVoxel3DGizmo();
                 break;
             case 'showAll3DGizmos':
                 this.showAll3DGizmos();
@@ -212,12 +220,24 @@ app.addSource(() => {
             sel().toggle3DIcon("bg.scene.Collider");
         }
 
+        toggleDrawable3DGizmo() {
+            sel().toggle3DIcon("bg.scene.Drawable");
+        }
+
+        toggleVoxel3DGizmo() {
+            sel().toggle3DIcon("bg.scene.Voxel");
+            sel().toggle3DIcon("bg.scene.VoxelGrid");
+        }
+
         showAll3DGizmos() {
             sel().show3DIcon([
                 "bg.scene.Camera",
                 "bg.scene.Light",
                 "bg.manipulation.OrbitCameraController",
-                "bg.scene.Collider"
+                "bg.scene.Collider",
+                "bg.scene.Drawable",
+                "bg.scene.Voxel",
+                "bg.scene.VoxelGrid"
             ]);
         }
 
@@ -226,7 +246,10 @@ app.addSource(() => {
                 "bg.scene.Camera",
                 "bg.scene.Light",
                 "bg.manipulation.OrbitCameraController",
-                "bg.scene.Collider"
+                "bg.scene.Collider",
+                "bg.scene.Drawable",
+                "bg.scene.Voxel",
+                "bg.scene.VoxelGrid"
             ]);
         }
 

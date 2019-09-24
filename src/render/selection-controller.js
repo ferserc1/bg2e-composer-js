@@ -32,11 +32,23 @@ app.addDefinitions(() => {
         }
     }
 
+
     class SelectionController {
         constructor(scene,selectionManager) {
             this._scene = scene;
             this._selectionManager = selectionManager;
             this._observers = {};
+
+            // Initial 3D gizmo configuration
+            this._visible3DGizmos = {
+                "bg.scene.Camera": true,
+                "bg.scene.Light": true,
+                "bg.manipulation.OrbitCameraController": true,
+                "bg.scene.Collider": true,
+                "bg.scene.Drawable": false,
+                "bg.scene.Voxel": true,
+                "bg.scene.VoxelGrid": true
+            };
         }
 
         gizmoUpdated(observer,callback) {
@@ -57,33 +69,50 @@ app.addDefinitions(() => {
             this._gizmoManager.hideGizmoIcon(icon);
         }
 
+        is3DIconVisible(icon) {
+            return this._visible3DGizmos.indexOf(icon) != -1;
+        }
+
         toggle3DIcon(icon) {
-            let v = new Gizmo3DVisibilityVisitor(icon,"toggle");
-            this._scene.root.accept(v);
-            app.ComposerWindowController.Get().updateView();
+            if (this._visible3DGizmos[icon]) {
+                this._visible3DGizmos[icon] = false;
+            }
+            else {
+                this._visible3DGizmos[icon] = true;
+            }
+
+            this.updateGizmoVisibility();
         }
 
         hide3DIcon(icon) {
-            let v = new Gizmo3DVisibilityVisitor(icon,"hide");
-            this._scene.root.accept(v);
-            app.ComposerWindowController.Get().updateView();
+            if (this._visible3DGizmos[icon]) {
+                this._visible3DGizmos[icon] = false;
+            }
+            this.updateGizmoVisibility();
         }
 
         show3DIcon(icon) {
-            let v = new Gizmo3DVisibilityVisitor(icon,"show");
-            this._scene.root.accept(v);
+            if (!this._visible3DGizmos[icon]) {
+                this._visible3DGizmos[icon] = true;
+            }
+            this.updateGizmoVisibility();
+        }
+
+        updateGizmoVisibility() {
+            if (!this._scene.sceneRoot) {
+                return;
+            }
+
+            for (let icon in this._visible3DGizmos) {
+                let isVisible = this._visible3DGizmos[icon];
+                let v = new Gizmo3DVisibilityVisitor(icon,isVisible ? "show" : "hide");
+                this._scene.sceneRoot.accept(v);
+            }
             app.ComposerWindowController.Get().updateView();
         }
 
         getIconVisibility(icon) {
-            let visible = false;
-            this._gizmoManager.gizmoIcons.some((iconData) => {
-                if (iconData.type==icon) {
-                    visible = iconData.visible;
-                    return true;
-                }
-            })
-            return visible;
+            return this._visible3DGizmos[icon];
         }
 
         set gizmoIconScale(s) { this._gizmoManager.gizmoIconScale = s; }

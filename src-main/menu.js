@@ -161,6 +161,18 @@ module.exports = {
 											focusedWindow.webContents.send('triggerMenu', { msg:'toggleCollider3DGizmo' })
 										}
 									},
+									{
+										label: "Normals, Tangents, Bitangents",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleDrawable3DGizmo' })
+										}
+									},
+									{
+										label: "Voxels",
+										click: function(item,focusedWindow) {
+											focusedWindow.webContents.send('triggerMenu', { msg:'toggleVoxel3DGizmo' })
+										}
+									},
 									{ type: 'separator' },
 									{
 										label: "Show All",
