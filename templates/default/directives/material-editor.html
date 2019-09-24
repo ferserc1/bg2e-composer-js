@@ -78,6 +78,12 @@
         <slider-picker label="Alpha cutoff" value="pbrMaterialVars.alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.diffuseTexture"></slider-picker>
         <bool-picker label="Transparent" value="pbrMaterialVars.isTransparent" commit-changes="onCommitChanges"></bool-picker>
     </div>
+    <h4>Ambient occlussion</h4>
+    <div class="bg2-widget-panel">
+        <texture-picker value="pbrMaterialVars.ambientOcclussionTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="Channel" value="pbrMaterialVars.ambientOcclussionChannel" options="maskChannels" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.ambientOcclussionTexture"></select-picker>
+        <p>Ambient occlussion is mapped without taking into account offset and scale, on the second UV channel</p>
+    </div>
     <h4>Normal map</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.normalTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>

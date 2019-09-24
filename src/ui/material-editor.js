@@ -91,11 +91,14 @@ app.addSource(() => {
             $scope.pbrMaterialVars.roughnessTexture = null;
             $scope.pbrMaterialVars.lightEmission = 0;
             $scope.pbrMaterialVars.lightEmissionTexture = null;
+            $scope.pbrMaterialVars.ambientOcclussion = 1;
+            $scope.pbrMaterialVars.ambientOcclussionTexture = null;
 
             $scope.pbrMaterialVars.metallicChannel = $scope.maskChannels[0];
             $scope.pbrMaterialVars.roughnessChannel = $scope.maskChannels[0];
             $scope.pbrMaterialVars.lightEmissionChannel = $scope.maskChannels[0];
             $scope.pbrMaterialVars.heightChannel = $scope.maskChannels[0];
+            $scope.pbrMaterialVars.ambientOcclussionChannel = $scope.maskChannels[0];
 
             // Other values that only can be scalar, vector or texture
             $scope.pbrMaterialVars.normalTexture = null;
@@ -212,11 +215,13 @@ app.addSource(() => {
                 setMixedValue("metallic");
                 setMixedValue("roughness");
                 setMixedValue("lightEmission");
+                setMixedValue("ambientOcclussion");
         
                 m.metallicChannel = $scope.pbrMaterialVars.metallicChannel.id;
                 m.roughnessChannel = $scope.pbrMaterialVars.roughnessChannel.id;
                 m.lightEmissionChannel = $scope.pbrMaterialVars.lightEmissionChannel.id;
                 m.heightChannel = $scope.pbrMaterialVars.heightChannel.id;
+                m.ambientOcclussionChannel = $scope.pbrMaterialVars.ambientOcclussionChannel.id;
 
                 if ($scope.pbrMaterialVars.normalTexture) {
                     promises.push(updateTexture(m,'normal',$scope.pbrMaterialVars.normalTexture));
@@ -310,12 +315,13 @@ app.addSource(() => {
                 setMixedValue("metallic");
                 setMixedValue("roughness");
                 setMixedValue("lightEmission");
+                setMixedValue("ambientOcclussion");
                 
                 $scope.pbrMaterialVars.metallicChannel = $scope.maskChannels[$scope.material.metallicChannel] || $scope.maskChannels[0];
                 $scope.pbrMaterialVars.roughnessChannel = $scope.maskChannels[$scope.material.roughnessChannel] || $scope.maskChannels[0];
                 $scope.pbrMaterialVars.lightEmissionChannel = $scope.maskChannels[$scope.material.lightEmissionChannel] || $scope.maskChannels[0];
                 $scope.pbrMaterialVars.heightChannel = $scope.maskChannels[$scope.material.heightChannel] || $scope.maskChannels[0];
-
+                $scope.pbrMaterialVars.ambientOcclussionChannel = $scope.maskChannels[$scope.material.ambientOcclussionChannel] || $scope.maskChannels[0];
 
                 if ($scope.material.normal instanceof bg.base.Texture) {
                     $scope.pbrMaterialVars.normalTexture = $scope.material.normal.fileName;
@@ -399,9 +405,6 @@ app.addSource(() => {
         $scope.$watch("materialVars.receiveShadows",() => { updateMaterial(); });
         $scope.$watch("materialVars.cullFace",() => { updateMaterial(); });
         $scope.$watch("materialVars.unlit",() => { updateMaterial(); });
-
-
-        
         
         $scope.$watch("pbrMaterialVars.diffuse", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.diffuseTexture", () => updateMaterial());
@@ -411,6 +414,8 @@ app.addSource(() => {
         $scope.$watch("pbrMaterialVars.roughness", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.ambientOcclussionTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.ambientOcclussionChannel", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.lightEmission", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.lightEmissionTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.lightEmissionChannel", () => updateMaterial());

@@ -6,8 +6,14 @@ app.addSource(() => {
             }
 
             createInstance(selectedNode) {
-                let comp = new bg.scene.Environment();
-                return comp;
+                let gl = app.ComposerWindowController.Get().gl;
+                let env = new bg.base.Environment(gl);
+                env.create({
+                    cubemapSize: 2048,
+                    irradianceMapSize: 32,
+                    specularMapSize: 32
+                });
+                new bg.scene.Environment(env);
             }
 
             updateTexture(textureUrl) {
