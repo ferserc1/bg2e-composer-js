@@ -13,7 +13,7 @@ app.addSource(() => {
                     irradianceMapSize: 32,
                     specularMapSize: 32
                 });
-                new bg.scene.Environment(env);
+                return new bg.scene.Environment(env);
             }
 
             updateTexture(textureUrl) {
