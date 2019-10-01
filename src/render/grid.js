@@ -107,6 +107,13 @@ app.addDefinitions(() => {
             }
         }
 
+        draw(renderQueue,modelMatrixStack,viewMatrixStack,projectionMatrixStack) {
+            if (this._hidden) return;
+            if (this._plist) {
+                super.draw(renderQueue,modelMatrixStack,viewMatrixStack,projectionMatrixStack);
+            }
+		}
+
         // Do not save or restore this component
         get shouldSerialize() { return false; }
     }
