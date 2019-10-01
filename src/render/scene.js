@@ -148,6 +148,9 @@ app.addDefinitions(() => {
             this._sceneCamera = null;   // Store the scene mode camera
             this._libraryCamera = null; // Store the library mode camera
 
+
+            this._currentSceneMode = app.render.SceneMode.SCENE;
+
             this._selectionManager = new app.render.SelectionManager(this);
             this._selectionController = new app.render.SelectionController(this,this._selectionManager);
 
@@ -158,6 +161,8 @@ app.addDefinitions(() => {
             };
         }
 
+        get currentSceneMode() { return this._currentSceneMode; }
+        
         get ready() {
             return this.root!=null && this.camera!=null;
         }
@@ -173,6 +178,7 @@ app.addDefinitions(() => {
                     this._libraryRoot.removeChild(this._libraryBackground);
                     this._libraryBackground = null;
                 }
+                this._currentSceneMode = mode;
                 break;
             case app.render.SceneMode.LIBRARY:
                 this._root = this._libraryRoot;
@@ -208,6 +214,7 @@ app.addDefinitions(() => {
                     }
                     ++index;
                 });
+                this._currentSceneMode = mode;
                 break;
             default:
                 console.error("Invalid scene mode");

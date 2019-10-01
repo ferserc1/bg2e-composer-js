@@ -222,7 +222,7 @@ app.addDefinitions(() => {
             if (!this.scene.ready) return;
 
             this.renderer.display(this.scene.root, this.scene.camera);
-            if (!this._takingScreenshot) {
+            if (!this._takingScreenshot && this.scene.currentSceneMode==app.render.SceneMode.SCENE) {
                 this.scene.selectionController.drawGizmos();
             }
 
