@@ -89,6 +89,8 @@ app.addSource(() => {
             $scope.pbrMaterialVars.metallicTexture = null;
             $scope.pbrMaterialVars.roughness = 0.9;
             $scope.pbrMaterialVars.roughnessTexture = null;
+            $scope.pbrMaterialVars.fresnel = [1,1,1,1];
+            $scope.pbrMaterialVars.fresnelTexture = null;
             $scope.pbrMaterialVars.lightEmission = 0;
             $scope.pbrMaterialVars.lightEmissionTexture = null;
             $scope.pbrMaterialVars.ambientOcclussion = 1;
@@ -214,6 +216,7 @@ app.addSource(() => {
                 setMixedValue("diffuse");
                 setMixedValue("metallic");
                 setMixedValue("roughness");
+                setMixedValue("fresnel");
                 setMixedValue("lightEmission");
                 setMixedValue("ambientOcclussion");
         
@@ -314,6 +317,7 @@ app.addSource(() => {
                 setMixedValue("diffuse");
                 setMixedValue("metallic");
                 setMixedValue("roughness");
+                setMixedValue("fresnel");
                 setMixedValue("lightEmission");
                 setMixedValue("ambientOcclussion");
                 
@@ -414,6 +418,8 @@ app.addSource(() => {
         $scope.$watch("pbrMaterialVars.roughness", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.fresnel", () => updateMaterial(),true);
+        $scope.$watch("pbrMaterialVars.fresnelTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.ambientOcclussionTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.ambientOcclussionChannel", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.lightEmission", () => updateMaterial());
