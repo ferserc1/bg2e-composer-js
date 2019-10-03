@@ -48,13 +48,13 @@ app.addSource(() => {
                         }
                     }
                     else {
-                        if (app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR) {
-                            console.error("Could not edit phong material. Change the graphic settings to non-PBR mode.",true);
-                        }
-                        else {
+                        //if (app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR) {
+                        //    console.error("Could not edit phong material. Change the graphic settings to non-PBR mode.",true);
+                        //}
+                        //else {
                             $scope.material = new bg.base.Material();
                             modifier = new bg.base.MaterialModifier($scope.node.materialModifier);
-                        }
+                        //}
                     }
 
                     if (modifier) {
@@ -134,6 +134,29 @@ app.addSource(() => {
 
         $scope.onApplyToAll = function() {
 
+        }
+
+        $scope.convertToPBR = function() {
+            let save = false;
+            let selectNode = null;
+            if (libMgr.current.selection.length>1) {
+                libMgr.current.selection.forEach((node) => {
+                    save = libMgr.current.convertToPBR(node) || save;
+                });
+            }
+            else if (libMgr.current.selection.length==1) {
+                save = libMgr.current.convertToPBR(libMgr.current.selection[0]);
+                selectNode = libMgr.current.selection[0];
+            }
+            
+            if (save) {
+                libMgr.current.save();
+                libMgr.current.deselectAll();
+
+                if (selectNode) {
+                    libMgr.current.selectNode(selectNode);
+                }
+            }
         }
 
         $scope.commitChanges = function() {

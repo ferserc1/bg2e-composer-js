@@ -709,6 +709,72 @@ app.addDefinitions(() => {
             }
         }
 
+        convertToPBR(node) {
+            function convertModifierData(phong) {
+                let result = {
+                    class: "PBRMaterial"
+                };
+        
+                let scalar = (v,d) => v!==undefined ? v : d;
+        
+                if (phong.texture != "") {
+                    result.diffuse = phong.texture;
+                }
+                else {
+                    result.diffuse = [
+                        scalar(phong.diffuseR, 1),
+                        scalar(phong.diffuseG, 1),
+                        scalar(phong.diffuseB, 1),
+                        scalar(phong.diffuseA, 1)
+                    ];
+                }
+                if (phong.normalMap) {
+                    result.normal = phong.normalMap;
+                }
+                else {
+                    result.normal = [0.5,0.5,1,1];
+                }
+                result.diffuseOffset = [
+                    scalar(phong.textureOffsetX, 0),
+                    scalar(phong.textureOffsetY, 0),
+                ];
+                result.diffuseScale = [
+                    scalar(phong.textureScaleX, 1),
+                    scalar(phong.textureScaleY, 1),
+                ];
+                result.normalOffset = [
+                    scalar(phong.normalMapOffsetX, 0),
+                    scalar(phong.normalMapOffsetY, 0),
+                ];
+                result.normalScale = [
+                    scalar(phong.normalMapScaleX, 1),
+                    scalar(phong.normalMapScaleY, 1),
+                ];
+                if (phong.shininess == 0) {
+                    result.roughness = 1;
+                }
+                else if (phong.shininess>=1 && phong.shininess<50) {
+                    result.roughness = 0.9;
+                }
+                else {
+                    result.roughness = 0.8;
+                }
+                result.metallic = scalar(phong.reflectionAmount,0);
+        
+                return result;
+            }
+
+            if (node.type=="material" &&
+                node.materialModifier &&
+                node.materialModifier.type!="pbr" &&
+                node.materialModifier["class"]!="PBRMaterial")
+            {
+                node.materialModifier = convertModifierData(node.materialModifier);
+                return true;
+            }
+            return false;
+        }
+
         // TODO: manipulation functions: add, delete and sort nodes
         // TODO: Remember to clear the selection when the library structure change
 
