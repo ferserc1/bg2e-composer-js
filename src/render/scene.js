@@ -374,11 +374,13 @@ app.addDefinitions(() => {
         }
 
         resetLibraryCamera() {
+            var bbox = new bg.tools.BoundingBox(this.materialPreviewModel);
+
             let ctrl = this._libraryCamera.component("bg.manipulation.OrbitCameraController");
             ctrl.rotation.x = 22.5;
             ctrl.rotation.y = 30;
             ctrl.distance = 2.5;
-            ctrl.center = new bg.Vector3();
+            ctrl.center = bbox.center;
         }
 
         createDefaultScene() {
