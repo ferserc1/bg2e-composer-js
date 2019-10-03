@@ -31,6 +31,42 @@
         },
         {
             "type":"button",
+            "icon":"scene-inspector",
+            "name":"Scene inspector",
+            "command":"showSceneEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
+        },
+        {
+            "type":"button",
+            "icon":"plist-inspector",
+            "name":"Model inspector",
+            "command":"showModelEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
+        },
+        {
+            "type":"button",
+            "icon":"library-inspector",
+            "name":"Library inspector",
+            "command":"showLibraryEditor",
+            "workspace":[
+                "/sceneEditor",
+                "/modelEditor",
+                "/libraryEditor"
+            ]
+        },
+        {
+            "type":"separator"
+        },
+        {
+            "type":"button",
             "icon":"undo",
             "name":"Undo",
             "command":"undo",
@@ -106,42 +142,6 @@
             "workspace":[
                 "/sceneEditor",
                 "/modelEditor"
-            ]
-        },
-        {
-            "type":"separator"
-        },
-        {
-            "type":"button",
-            "icon":"scene-inspector",
-            "name":"Scene inspector",
-            "command":"showSceneEditor",
-            "workspace":[
-                "/sceneEditor",
-                "/modelEditor",
-                "/libraryEditor"
-            ]
-        },
-        {
-            "type":"button",
-            "icon":"plist-inspector",
-            "name":"Model inspector",
-            "command":"showModelEditor",
-            "workspace":[
-                "/sceneEditor",
-                "/modelEditor",
-                "/libraryEditor"
-            ]
-        },
-        {
-            "type":"button",
-            "icon":"library-inspector",
-            "name":"Library inspector",
-            "command":"showLibraryEditor",
-            "workspace":[
-                "/sceneEditor",
-                "/modelEditor",
-                "/libraryEditor"
             ]
         },
         {
