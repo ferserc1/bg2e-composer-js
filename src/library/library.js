@@ -563,34 +563,47 @@ app.addDefinitions(() => {
      
                 if (materials.length>0) {
                     function fixPath(modifierData,field) {
-                        if (modifierData[field] && modifierData[field]!="") {
+                        if (modifierData[field] && typeof(modifierData[field])=="string" && modifierData[field]!="") {
                             modifierData[field] = path.parse(modifierData[field]).base;
                         }
                     }
-                    function fixPaths(modifierData) {
-                        fixPath(modifierData,"shininessMask");
-                        fixPath(modifierData,"lightEmissionMask");
-                        fixPath(modifierData,"texture");
-                        fixPath(modifierData,"normalMap");
-                        fixPath(modifierData,"reflectionMask");
-                        fixPath(modifierData,"roughnessMask");
+                    function fixPaths(modifierData,fields) {
+                        fields.forEach((field) => fixPath(modifierData,field));
                     }
                     let resources = [];
                     let promises = [];
                     let mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
                     materials.forEach((matData) => {
+                        let textureFields = [];
                         matData.material.getExternalResources(resources);
                         if (matData.material instanceof bg.base.Material) {
                             mask = ~bg.base.MaterialFlag.LIGHT_MAP; // All settings except lightmap
+                            textureFields = [
+                                "shininessMask",
+                                "lightEmissionMask",
+                                "texture",
+                                "normalMap",
+                                "reflectionMask",
+                                "roughnessMask"
+                            ];
                         }
                         else if (matData.material instanceof bg.base.PBRMaterial) {
                             mask = ~0;
+                            textureFields = [
+                                "diffuse",
+                                "normal",
+                                "metallic",
+                                "roughness",
+                                "height",
+                                "fresnel",
+                                "lightEmission"
+                            ];
                         }
                         let mod = matData.material.getModifierWithMask(mask);
                         let matNode = this.addNode(app.library.NodeType.MATERIAL);
                         matNode.name = matData.name;
                         matNode.materialModifier = mod.serialize();
-                        fixPaths(matNode.materialModifier);
+                        fixPaths(matNode.materialModifier,textureFields);
                     });
 
                     resources.forEach((resource) => {
