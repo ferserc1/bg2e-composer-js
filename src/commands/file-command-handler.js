@@ -483,6 +483,28 @@ app.addSource(() => {
                 }
             })
         }
+
+        reloadLibrary(params) {
+            let mode = "edit";
+            if (typeof(params) == "object") {
+                mode = params.mode || "edit"
+            }
+            else if (typeof(params) == "string") {
+                mode = params || "edit";
+            }
+            return new Promise((resolve,reject) => {
+                app.library.Manager.Get(mode).reload()
+                    .then(() => {
+                        if (mode=="edit") {
+                            app.switchWorkspace(app.Workspace.LibraryEditor);
+                        }
+                        resolve(true);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
     }
 
     new FileCommandHandler();

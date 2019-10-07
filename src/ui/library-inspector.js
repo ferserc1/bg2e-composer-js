@@ -132,6 +132,11 @@ app.addSource(() => {
             app.CommandHandler.Get("FileCommandHandler").openLibrary($scope.mode);
         };
 
+        $scope.reloadLibrary = function() {
+            clearSearch();
+            app.CommandHandler.Get("FileCommandHandler").reloadLibrary($scope.mode);
+        };
+
         $scope.revealLibrary = function() {
             const { shell } = require('electron').remote;
             shell.showItemInFolder(libMgr.current.filePath);

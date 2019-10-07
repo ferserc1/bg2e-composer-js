@@ -37,6 +37,10 @@ app.addSource(() => {
             return Promise.resolve(true);
         }
 
+        reload() {
+            return this.open(this._currentLibrary.filePath);
+        }
+
         libraryChanged(observerId,callback) {
             this._observers[observerId] = callback;
         }
