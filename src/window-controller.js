@@ -52,6 +52,13 @@ app.addDefinitions(() => {
 
         renderer.settings.shadows.type = this.renderSettings.shadowType;
         renderer.settings.shadows.quality = this.renderSettings.shadowQuality;
+
+        // PBR renderer
+        let pbrRenderer = this._renderers[app.RenderPath.PBR];
+        pbrRenderer.settings.colorCorrection.gamma = this.renderSettings.gamma;
+        pbrRenderer.settings.colorCorrection.brightness = this.renderSettings.brightness;
+        pbrRenderer.settings.colorCorrection.contrast = this.renderSettings.contrast;
+        pbrRenderer.settings.colorCorrection.saturation = this.renderSettings.saturation;
     }
 
     function configurePrimitiveMaterials() {
@@ -82,6 +89,10 @@ app.addDefinitions(() => {
             assertProperty(this._renderSettings,'ssaoMaxDistance',100);
             assertProperty(this._renderSettings,'shadowQuality',bg.render.ShadowMapQuality.mid);
             assertProperty(this._renderSettings,'shadowType',bg.render.ShadowType.HARD);
+            assertProperty(this._renderSettings,'gamma',2);
+            assertProperty(this._renderSettings,'brightness',1);
+            assertProperty(this._renderSettings,"contrast",1);
+            assertProperty(this._renderSettings,"saturation",1);
 
             // This will draw the view 5 times. 
             this._updateFrames = 5;

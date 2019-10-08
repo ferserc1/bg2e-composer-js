@@ -46,6 +46,16 @@
         <input type="number" class="bg2-width-20" ng-model="ssaoMaxDistance" ng-disabled="!ssao">
     </div>
 </div>
+<div class="bg2-widget-panel" ng-show="showPBRSettings()">
+    <h4>PBR renderer settings</h4>
+    <div class="bg2-form-field">
+        <h4>Color correction</h4>
+        <slider-picker label="Gamma" value="gamma" increment="0.1" min="0" max="3" commit-changes=""></slider-picker>
+        <slider-picker label="Brightness" value="brightness" increment="0.1" min="0" max="2" commit-changes=""></slider-picker>
+        <slider-picker label="Contrast" value="contrast" increment="0.1" min="0" max="2" commit-changes=""></slider-picker>
+        <slider-picker label="Saturation" value="saturation" increment="0.1" min="0" max="2" commit-changes=""></slider-picker>
+    </div>
+</div>
 <div class="bg2-widget-panel">
     <h4>Shadows</h4>
     <select-picker label="Type" value="shadowType" options="shadowTypes"></select-picker>

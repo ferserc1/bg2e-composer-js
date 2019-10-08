@@ -150,6 +150,11 @@ app.addSource(() => {
                 }
             });
         }
+        let rs = app.ComposerWindowController.Get().renderSettings;
+        $scope.gamma = rs.gamma;
+        $scope.brightness = rs.brightness;
+        $scope.contrast = rs.contrast;
+        $scope.saturation = rs.saturation;
 
         function updateCurrentResolution() {
             let canvas = bg.app.MainLoop.singleton.canvas.domElement;
@@ -201,6 +206,10 @@ app.addSource(() => {
         if (!app.ComposerWindowController.Get().supportHighQualityRender) {
             $scope.error = "Error: Extension WEBGL_draw_buffers does not supported.";
             $scope.warning = "Warning: your computer does not support deferred render. Check that you have installed the last version of the graphics drivers. ";
+        }
+
+        $scope.showPBRSettings = function() {
+            return app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR;
         }
         
         $scope.$watch("renderPath",function() {
@@ -290,6 +299,26 @@ app.addSource(() => {
             if ($scope.skin && $scope.skin.label) {
                 app.currentSkin = $scope.skin.label;
             }
+        });
+
+        $scope.$watch("gamma", function() {
+            app.ComposerWindowController.Get().renderSettings.gamma = $scope.gamma;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("brightness", function() {
+            app.ComposerWindowController.Get().renderSettings.brightness = $scope.brightness;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("contrast", function() {
+            app.ComposerWindowController.Get().renderSettings.contrast = $scope.contrast;
+            app.ComposerWindowController.Get().saveRenderSettings();
+        });
+
+        $scope.$watch("saturation", function() {
+            app.ComposerWindowController.Get().renderSettings.saturation = $scope.saturation;
+            app.ComposerWindowController.Get().saveRenderSettings();
         });
     }]);
 
