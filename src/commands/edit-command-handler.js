@@ -115,11 +115,19 @@ app.addSource(() => {
             }
 
             selectAll() {
-                let selectVisitor = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
-                app.render.Scene.Get().root.accept(selectVisitor);
-                selectVisitor.result.forEach((item) => {
-                    app.render.Scene.Get().selectionManager.selectNode(item);
-                });
+                if (app.render.Scene.Get().currentSceneMode==app.render.SceneMode.LIBRARY) {
+                    app.library.Manager.Get("edit").current.currentNode.children.forEach((child) => {
+                        app.library.Manager.Get("edit").current.selectNode(child);
+                    });
+                    app.library.Manager.Get("edit").current.notifySelectionChanged();
+                }
+                else {
+                    let selectVisitor = new bg.scene.FindComponentVisitor("bg.scene.Drawable");
+                    app.render.Scene.Get().root.accept(selectVisitor);
+                    selectVisitor.result.forEach((item) => {
+                        app.render.Scene.Get().selectionManager.selectNode(item);
+                    });
+                }
             }
         }
     
