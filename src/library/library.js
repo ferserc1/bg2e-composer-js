@@ -286,10 +286,9 @@ app.addDefinitions(() => {
         // resource is outside the repository path, it is copied first, and in this
         // case, it is placed inside copySubpath subfolder
         getResourceLocalPath(absolutePath,copySubpath="") {
-            let reString = this.repoPath.replace(/\//,'\\\/');
-            reString = this.repoPath.replace(/\\/,'\\\\');
-            reString = '^' + reString.replace(/\:/,'\:') + '[\\\/]{0,1}(.*)';
-            let re = new RegExp(reString,'i');
+            let reString = this.repoPath.replace(/[\/\\]/g,'[\\\\\\/]');
+            reString += '[\\\\\\/]{0,1}(.*)';
+            let re = new RegExp('^' + reString,'i');
             if (!re.test(absolutePath)) {
                 // Copy resource to library repository path
                 let parsedPath = path.parse(absolutePath);
