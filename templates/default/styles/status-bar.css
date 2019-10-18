@@ -59,3 +59,19 @@ status-bar .bg2-switch-grid-window div {
     width: 250px;
     height: 100px;
 }
+
+.bg2-stats-window {
+    position: fixed;
+    bottom: 29px;
+    left: 10px;
+    width: 520px;
+    height: 150px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.bg2-stats-window .bg2-stats-container {
+    height: 100px;
+    overflow: auto;
+    width: 100%;
+}

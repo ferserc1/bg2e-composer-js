@@ -2,6 +2,17 @@ app.addDefinitions(() => {
     app.ui = app.ui || {};
 
     let g_statusBar = null;
+
+    let selectedTriangles = (s) => {
+        let count = 0;
+        s.selection.forEach((selItem) => {
+            if (selItem.plist) {
+                count += selItem.plist.index.length / 3;
+            }
+        })
+        return count;
+    }
+
     class StatusBar {
         static Get() {
             if (!g_statusBar) {
@@ -14,6 +25,7 @@ app.addDefinitions(() => {
             this._observers = {};
 
             this._selection = "nothing selected";
+            this._emptySelection = true;
             this._logMessage = "";
             this._logInfo = "";
             this._logWarning = "";
@@ -24,6 +36,8 @@ app.addDefinitions(() => {
 
         get selection() { return this._selection; }
 
+        get emptySelection() { return this._emptySelection; }
+
         get logMessage() { return app.ui.Log.Get().lastMessage; }
         get lastMessageType() { return app.ui.Log.Get().lastLevel; }
         get logMessages() { return app.ui.Log.Get().messages; }
@@ -31,40 +45,18 @@ app.addDefinitions(() => {
         // This function register the required observers to show the
         // selection data
         init() {
-            let selectedTriangles = (s) => {
-                let count = 0;
-                s.selection.forEach((selItem) => {
-                    if (selItem.plist) {
-                        count += selItem.plist.index.length / 3;
-                    }
-                })
-                return count;
-            }
-
             let printSelection = (s) => {
                 if (s.selection.length==0) {
                     this._selection = "nothing selected";
+                    this._emptySelection = true;
                 }
                 else if (s.selection.length==1) {
                     this._selection = "1 item selected";
-                    let node = s.selection[0].node;
-                    let drawable = node && node.drawable;
-                    let transform = node && node.transform && node.transform.matrix;
-                    // TODO: too slow on medium-high polygon objects
-                    // Implement printSelection using web workers
-//                    if (drawable) {
-//                        let bbox = new bg.tools.BoundingBox(drawable,transform);
-//                        let x = Math.round(bbox.size.x * 1000) / 1000;
-//                        let y = Math.round(bbox.size.y * 1000) / 1000;
-//                        let z = Math.round(bbox.size.z * 1000) / 1000;
-//                        this._selection += `, width:${ x }, height:${ y }, depth:${ z }`;
-//                    }
-//                    else {
-//                        this._selection += " (select a drawable node to view size)";
-//                    }   
+                    this._emptySelection = false; 
                 }
                 else {
-//                    this._selection = s.selection.length + " items selected (select single node to view size)";
+                    this._selection = s.selection.length + " items selected";
+                    this._emptySelection = false;
                 }
                 let count = selectedTriangles(s);
                 if (count) {
@@ -90,6 +82,38 @@ app.addDefinitions(() => {
             app.ui.Log.Get().logChanged("statusBar",() => {
                 this.notifyStatusChanged();
             });
+        }
+
+        getSelectionDetails() {
+            return new Promise((resolve,reject) => {
+                setTimeout(() => {
+                    let s = app.render.Scene.Get().selectionManager;
+
+                    let details = [];
+                    s.selection.forEach((item) => {
+                        let node = item.node;
+                        let drawable = node && node.drawable;
+                        let transform = node && node.transform && node.transform.matrix;
+                        if (drawable) {
+                            let bbox = new bg.tools.BoundingBox(drawable,transform);
+                            let x = Math.round(bbox.size.x * 1000) / 1000;
+                            let y = Math.round(bbox.size.y * 1000) / 1000;
+                            let z = Math.round(bbox.size.z * 1000) / 1000;
+                            let triangles = 0;
+                            drawable.forEach((plist) => {
+                                triangles += plist.index.length / 3;
+                            });
+                            let trianglesString = triangles == 1 ? "triangle" : "triangles";
+                            let polygonString = triangles / 2 == 1 ? "polygon" : "polygons";
+                            details.push({ text: `Object ${ details.length + 1 } - width:${ x }, height:${ y }, depth:${ z }. ${ triangles } ${ trianglesString }, ${ triangles / 2} ${ polygonString }.` });
+                        }
+                    });
+                    if (details.length == 0) {
+                        details.push({ text: `Select a drawable node to view the size` });
+                    }
+                    resolve(details);
+                },50);
+            });  
         }
 
         statusChanged(observer,callback) {
@@ -121,6 +145,7 @@ app.addSource(() => {
 
     angularApp.controller("StatusBarController", ['$scope',function($scope) {
         $scope.selectionText = "";
+        $scope.emptySelection = true;
         $scope.lastMessage = "";
         $scope.lastMessageType = "";
         $scope.logMessages = [];
@@ -128,12 +153,19 @@ app.addSource(() => {
         $scope.gridPlane = app.render.Scene.Get().grid.planeSize;
 
         $scope.logWindowVisible = false;
+        $scope.statsViewVisible = false;
+        $scope.stats = [];
 
         function updateUI() {
             $scope.selectionText = app.ui.StatusBar.Get().selection;
+            $scope.emptySelection = app.ui.StatusBar.Get().emptySelection;
             $scope.lastMessage = app.ui.StatusBar.Get().logMessage;
             $scope.lastMessageType = app.ui.StatusBar.Get().lastMessageType;
             $scope.logMessages = app.ui.StatusBar.Get().logMessages;
+            
+            $scope.logWindowVisible = false;
+            $scope.statsViewVisible = false;
+            $scope.stats = [];
         }
 
         updateUI();
@@ -149,6 +181,19 @@ app.addSource(() => {
             $scope.gridHidden = app.render.Scene.Get().grid.hidden;
             $scope.$apply();
         });
+
+        $scope.showStats = function() {
+            $scope.statsViewVisible = true;
+            $scope.stats = [
+                { text: "Loading scene statistics..." }
+                
+            ];
+            app.ui.StatusBar.Get().getSelectionDetails()
+                .then((data) => {
+                    $scope.stats = data;
+                    $scope.$apply();
+                })
+        }
 
         $scope.openLog = function() {
             $scope.logWindowVisible = true;

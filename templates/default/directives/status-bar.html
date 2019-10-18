@@ -1,5 +1,7 @@
 <div class="bg2-width-30 bg2-info">
     {{ selectionText }}
+    <button class="bg2-button-mid" ng-click="showStats()" ng-hide="emptySelection || statsViewVisible">Details</button>
+    <button class="bg2-button-mid" ng-click="statsViewVisible=false" ng-show="statsViewVisible">Close</button>
 </div>
 <div class="bg2-width-20 bg2-info">
     Grid: {{ gridSize }} m
@@ -32,6 +34,15 @@
             <input type="number" id="grid-plane" class="bg2-width-30" ng-model="gridPlane">
             <span>m</span>
         </div>
+    </div>
+</div>
+
+<div class="bg2-stats-window bg2-widget" ng-show="statsViewVisible">
+    <div class="bg2-title">
+        <h4>Stats</h4>
+    </div>
+    <div class="bg2-stats-container">
+        <p ng-repeat="stat in stats">{{ stat.text }}</p>
     </div>
 </div>
 
