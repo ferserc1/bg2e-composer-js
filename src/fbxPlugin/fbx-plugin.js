@@ -106,7 +106,8 @@ app.addDefinitions(() => {
                 plist.color = plistData.color || [];
                 plist.index = plistData.indices || [];
                 plist.build();
-                drw.addPolyList(plist);
+                let mat = app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR ? new bg.base.PBRMaterial() : new bg.base.Material();
+                drw.addPolyList(plist,mat);
             });
         }
         return node;
