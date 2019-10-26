@@ -72,7 +72,8 @@
     <div class="bg2-widget-panel">
         <h5>Diffuse</h5>
         <texture-picker value="pbrMaterialVars.diffuseTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
-        <vector-picker label="Scale" value="pbrMaterialVars.diffuseScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.diffuseUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.diffuseTexture"></select-picker>
+        <vector-picker label="Scale" value="pbrMaterialVars.diffuseScale" increment="0.1" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.diffuseTexture"></vector-picker>
         <color-picker label="Color" value="pbrMaterialVars.diffuse" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.diffuseTexture"></color-picker>
         <slider-picker label="Alpha cutoff" value="pbrMaterialVars.alphaCutoff" increment="0.1" min="0" max="1" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.diffuseTexture"></slider-picker>
         <bool-picker label="Transparent" value="pbrMaterialVars.isTransparent" commit-changes="onCommitChanges"></bool-picker>
@@ -81,15 +82,18 @@
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.ambientOcclussionTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
         <select-picker label="Channel" value="pbrMaterialVars.ambientOcclussionChannel" options="maskChannels" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.ambientOcclussionTexture"></select-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.ambientOcclussionUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.ambientOcclussionTexture"></select-picker>
     </div>
     <h4>Normal map</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.normalTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.normalUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.normalTexture"></select-picker>
         <vector-picker label="Scale" value="pbrMaterialVars.normalScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
     </div>
     <h4>Metalness</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.metallicTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.metallicUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.metallicTexture"></select-picker>
         <select-picker label="Channel" value="pbrMaterialVars.metallicChannel" options="maskChannels" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.metallicTexture"></select-picker>
         <slider-picker label="Value" value="pbrMaterialVars.metallic" increment="0.01" min="0" max="1" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.metallicTexture"></slider-picker>
         <vector-picker label="Scale" value="pbrMaterialVars.metallicScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
@@ -97,6 +101,7 @@
     <h4>Roughness</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.roughnessTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.roughnessUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.roughnessTexture"></select-picker>
         <select-picker label="Channel" value="pbrMaterialVars.roughnessChannel" options="maskChannels" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.roughnessTexture"></select-picker>
         <slider-picker label="Value" value="pbrMaterialVars.roughness" increment="0.01" min="0" max="1" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.roughnessTexture"></slider-picker>
         <vector-picker label="Scale" value="pbrMaterialVars.roughnessScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
@@ -105,8 +110,9 @@
     <h4>Fresnel</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.fresnelTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
-        <color-picker label="Color" value="pbrMaterialVars.fresnel" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.fresnelTexture"></color-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.fresnelUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.fresnelTexture"></select-picker>
         <vector-picker label="Scale" value="pbrMaterialVars.fresnelScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
+        <color-picker label="Color" value="pbrMaterialVars.fresnel" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.fresnelTexture"></color-picker>
     </div>
 
     <!--
@@ -122,6 +128,7 @@
     <h4>Height map</h4>
     <div class="bg2-widget-panel">
         <texture-picker value="pbrMaterialVars.heightTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
+        <select-picker label="UV Set" value="pbrMaterialVars.heightUV" options="uvSets" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.heightTexture"></select-picker>
         <select-picker label="Channel" value="pbrMaterialVars.heightChannel" options="maskChannels" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.heightTexture"></select-picker>
         <slider-picker label="Value" value="pbrMaterialVars.heightIntensity" increment="0.01" min="0" max="10" commit-changes="onCommitChanges" ng-show="pbrMaterialVars.heightTexture"></slider-picker>
         <vector-picker label="Scale" value="pbrMaterialVars.heightScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>

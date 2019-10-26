@@ -42,6 +42,11 @@ app.addSource(() => {
             { id:3, label:"A" }
         ];
 
+        $scope.uvSets = [
+            { id:0, label:"UV 0" },
+            { id:1, label:"UV 1" }
+        ];
+
         const MaterialType = {
             PHONG: 0,
             PBR: 1
@@ -101,6 +106,14 @@ app.addSource(() => {
             $scope.pbrMaterialVars.lightEmissionChannel = $scope.maskChannels[0];
             $scope.pbrMaterialVars.heightChannel = $scope.maskChannels[0];
             $scope.pbrMaterialVars.ambientOcclussionChannel = $scope.maskChannels[0];
+
+            $scope.pbrMaterialVars.diffuseUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.metallicUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.roughnessUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.fresnelUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.ambientOcclussionUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.normalUV = $scope.uvSets[0];
+            $scope.pbrMaterialVars.heightUV = $scope.uvSets[0];
 
             // Other values that only can be scalar, vector or texture
             $scope.pbrMaterialVars.normalTexture = null;
@@ -256,6 +269,14 @@ app.addSource(() => {
                 m.heightScale = new bg.Vector2($scope.pbrMaterialVars.heightScale);
                 m.cullFace = $scope.pbrMaterialVars.cullFace;
                 m.unlit = $scope.pbrMaterialVars.unlit;
+
+                m.diffuseUV = $scope.pbrMaterialVars.diffuseUV.id;
+                m.ambientOcclussionUV = $scope.pbrMaterialVars.ambientOcclussionUV.id;
+                m.metallicUV = $scope.pbrMaterialVars.metallicUV.id;
+                m.roughnessUV = $scope.pbrMaterialVars.roughnessUV.id;
+                m.fresnelUV = $scope.pbrMaterialVars.fresnelUV.id;
+                m.normalUV = $scope.pbrMaterialVars.normalUV.id;
+                m.heightUV = $scope.pbrMaterialVars.heightUV.id;
                 
                 if ($scope.materialChanged) {
                     Promise.all(promises).then(() => $scope.materialChanged($scope.material));
@@ -333,6 +354,14 @@ app.addSource(() => {
                 $scope.pbrMaterialVars.lightEmissionChannel = $scope.maskChannels[$scope.material.lightEmissionChannel] || $scope.maskChannels[0];
                 $scope.pbrMaterialVars.heightChannel = $scope.maskChannels[$scope.material.heightChannel] || $scope.maskChannels[0];
                 $scope.pbrMaterialVars.ambientOcclussionChannel = $scope.maskChannels[$scope.material.ambientOcclussionChannel] || $scope.maskChannels[0];
+
+                $scope.pbrMaterialVars.diffuseUV = $scope.maskChannels[$scope.material.diffuseUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.ambientOcclussionUV = $scope.maskChannels[$scope.material.ambientOcclussionUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.metallicUV = $scope.maskChannels[$scope.material.metallicUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.roughnessUV = $scope.maskChannels[$scope.material.roughnessUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.fresnelUV = $scope.maskChannels[$scope.material.fresnelUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.normalUV = $scope.maskChannels[$scope.material.normalUV] || $scope.maskChannels[0];
+                $scope.pbrMaterialVars.heightUV = $scope.maskChannels[$scope.material.heightUV] || $scope.maskChannels[0];
 
                 if ($scope.material.normal instanceof bg.base.Texture) {
                     $scope.pbrMaterialVars.normalTexture = $scope.material.normal.fileName;
@@ -452,6 +481,14 @@ app.addSource(() => {
         $scope.$watch("pbrMaterialVars.heightScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.cullFace", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.unlit", () => updateMaterial());
+
+        $scope.$watch("pbrMaterialVars.diffuseUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.metallicUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.roughnessUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.fresnelUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.normalUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightUV", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.ambientOcclussionUV", () => updateMaterial());
 
 
     }]);
