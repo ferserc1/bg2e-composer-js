@@ -110,7 +110,8 @@ app.addSource(() => {
             $scope.pbrMaterialVars.diffuseScale = [1, 1];
             $scope.pbrMaterialVars.normalScale = [1, 1];
             $scope.pbrMaterialVars.castShadows = true;
-            $scope.pbrMaterialVars.heightScale = 1;
+            $scope.pbrMaterialVars.heightIntensity = 1;
+            $scope.pbrMaterialVars.heightScale = [1, 1];
             $scope.pbrMaterialVars.cullFace = true;
             $scope.pbrMaterialVars.unlit = false;
 
@@ -242,7 +243,8 @@ app.addSource(() => {
                 m.diffuseScale = new bg.Vector2($scope.pbrMaterialVars.diffuseScale);
                 m.normalScale = new bg.Vector2($scope.pbrMaterialVars.normalScale);
                 m.castShadows = $scope.pbrMaterialVars.castShadows;
-                m.heightScale = $scope.pbrMaterialVars.heightScale;
+                m.heightIntensity = $scope.pbrMaterialVars.heightIntensity;
+                m.heightScale = new bg.Vector2($scope.pbrMaterialVars.heightScale);
                 m.cullFace = $scope.pbrMaterialVars.cullFace;
                 m.unlit = $scope.pbrMaterialVars.unlit;
                 
@@ -340,7 +342,8 @@ app.addSource(() => {
                 $scope.pbrMaterialVars.diffuseScale = $scope.material.diffuseScale.toArray();
                 $scope.pbrMaterialVars.normalScale = $scope.material.normalScale.toArray();
                 $scope.pbrMaterialVars.castShadows = $scope.material.castShadows;
-                $scope.pbrMaterialVars.heightScale = $scope.material.heightScale;
+                $scope.pbrMaterialVars.heightIntensity = $scope.material.heightIntensity;
+                $scope.pbrMaterialVars.heightScale = $scope.material.heightScale.toArray();
                 $scope.pbrMaterialVars.cullFace = $scope.material.cullFace;
                 $scope.pbrMaterialVars.unlit = $scope.material.unlit;
             
@@ -427,7 +430,8 @@ app.addSource(() => {
         $scope.$watch("pbrMaterialVars.diffuseScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.normalScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.castShadows", () => updateMaterial());
-        $scope.$watch("pbrMaterialVars.heightScale", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightIntensity", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.heightScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.cullFace", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.unlit", () => updateMaterial());
 
