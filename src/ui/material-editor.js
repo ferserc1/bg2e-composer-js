@@ -109,6 +109,9 @@ app.addSource(() => {
             $scope.pbrMaterialVars.isTransparent = false;
             $scope.pbrMaterialVars.diffuseScale = [1, 1];
             $scope.pbrMaterialVars.normalScale = [1, 1];
+            $scope.pbrMaterialVars.metallicScale = [1, 1];
+            $scope.pbrMaterialVars.roughnessScale = [1, 1];
+            $scope.pbrMaterialVars.fresnelScale = [1, 1];
             $scope.pbrMaterialVars.castShadows = true;
             $scope.pbrMaterialVars.heightIntensity = 1;
             $scope.pbrMaterialVars.heightScale = [1, 1];
@@ -242,6 +245,12 @@ app.addSource(() => {
                 m.isTransparent = $scope.pbrMaterialVars.isTransparent;
                 m.diffuseScale = new bg.Vector2($scope.pbrMaterialVars.diffuseScale);
                 m.normalScale = new bg.Vector2($scope.pbrMaterialVars.normalScale);
+
+                m.metallicScale = new bg.Vector2($scope.pbrMaterialVars.metallicScale);
+                m.roughnessScale = new bg.Vector2($scope.pbrMaterialVars.roughnessScale);
+
+                m.fresnelScale = new bg.Vector2($scope.pbrMaterialVars.fresnelScale);
+
                 m.castShadows = $scope.pbrMaterialVars.castShadows;
                 m.heightIntensity = $scope.pbrMaterialVars.heightIntensity;
                 m.heightScale = new bg.Vector2($scope.pbrMaterialVars.heightScale);
@@ -341,6 +350,12 @@ app.addSource(() => {
                 $scope.pbrMaterialVars.isTransparent = $scope.material.isTransparent;
                 $scope.pbrMaterialVars.diffuseScale = $scope.material.diffuseScale.toArray();
                 $scope.pbrMaterialVars.normalScale = $scope.material.normalScale.toArray();
+
+                $scope.pbrMaterialVars.metallicScale = $scope.material.metallicScale.toArray();
+                $scope.pbrMaterialVars.roughnessScale = $scope.material.roughnessScale.toArray();
+
+                $scope.pbrMaterialVars.fresnelScale = $scope.material.fresnelScale.toArray();
+
                 $scope.pbrMaterialVars.castShadows = $scope.material.castShadows;
                 $scope.pbrMaterialVars.heightIntensity = $scope.material.heightIntensity;
                 $scope.pbrMaterialVars.heightScale = $scope.material.heightScale.toArray();
@@ -412,11 +427,14 @@ app.addSource(() => {
         $scope.$watch("pbrMaterialVars.metallic", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.metallicTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.metallicChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.metallicScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.roughness", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.roughnessChannel", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.roughnessScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.fresnel", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.fresnelTexture", () => updateMaterial());
+        $scope.$watch("pbrMaterialVars.fresnelScale", () => updateMaterial(),true);
         $scope.$watch("pbrMaterialVars.ambientOcclussionTexture", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.ambientOcclussionChannel", () => updateMaterial());
         $scope.$watch("pbrMaterialVars.lightEmission", () => updateMaterial());
