@@ -14,7 +14,7 @@
         </ul>
         <div ng-show="currentTab==0" class="bg2-tab-content">
             <div ng-show="node.type=='material'">
-                <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" convert-to-pbr-pressed="convertToPBR" commit-changes="commitChanges"></material-editor>
+                <material-editor material="material" material-changed="onMaterialChanged" apply-to-all-pressed="onApplyToAll" convert-to-pbr-pressed="convertToPBR" commit-changes="commitChanges" show-uvs="false" show-ambient-occlussion="false"></material-editor>
             </div>
             <div ng-show="node.type=='model'">
                 <file-picker label="File" value="modelFile" filters="fileFilters" commit-changes="selectModel"></file-picker>

@@ -190,19 +190,21 @@ app.addDefinitions(() => {
             isTransparent: false,
             alphaCutoff: 0.5,
             diffuseScale: [1,1],
-            diffuseOffset: [0,0],
             metallic: 0,
             metallicChannel: 0,
+            metallicScale: [1,1],
             roughness: 0.92,
             roughnessChannel: 0,
+            roughnessScale: [1,1],
             lightEmission: 0,
             lightEmissionChannel: 0,
+            lightEmissionScale: [1,1],
             height: 0,
             heightChannel: 0,
-            heightScale: 1,
+            heightScale: [1,1],
+            heightIntensity: 1,
             normal: [0.5,0.5,1,1],
             normalScale: [1,1],
-            normalOffset: [0,0],
             castShadows: true,
             cullFace: true,
             unlit: false
@@ -746,17 +748,9 @@ app.addDefinitions(() => {
                 else {
                     result.normal = [0.5,0.5,1,1];
                 }
-                result.diffuseOffset = [
-                    scalar(phong.textureOffsetX, 0),
-                    scalar(phong.textureOffsetY, 0),
-                ];
                 result.diffuseScale = [
                     scalar(phong.textureScaleX, 1),
                     scalar(phong.textureScaleY, 1),
-                ];
-                result.normalOffset = [
-                    scalar(phong.normalMapOffsetX, 0),
-                    scalar(phong.normalMapOffsetY, 0),
                 ];
                 result.normalScale = [
                     scalar(phong.normalMapScaleX, 1),

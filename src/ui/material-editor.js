@@ -55,6 +55,9 @@ app.addSource(() => {
         $scope.materialVars = {};
         $scope.pbrMaterialVars = {};
 
+        $scope.showUvs = /^false$/i.test($scope.showUvs) ? false : true;
+        $scope.showAmbientOcclussion = /^false$/i.test($scope.showAmbientOcclussion) ? false : true;
+
         function resetValues() {
             $scope.materialVars.diffuse = [1,1,1,1];
             $scope.materialVars.specular = [1,1,1,1];
@@ -503,7 +506,9 @@ app.addSource(() => {
                 materialChanged:"=?",
                 applyToAllPressed:"=?",
                 commitChanges:"=?",
-                convertToPbrPressed:"=?"
+                convertToPbrPressed:"=?",
+                showUvs:"@?",
+                showAmbientOcclussion:"@?"
             },
             controller: 'MaterialEditorController'
         };
