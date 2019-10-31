@@ -109,9 +109,6 @@
 
     <h4>Fresnel</h4>
     <div class="bg2-widget-panel">
-        <texture-picker value="pbrMaterialVars.fresnelTexture" label="Texture" commit-changes="onCommitChanges"></texture-picker>
-        <select-picker label="UV Set" value="pbrMaterialVars.fresnelUV" options="uvSets" commit-changes="onCommitChanges" ng-show="showUvs==true"></select-picker>
-        <vector-picker label="Scale" value="pbrMaterialVars.fresnelScale" increment="0.1" commit-changes="onCommitChanges"></vector-picker>
         <color-picker label="Color" value="pbrMaterialVars.fresnel" commit-changes="onCommitChanges" ng-hide="pbrMaterialVars.fresnelTexture"></color-picker>
     </div>
 
