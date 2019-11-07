@@ -405,7 +405,7 @@ app.addDefinitions(() => {
 
             let env = new bg.base.Environment(this.gl);
             env.create({
-                cubemapSize: 1024,
+                cubemapSize: 512,
                 irradianceMapSize: 32,
                 specularMapSize: 32
             });
