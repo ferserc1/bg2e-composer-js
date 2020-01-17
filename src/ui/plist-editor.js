@@ -119,6 +119,41 @@ app.addSource(() => {
         $scope.fromUV = $scope.uvChannels[0];
         $scope.toUV = $scope.uvChannels[1];
 
+        $scope.replaceNameSrc = "";
+        $scope.replaceNameDst = "";
+        $scope.replaceNameScope = [
+            { id:0, label:"Selection" },
+            { id:1, label:"Scene" }
+        ];
+        $scope.replaceScopeValue = $scope.replaceNameScope[0];
+        $scope.replaceName = function() {
+            let items = [];
+            // Add items to selection depending on the search scope
+            if ($scope.replaceScopeValue.id==0) {
+                app.render.Scene.Get().selectionManager.selection.forEach((selItem) => {
+                    if (selItem.plist) {
+                        items.push(selItem.plist);
+                    }
+                });
+            }
+            else {
+                function addPlists(node) {
+                    if (node.children.length>0) {
+                        node.children.forEach((child) => addPlists(child));
+                    }
+                    if (node.drawable) {
+                        node.drawable.forEach((pl) => items.push(pl));
+                    }
+                }
+                addPlists(app.render.Scene.Get().sceneRoot);
+            }
+            executeCommand(new app.plistCommands.ReplaceName(
+                items,
+                $scope.replaceNameSrc,
+                $scope.replaceNameDst
+            ));
+        };
+
         $scope.name = "";
         $scope.groupName = "";
         $scope.visible = false;

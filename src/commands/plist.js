@@ -578,4 +578,46 @@ app.addSource(() => {
     }
 
     app.plistCommands.ExtractPlist = ExtractPlist;
+
+    class ReplaceName extends app.Command {
+        constructor(plists,find,replace) {
+            super();
+            this._plists = plists;
+            this._find = find;
+            this._replace = replace;
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                if (this._plists.length==0) {
+                    resolve();
+                    return;
+                }
+                this._undoData = [];
+                let re = new RegExp(this._find);
+                this._plists.forEach((item) => {
+                    this._undoData.push({
+                        plist: item,
+                        prevName: item.name
+                    });
+                    if (re.test(item.name)) {
+                        item.name = this._replace;
+                    }
+                });
+
+                resolve();
+            })
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._undoData.forEach((item) => {
+                    item.plist.name = item.prevName;
+                });
+                resolve();
+            })
+        }
+    }
+
+    app.plistCommands.ReplaceName = ReplaceName;
 });
