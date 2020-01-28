@@ -1,0 +1,28 @@
+<div class="bg2-widget-panel">
+    <h3>Anchors</h3>
+    <ul class="bg2-item-list">
+        <li ng-repeat="anchor in anchors">
+            <h2 ng-click="selectAnchor(anchor)" ng-class="{ 'bg2-selected' : anchor==selectedAnchor }">
+                Position: [{{ anchor.offset.x | number:2 }}, {{ anchor.offset.y | number:2 }}, {{ anchor.offset.z | number:2 }}], radius: {{ anchor.radius }}
+            </h2>
+        </li>
+    </ul>
+    <div class="bg2-actions bg2-list">
+        <button title="Add anchor" ng-click="addAnchor($event)"><i class="bg2-icon bg2-add"></i></button>
+        <button title="Remove selected anchor" ng-click="removeSelectedAnchor($event)"><i class="bg2-icon bg2-remove"></i></button>
+    </div>
+</div>
+<div ng-show="selectedAnchor">
+    <h3>Selected Anchor</h3>
+    <div class="bg2-form-field">
+        <vector-picker label="Offset" value="selectedAnchorOffset" increment="0.01" commit-changes="commitOffset"></vector-picker>
+    </div>
+    <div class="bg2-form-field">
+        <number-picker label="Radius" value="selectedAnchorRadius" increment="0.01" commit-changes="commitRadius"></vector-picker>
+    </div>
+</div>
+<div class="bg2-widget-panel">
+    <h3>Actions</h3>
+    <button ng-click="addBoundingBoxAnchors()">Add Bounding Box Anchors</button>
+    <button ng-click="addBottomAnchors()">Add Bottom Anchors</button>
+</div>
