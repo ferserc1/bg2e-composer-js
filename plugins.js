@@ -134,7 +134,12 @@ class Plugins {
 
         let angularApp = angular.module(GLOBAL_APP_NAME);
         g_plugins.forEach((filePath) => {
-            let pluginModule = require(filePath)(app,angularApp,bg);
+            var templates = filePath.split('/');
+            templates.pop();
+            templates.pop();
+            templates.push("templates");
+            templates = templates.join("/");
+            let pluginModule = require(filePath)(app,angularApp,bg,templates);
             this._modules.push(pluginModule);
         });
     }
