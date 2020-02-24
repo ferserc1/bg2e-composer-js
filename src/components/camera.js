@@ -228,7 +228,7 @@ app.addSource(() => {
                     if (!s_previewWindow || s_previewWindow.closed) {
                         let w = s_previewSize.w;
                         let h = s_previewSize.h;
-                        let params = `width=${w},height=${h},nodeIntegration=no`;
+                        let params = `frame=no,menubar=no,toolbar=no,scrollbars=no,status=no,width=${w},height=${h}`;
                         s_previewWindow = window.open("","Camera Preview",params);
                         s_previewWindow.onresize = (evt) => {
                             s_previewSize.w = evt.target.innerWidth;

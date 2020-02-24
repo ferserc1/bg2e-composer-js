@@ -29,7 +29,7 @@ function launch(indexFile,debug) {
             y: mainWindowState.y,
             icon: path.join(__dirname, "data/bg2e-composer-512.png"),
             webPreferences: {
-                //nodeIntegration: true,
+                nodeIntegration: true,
                 nativeWindowOpen: true // Allow full access to modal window properties
             }
         });

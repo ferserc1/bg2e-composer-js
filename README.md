@@ -9,8 +9,10 @@ It is necessary to have Node.js installed, which you can obtain for your operati
 You will also need to install Electron.js in the system. The installation is done directly from Node's package manager (npm), from the command line:
 
 ```
-npm install -g electron
+npm install -g electron@5
 ```
+
+IMPORTANT: install electron 5.0
 
 ### Notes about electron installation:
 
