@@ -134,7 +134,8 @@ class Plugins {
 
         let angularApp = angular.module(GLOBAL_APP_NAME);
         g_plugins.forEach((filePath) => {
-            var templates = filePath.split('/');
+            let templates = filePath.replace(/\\/g,'/');            
+            templates = templates.split('/');
             templates.pop();
             templates.pop();
             templates.push("templates");
