@@ -55,6 +55,7 @@ app.addDefinitions(() => {
 
         // PBR renderer
         let pbrRenderer = this._renderers[app.RenderPath.PBR];
+        pbrRenderer.settings.colorCorrection = pbrRenderer.settings.colorCorrection || {}
         pbrRenderer.settings.colorCorrection.gamma = this.renderSettings.gamma;
         pbrRenderer.settings.colorCorrection.brightness = this.renderSettings.brightness;
         pbrRenderer.settings.colorCorrection.contrast = this.renderSettings.contrast;

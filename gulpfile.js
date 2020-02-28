@@ -5,17 +5,20 @@ const path = require("path");
 
 let fbxPluginPath = {
     win64: `${ __dirname }/../fbx2json-dist/win64`,
-    macOS: `${ __dirname }/../fbx2json-dist/osx`
+    macOS: `${ __dirname }/../fbx2json-dist/osx`,
+    linux: `${ __dirname }/../fbx2json-dist/linux`
 };
 
 let raytracerPluginPath = {
     win64: `${ __dirname }/../bg2e-raytracer-dist/win64`,
-    macOS: `${ __dirname }/../bg2e-raytracer-dist/osx`
+    macOS: `${ __dirname }/../bg2e-raytracer-dist/osx`,
+    linux: null
 };
 
 let vitscnImportPath = {
     win64: `${ __dirname }/../bg2e-scene-pkg/win64`,
-    macOS: `${ __dirname }/../bg2e-scene-pkg/macOS`
+    macOS: `${ __dirname }/../bg2e-scene-pkg/macOS`,
+    linux: null
 };
 
 gulp.task("compile", function() {
@@ -99,6 +102,11 @@ gulp.task("fbxPlugin", function() {
         ])
             .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/macos')),
 
+        gulp.src([
+            `${ fbxPluginPath.linux }/fbx2json`
+        ])
+            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/linux')),
+        
         gulp.src([
             "fbxPlugin/plugin/*"
         ])
