@@ -23,6 +23,13 @@ app.addDefinitions(() => {
             app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");
         }
     }
+    else if (commandPath && /linux/i.test(process.platform)) {
+        commandPath = path.join(commandPath,"linux");
+        if (fs.existsSync(commandPath)) {
+            app.fbxPlugin.available = true;
+            app.fbxPlugin.path = path.join(commandPath,"fbx2json");
+        }
+    }
 
     app.fbxPlugin.loadFbxJson = function(filePath) {
         return new Promise((resolve,reject) => {
