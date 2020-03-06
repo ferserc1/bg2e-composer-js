@@ -107,7 +107,7 @@ app.addSource(() => {
                             let template = angular.element(html);
                             let content = getElementByClassName(element[0],'bg2-dialog-content');
                             let title = getElementByClassName(element[0],'bg2-dialog-title');
-                            
+                            scope.data = params.data || {};
                             content.append(template);
                             title[0].innerHTML = params.title;
                             $compile(template)(scope);
