@@ -350,3 +350,36 @@ ul.bg2-item-list li h2 {
     width: 10px;
     height: 10px;
 }
+
+/* Modal view list */
+ul.bg2-item-list {
+    padding: 0px;
+}
+
+ul.bg2-item-list li {
+    list-style: none;
+    border: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
+    padding-left: 13px;
+    padding-right: 13px;
+    margin-bottom: -1px;
+}
+
+ul.bg2-item-list li:last-child {
+    border-radius: 0px 0px 5px 5px;
+}
+
+ul.bg2-item-list li:first-child {
+    border-radius: 5px 5px 0px 0px;
+}
+
+ul.bg2-item-list li.selected {
+    color: black;
+    background-color: #bfbfbf;
+}
+
+ul.bg2-item-list li a {
+    padding: 10px;
+    display: block;
+    width: 100%;
+}

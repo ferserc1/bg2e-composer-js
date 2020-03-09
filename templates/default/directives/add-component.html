@@ -1,7 +1,7 @@
 <div class="bg2-widget-panel">
     <input type="search" placeholder="Search" autofocus ng-model="searchText">
 </div>
-<ul>
+<ul class="bg2-item-list">
     <li ng-repeat="comp in componentList | filter:{ name: searchText }" ng-class="{ 'selected' : comp.isSelected }">
         <a ng-click="select(comp)" ng-dblclick="select(comp,true)">{{ comp.name }}</a>
     </li>
