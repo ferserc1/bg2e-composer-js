@@ -1,6 +1,15 @@
 <plugin-settings></plugin-settings>
 <div class="bg2-widget-panel">
-    <path-picker label="Additional plugin search path" value="pluginPath" commit-changes="pluginPathSelected"></path-picker>
+    <div class="bg2-widget-panel">
+        <h2>Additional plugin search paths</h2>
+        <ul class="bg2-item-list">
+            <li ng-repeat="path in pluginSearchPaths">{{ path }}<button ng-click="removePath(path)">Remove</button></li>
+        </ul>
+        <div class="bg2-widget-panel">
+            <path-picker label="Select" value="pluginPath" commit-changes="pluginPathSelected"></path-picker>
+            <button ng-click="addPluginPath()">Add Path</button>
+        </div>
+    </div>
     <p>Reload Composer to refresh the external plugins.</p>
     <p class="bg2-alert">CAUTION: all the unsaved changes in the current scene will be lost.</p>
     <button ng-click="reloadApp()">Reload App</button>
