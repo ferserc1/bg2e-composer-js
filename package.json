@@ -24,7 +24,7 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/ferserc1/bg2e-composer-js#readme",
   "dependencies": {
-    "angular": "^1.6.6",
+    "angular": "^1.8.3",
     "angular-route": "^1.6.6",
     "angularjs-scroll-glue": "^2.2.0",
     "angularjs-slider": "^6.4.0",
