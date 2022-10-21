@@ -8,6 +8,12 @@ The version of Electron used for this project is not available on Mac computers 
 
 - File > plugin settings > open developer tools
 
+### Important note for Apple Silicon Macs
+
+It is necessary to use Electron v5, which is not available on some platforms because it is a very old version. For example, this version does not work on Mac computers with Apple Silicon processors, as the installer tries to download the binary executables for a version that does not exist (arm64). 
+
+If you are working with Apple Silicon, you can avoid this problem by opening the terminal in x86 mode. To do this, just show the properties of the Terminal.app application in the Finder, and enable the option to run in Rosetta mode. The most convenient option is to duplicate the Terminal.app application, changing the name to Terminal x86.app, and then you can have one terminal for Apple Silicon and another for Intel.
+
 ### Install
 
 Download the Electron base binary files for your platform:
@@ -52,13 +58,6 @@ You are now ready to run Composer:
 
 ## Debug using Electron
 
-It is necessary to use Electron v5, which is not available on some platforms because it is a very old version. For example, this version does not work on Mac computers with Apple Silicon processors, as the installer tries to download the binary executables for a version that does not exist (arm64):
-
-```sh
-npm install electron@5
-```
-
-The `electron@5` package is not included in the package.json file because it does not work on all current platforms.
 
 To debug the application with Electron it is not necessary to clone the repository inside the electron binary files (`resources/app` folder). Just execute the steps mentioned in point 1 and launch the application with:
 
