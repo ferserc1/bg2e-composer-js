@@ -9,7 +9,7 @@ app.addSource(() => {
                 let gl = app.ComposerWindowController.Get().gl;
                 let env = new bg.base.Environment(gl);
                 env.create({
-                    cubemapSize: 2048,
+                    cubemapSize: 512,
                     irradianceMapSize: 32,
                     specularMapSize: 32
                 });
@@ -46,6 +46,15 @@ app.addSource(() => {
                 );
             }
 
+            updateSizes(cubemapSize,specularMapSize,irradianceMapSize) {
+                return app.CommandManager.Get().doCommand(
+                    new app.environmentCommands.SetSizes(
+                        this.componentInstance.environment,
+                        cubemapSize,specularMapSize,irradianceMapSize
+                    )
+                );
+            }
+
             updateAll(tex,irr,skybox) {
                 let comp = this.componentInstance;
                 if (comp.equirectangularTexture && comp.equirectangularTexture.fileName==tex &&
@@ -69,6 +78,9 @@ app.addSource(() => {
         $scope.texture = null;
         $scope.irradianceIntensity = 1;
         $scope.showSkybox = true;
+        $scope.reflection = 512;
+        $scope.specluar = 32;
+        $scope.irradiance = 32;
 
         // This is used to restore the original irradiance value after preview
         // the slider value. It's necesary to restore the original value to
@@ -86,6 +98,9 @@ app.addSource(() => {
             $scope.irradianceIntensity = comp.environment.irradianceIntensity;
             irradianceRestore = $scope.irradianceIntensity;
             $scope.showSkybox = comp.environment.showSkybox;
+            $scope.reflection = comp.environment.cubemapSize;
+            $scope.specular = comp.environment.specularMapSize;
+            $scope.irradiance = comp.environment.irradianceMapSize;
         };
 
         $scope.commitIrradiance = function(irr) {
@@ -105,6 +120,32 @@ app.addSource(() => {
             $scope.component.updateSkybox($scope.showSkybox)
                 .then(() => app.ComposerWindowController.Get().updateView())
                 .catch((err) => console.error(err.message));
+        };
+
+        let commitSizeTimer = null;
+        $scope.commitCubemapSizes = function(value) {
+            if (commitSizeTimer) {
+                clearTimeout(commitSizeTimer);
+                commitSizeTimer = null;
+            }
+
+            commitSizeTimer = setTimeout(() => {
+                commitSizeTimer = null;
+                let ref = bg.Math.closestPow2($scope.reflection);
+                let spec = bg.Math.closestPow2($scope.specular);
+                let irr = bg.Math.closestPow2($scope.irradiance);
+                $scope.component.updateSizes(ref,spec,irr)
+                    .then(() => {
+                        app.ComposerWindowController.Get().updateView();
+                        setTimeout(() => {
+                            $scope.reflection = ref;
+                            $scope.specular = spec;
+                            $scope.irradiance = irr;
+                            $scope.$apply();
+                        }, 50);
+                    })
+                    .catch((err) => console.error(err.message));
+            }, 500);
         };
 
         $scope.commitAll = function() {

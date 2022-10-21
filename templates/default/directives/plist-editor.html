@@ -22,6 +22,13 @@
         <button ng-click="duplicatePlist()">Duplicate PolyList</button>
         <button ng-click="removePlist()">Remove PolyList</button>
         <button ng-click="extractPlist()">Extract PolyList</button>
+        <h3>Replace Name</h3>
+        <div class="bg2-widget-panel">
+            <select-picker label="Scope" value="replaceScopeValue" options="replaceNameScope"></select-picker>
+            <string-picker label="Find" value="replaceNameSrc"></string-picker>
+            <string-picker label="Replace" value="replaceNameDst"></string-picker>
+            <button ng-click="replaceName()">Replace</button>
+        </div>
     </div>
 </div>
 <div ng-hide="selection.length">

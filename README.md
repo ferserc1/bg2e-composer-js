@@ -1,81 +1,79 @@
 # bg2 engine Composer - JavaScript
 
-## Requirements
+## IMPORTANT
 
-It is necessary to have Node.js installed, which you can obtain for your operating system at the following URL:
+This editor works with a deprecated version of bg2 engine. We have integrated all bg2 engine, bg2e physics and bg2e voxel dependencies into this repository.
 
-[https://nodejs.org/](https://nodejs.org/)
+The version of Electron used for this project is not available on Mac computers with Apple Silicon processors, so it is not possible to debug the main process. However, from this version onwards, all the source code files are included without compiling or packaging, so it is possible to debug the renderer process by simply running the application and accessing the development tools through the application:
 
-You will also need to install Electron.js in the system. The installation is done directly from Node's package manager (npm), from the command line:
+- File > plugin settings > open developer tools
 
-```
-npm install -g electron
-```
+### Install
 
-### Notes about electron installation:
+Download the Electron base binary files for your platform:
 
-In Linux/Unix systems you have to install electron.js with root permissions:
+- [https://www.bg2engine.org/dependencies/composer-bin-base-win64.zip](https://www.bg2engine.org/dependencies/composer-bin-base-win64.zip)
+- [https://www.bg2engine.org/dependencies/composer-bin-base-mac.zip](https://www.bg2engine.org/dependencies/composer-bin-base-mac.zip)
 
-```
-sudo npm install -g electron
-```
+Uncompress the base files and clone this repository in the appropiate resource folder:
 
-On some systems, there is a bug in electron.js that causes the installation process to fail:
+- Windows: composer/resources/app
+- Mac: Compser.app/Contents/Resources/app
 
-```
-$ sudo npm install -g electron
-Password:
-/usr/local/bin/electron -> /usr/local/lib/node_modules/electron/cli.js
+Note: the app folder is the folder containing the repository code. The following configuration would be wrong:
 
-> electron@4.0.1 postinstall /usr/local/lib/node_modules/electron
-> node install.js
+- Windows: composer/resources/app/bg2e-composer-js  > wrong!
+- Mac: Composer.app/Contents/Resources/app/bg2e-composer-js  > wrong!
 
-/usr/local/lib/node_modules/electron/install.js:49
-  throw err
-  ^
+Download and uncompress de binary dependencies:
 
-Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/electron/.electron'
-...
-```
+[https://www.bg2engine.org/dependencies/bg2e-composer-bin-deps.zip](https://www.bg2engine.org/dependencies/bg2e-composer-bin-deps.zip)
 
-There is a workaround to fix this problem, adding the following parameters to npm:
+- app (composer repo)/deps/bin
 
-```
-$ sudo npm install -g electron --unsafe-perm=true --allow-root
-```
+After this step, the `deps/bin` folder will contain:
 
-### Download dependencies and run Composer
+deps/bin
+ - bg2e-raytracer-dist
+ - bg2e-scene-pkg
+ - fbx2json-dist
 
-Navigate to the bg2e-composer path and type the following command to install the dependencias:
+From the main repository (app) folder, run the following commands:
 
-```
-$ npm install
+```sh
+npm install
+npm run build
 ```
 
-Now, compile the sources with the following command:
+You are now ready to run Composer:
 
-```
-$ gulp
-```
+- Windows: composer/composer.exe
+- Mac: Composer.app
 
-After that, you can run Composer typing:
+## Debug using Electron
 
-```
-$ electron main.js
-```
+It is necessary to use Electron v5, which is not available on some platforms because it is a very old version. For example, this version does not work on Mac computers with Apple Silicon processors, as the installer tries to download the binary executables for a version that does not exist (arm64):
 
-### Debug
-
-You can debug Composer using the following command to run it:
-
-```
-$ electron main-debug.js
+```sh
+npm install electron@5
 ```
 
-Launching Composer in this way directly uses the uncompiled source code files, and enables Electron's debugging tools, which you can open from the menu `View > Toggle Developer Tools`
+The `electron@5` package is not included in the package.json file because it does not work on all current platforms.
 
-### External plugins
+To debug the application with Electron it is not necessary to clone the repository inside the electron binary files (`resources/app` folder). Just execute the steps mentioned in point 1 and launch the application with:
+
+```js
+npm run debug
+```
+
+Please note that this option will only work with platforms that are supported by Electron v5.
+
+## External plugins
 
 To use all the Composer external plugins, it's better to download this repository using the bg2 engine download and installation scripts that you can find here:
 
 [https://github.com/ferserc1/bg2e](https://github.com/ferserc1/bg2e)
+
+## Troubleshooting
+
+The first time the application is run, it fails to find the preferences. The result is that the menus do not load correctly. Simply close and reopen the application to solve this problem.

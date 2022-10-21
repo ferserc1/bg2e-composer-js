@@ -1,4 +1,4 @@
 
-const launcher = require(__dirname + '/launcher');
+const main = require("./main-debug.js");
 
-launcher.launchRelease();
+main();

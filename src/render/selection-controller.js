@@ -178,7 +178,7 @@ app.addDefinitions(() => {
                 if (result.node.component("bg.manipulation.Gizmo")) {
                     this._gizmoP = new bg.Matrix4(result.node.component("bg.manipulation.Gizmo")._gizmoP);
                 }
-                this._gizmoManager.startAction(result, this._downPosition);
+                this._gizmoManager.startAction(result, this._downPosition, this._scene.camera);
                 return true;
             }
             return false;

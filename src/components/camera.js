@@ -107,6 +107,11 @@ app.addSource(() => {
 
     let angularApp = angular.module(GLOBAL_APP_NAME);
 
+    let s_previewWindow = null;
+    let s_previewCamera = null;
+    let s_previewSize = { w: 400, h: 400 };
+    let s_updateTimer = null;
+
     angularApp.directive("cameraUi", function() {
         return {
             restrict: "E",
@@ -180,6 +185,60 @@ app.addSource(() => {
                             app.ComposerWindowController.Get().postReshape();
                             app.ComposerWindowController.Get().updateView();
                         });
+                }
+
+                function updatePreviewWindow() {
+                    if (s_previewWindow && s_previewCamera) {
+                        let renderer = app.ComposerWindowController.Get().lowQualityRenderer;
+                        let scene = app.render.Scene.Get().root;
+
+                        let image = renderer.getImage(
+                            scene,
+                            s_previewCamera,
+                            s_previewSize.w,
+                            s_previewSize.h);
+                        let img = new Image();
+                        img.src = image;
+                        img.style = "position: absolute; left: 0px; top: 0px;";
+                        s_previewWindow.document.body.innerHTML = "";
+                        s_previewWindow.document.body.appendChild(img);
+                        app.ComposerWindowController.Get().postRedisplay();
+                    }
+                }
+
+                function updateTimerFunction() {
+                    if (s_updateTimer && (!s_previewWindow || s_previewWindow.closed)) {
+                        console.log("Preview camera update done.");
+                        clearTimeout(s_updateTimer);
+                        s_updateTimer = null;
+                    }
+                    else if (s_previewWindow && s_previewCamera) {
+                        updatePreviewWindow();
+                        s_updateTimer = setTimeout(updateTimerFunction, 250);
+                    }
+                }
+
+                function startUpdatePreviewTimer() {
+                    if (!s_updateTimer) {
+                        updateTimerFunction();
+                    }
+                }
+
+                $scope.showPreview = function() {
+                    if (!s_previewWindow || s_previewWindow.closed) {
+                        let w = s_previewSize.w;
+                        let h = s_previewSize.h;
+                        let params = `frame=no,menubar=no,toolbar=no,scrollbars=no,status=no,width=${w},height=${h}`;
+                        s_previewWindow = window.open("","Camera Preview",params);
+                        s_previewWindow.onresize = (evt) => {
+                            s_previewSize.w = evt.target.innerWidth;
+                            s_previewSize.h = evt.target.innerHeight;
+                        }
+                    }
+                    
+                    s_previewCamera = $scope.component.componentInstance;
+                    updatePreviewWindow();
+                    startUpdatePreviewTimer();
                 }
 
                 $scope.saveLens = function() {

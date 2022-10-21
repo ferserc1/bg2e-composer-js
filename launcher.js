@@ -29,7 +29,19 @@ function launch(indexFile,debug) {
             y: mainWindowState.y,
             icon: path.join(__dirname, "data/bg2e-composer-512.png"),
             webPreferences: {
-                nodeIntegration: true
+                nodeIntegration: true,
+                nativeWindowOpen: true // Allow full access to modal window properties
+            }
+        });
+
+        win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+            if (frameName === 'modal') {
+                event.preventDefault();
+                Object.assign(options, {
+                    //modal: true,
+                    parent: win
+                });
+                event.newGuest = new BrowserWindow(options);
             }
         });
         win.setMinimumSize(800,600);

@@ -24,8 +24,23 @@ class Plugins {
         const settings = require('electron-settings');
         this._customPath = settings.get("customPluginPath");
 
-        if (this._customPath) {
+        // customPluginPath may be a string if Composer is updated from
+        // a previous version
+        if (typeof(this._customPath) == "string") {
             this._paths.push(this._customPath);
+
+            // Update plugin path settings to be an array
+            this._customPath = [ this._customPath ];
+            app.settings.set("customPluginPath",this._customPath);
+        }
+        else if (Array.isArray(this._customPath)) {
+            this._customPath.forEach((p) => {
+                this._paths.push(p);
+            })
+        }
+        else if (!this._customPath) {
+            this._customPath = [];
+            app.settings.set("customPluginPath",this._customPath);
         }
 
         if (app.isRenderer) {
@@ -33,8 +48,23 @@ class Plugins {
         }
 
         this._pluginSources = [];
+
+        // Remove duplicated paths
+        let visitedPaths = [];
+        this._paths = this._paths.filter((p) => {
+            p = p.replace(/\\/g,"/");
+            if (visitedPaths.indexOf(p) == -1) {
+                visitedPaths.push(p);
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+
         this._paths.forEach((pluginPath) => {
             if (fs.existsSync(pluginPath)) {
+                visitedPaths.push(pluginPath);
                 fs.readdirSync(pluginPath).forEach((plugin) => {
                     try {
                         let fullPluginPath = path.join(pluginPath,plugin);
@@ -90,14 +120,38 @@ class Plugins {
         return this._paths;
     }
 
-    get customPath() {
+    get customPaths() {
         return this._customPath;
     }
 
-    set customPath(path) {
-        this._customPath = path;
-        app.settings.set("customPluginPath",path);
-    } 
+    addCustomPath(p) {
+        if (!Array.isArray(this._customPath)) {
+            // This should never happen
+            this._customPath = [ p ];
+        }
+        else if (this._customPath.indexOf(p) == -1) {
+            this._customPath.push(p);
+        }
+        app.settings.set("customPluginPath",this._customPath);
+    }
+
+    removeCustomPath(p) {
+        if (!Array.isArray(this._customPath)) {
+            // This should never happen
+            console.warn("Unexpected configuration error: outdated plugin search path format.");
+        }
+        else {
+            let i = this._customPath.indexOf(p);
+            if (i != -1) {
+                this._customPath.splice(i, 1);
+                app.settings.set("customPluginPath",this._customPath);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
 
     get modules() {
         return this._modules;
@@ -134,7 +188,13 @@ class Plugins {
 
         let angularApp = angular.module(GLOBAL_APP_NAME);
         g_plugins.forEach((filePath) => {
-            let pluginModule = require(filePath)(app,angularApp,bg);
+            let templates = filePath.replace(/\\/g,'/');            
+            templates = templates.split('/');
+            templates.pop();
+            templates.pop();
+            templates.push("templates");
+            templates = templates.join("/");
+            let pluginModule = require(filePath)(app,angularApp,bg,templates);
             this._modules.push(pluginModule);
         });
     }

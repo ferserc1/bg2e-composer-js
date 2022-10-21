@@ -1,4 +1,6 @@
 node_modules
 window-main-compiled.js
 fbx2json
-npm-debug\.log
+npm-debug/.log
+deps/bin/*
+plugins/

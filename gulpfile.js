@@ -2,20 +2,24 @@ const gulp = require("gulp");
 const concat = require("gulp-concat");
 const fs = require("fs");
 const path = require("path");
+const composerPluginsPath = `${ __dirname }/plugins`;
 
 let fbxPluginPath = {
-    win64: `${ __dirname }/../fbx2json-dist/win64`,
-    macOS: `${ __dirname }/../fbx2json-dist/osx`
+    win64: `${ __dirname }/deps/bin/fbx2json-dist/win64`,
+    macOS: `${ __dirname }/deps/bin/fbx2json-dist/osx`,
+    linux: `${ __dirname }/deps/bin/fbx2json-dist/linux`
 };
 
 let raytracerPluginPath = {
-    win64: `${ __dirname }/../bg2e-raytracer-dist/win64`,
-    macOS: `${ __dirname }/../bg2e-raytracer-dist/osx`
+    win64: `${ __dirname }/deps/bin/bg2e-raytracer-dist/win64`,
+    macOS: `${ __dirname }/deps/bin/bg2e-raytracer-dist/osx`,
+    linux: null
 };
 
 let vitscnImportPath = {
-    win64: `${ __dirname }/../bg2e-scene-pkg/win64`,
-    macOS: `${ __dirname }/../bg2e-scene-pkg/macOS`
+    win64: `${ __dirname }/deps/bin/bg2e-scene-pkg/win64`,
+    macOS: `${ __dirname }/deps/bin/bg2e-scene-pkg/macOS`,
+    linux: null
 };
 
 gulp.task("compile", function() {
@@ -58,23 +62,23 @@ gulp.task("vitscnImport", function() {
             `${ vitscnImportPath.win64 }/vccorlib140.dll`,
             `${ vitscnImportPath.win64 }/vcruntime140.dll`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/win64')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/vitscn-import/win64`)),
     
         gulp.src([
             `${ vitscnImportPath.macOS }/libbg2e.dylib`,
             `${ vitscnImportPath.macOS }/scene-pkg`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/macos')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/vitscn-import/macos`)),
         
         gulp.src([
             "vitscnPlugin/plugin/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/plugin')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/vitscn-import/plugin`)),
         
         gulp.src([
             "vitscnPlugin/src/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/vitscn-import/src'))
+            .pipe(gulp.dest(`${ composerPluginsPath }/vitscn-import/src`))
         
     ]);
 });
@@ -91,23 +95,28 @@ gulp.task("fbxPlugin", function() {
             `${ fbxPluginPath.win64 }/vcruntime140.dll`,
             `${ fbxPluginPath.win64 }/fbx2json.exe`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/win64')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/fbx2json/win64`)),
         
         gulp.src([
             `${ fbxPluginPath.macOS }/libfbxsdk.dylib`,
             `${ fbxPluginPath.macOS }/fbx2json`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/macos')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/fbx2json/macos`)),
 
+        gulp.src([
+            `${ fbxPluginPath.linux }/fbx2json`
+        ])
+            .pipe(gulp.dest(`${ composerPluginsPath }/fbx2json/linux`)),
+        
         gulp.src([
             "fbxPlugin/plugin/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/plugin')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/fbx2json/plugin`)),
 
         gulp.src([
             "fbxPlugin/src/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/fbx2json/src')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/fbx2json/src`)),
 
         gulp.src([
             `${ raytracerPluginPath.win64 }/raytracer.exe`,
@@ -116,32 +125,32 @@ gulp.task("fbxPlugin", function() {
             `${ raytracerPluginPath.win64 }/vccorlib140.dll`,
             `${ raytracerPluginPath.win64 }/vcruntime140.dll`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/win64')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer/win64`)),
 
         gulp.src([
             `${ raytracerPluginPath.macOS }/raytracer`
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/macos')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer/macos`)),
 
         gulp.src([
             "raytracerPlugin/plugin/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/plugin')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer/plugin`)),
 
         gulp.src([
             "raytracerPlugin/src/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/src')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer/src`)),
 
         gulp.src([
             "raytracerPlugin/templates/*"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer/templates')),
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer/templates`)),
         
         gulp.src([
             "raytracerPlugin/menu.js"
         ])
-            .pipe(gulp.dest(__dirname + '/../composer-plugins/raytracer'))
+            .pipe(gulp.dest(`${ composerPluginsPath }/raytracer`))
     ])
 });
 

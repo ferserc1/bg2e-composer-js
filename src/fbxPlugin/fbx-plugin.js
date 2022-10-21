@@ -23,6 +23,13 @@ app.addDefinitions(() => {
             app.fbxPlugin.path = path.join(commandPath,"fbx2json.exe");
         }
     }
+    else if (commandPath && /linux/i.test(process.platform)) {
+        commandPath = path.join(commandPath,"linux");
+        if (fs.existsSync(commandPath)) {
+            app.fbxPlugin.available = true;
+            app.fbxPlugin.path = path.join(commandPath,"fbx2json");
+        }
+    }
 
     app.fbxPlugin.loadFbxJson = function(filePath) {
         return new Promise((resolve,reject) => {
@@ -106,7 +113,8 @@ app.addDefinitions(() => {
                 plist.color = plistData.color || [];
                 plist.index = plistData.indices || [];
                 plist.build();
-                drw.addPolyList(plist);
+                let mat = app.ComposerWindowController.Get().renderModel==app.RenderModel.PBR ? new bg.base.PBRMaterial() : new bg.base.Material();
+                drw.addPolyList(plist,mat);
             });
         }
         return node;

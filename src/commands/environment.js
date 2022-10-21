@@ -124,4 +124,46 @@ app.addSource(() => {
     }
 
     app.environmentCommands.SetData = SetData;
+
+    class SetSizes extends app.Command {
+        constructor(env,cubemapSize,specularMapSize,irradianceMapSize) {
+            super();
+            this._env = env;
+            this._sizes = {
+                cubemapSize: cubemapSize,
+                specularMapSize: specularMapSize,
+                irradianceMapSize: irradianceMapSize
+            };
+
+            this._prevData = {
+                cubemapSize: env.cubemapSize,
+                specularMapSize: env.specularMapSize,
+                irradianceMapSize: env.irradianceMapSize
+            };
+        }
+
+        execute() {
+            return new Promise((resolve,reject) => {
+                this._env.resize({
+                    cubemapSize: this._sizes.cubemapSize,
+                    specularMapSize: this._sizes.specularMapSize,
+                    irradianceMapSize: this._sizes.irradianceMapSize
+                });
+                resolve();
+            });
+        }
+
+        undo() {
+            return new Promise((resolve,reject) => {
+                this._env.resize({
+                    cubemapSize: this._prevData.cubemapSize,
+                    specularMapSize: this._prevData.specularMapSize,
+                    irradianceMapSize: this._prevData.irradianceMapSize
+                });
+                resolve();
+            });
+        }
+    }
+
+    app.environmentCommands.SetSizes = SetSizes;
 })

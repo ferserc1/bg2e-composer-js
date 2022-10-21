@@ -1,5 +1,6 @@
 <select-picker label="Projection" value="projectionType" options="projections" commit-changes="changeProjection"></select-picker>
 <button ng-click="setAsMain()" ng-class="{ 'disabled' : isMainCamera }">Set As Main</button>
+<button ng-click="showPreview()">Preview Window</button>
 <div ng-show="projectionType.id==1">
     <h3>Perspective</h3>
     <number-picker label="Field of View" value="fov" commit-changes="saveProjection"></number-picker>

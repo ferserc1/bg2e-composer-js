@@ -1,4 +1,5 @@
 
-const launcher = require(__dirname + '/launcher');
-
-launcher.launchDebug();
+module.exports = () => {
+    const launcher = require(__dirname + '/launcher');
+    launcher.launchDebug();
+}
