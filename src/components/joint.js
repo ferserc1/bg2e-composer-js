@@ -37,6 +37,7 @@ app.addSource(() => {
                     let bb = new bg.tools.BoundingBox(drw);
                     console.log(bb);
                     comp.joint.offset = new bg.Vector3(bb.halfSize.x, 0, bb.halfSize.z);
+                    comp.joint.transformOrder = bg.physics.LinkTransformOrder.TRANSLATE_ROTATE;
                 }
                 return comp;
             }
